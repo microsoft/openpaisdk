@@ -12,6 +12,8 @@ This SDK is designed to facilitate the developers of [OpenPAI](https://github.co
 
 To let users easily access multiple clusters, the SDK records the necessary configuration of each cluster in a local file (e.g. `~/.openpai/clusters.yaml`). In the file, a list of clusters are stored, and each of them has a alias (`${cluster-alias}`) to be addressed. 
 
+To accelerate cluster loading, the SDK may also cache some not-frequently-changed cluster information (e.g. virtual clusters, storages). And the updating method is also provided to synchronize with cluster.
+
 # Unified Storage Interface
 
 Multiple types of storages are supported by OpenPAI, however, the end user and developers should not be bothered by too much details of it. The SDK provides an abstract storage accessing methods to let users access the storages.
