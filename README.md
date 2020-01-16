@@ -16,6 +16,7 @@ Initialize the `openPAIClient`
 const cluster: IPAICluster = {
     username: '<username>',
     password: '<password>',
+    token: '<token>',
     rest_server_uri: '<The host>/rest-server'
 };
 const openPAIClient = new OpenPAIClient(cluster);
