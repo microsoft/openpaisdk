@@ -1,14 +1,18 @@
 # OpenPAI JS SDK
 
-The `JavaScript` SDK for `OpenPAI`.
+The `JavaScript` SDK is designed to facilitate the developers of [OpenPAI](https://github.com/microsoft/pai) to offer user friendly experience. 
+
+The SDK mainly provides client side sharable functions such as RESTful API wrapping, error handling, storage accessing and processing of [job protocol](). 
+
+It could be used to support existing or future front-ends (e.g. Web Portal, VS Code extension, Command Line Interface, Jupyter Notebook extension, and 3rd party clients), and also could be used to simplify the design of [kube runtime plugins](), which are executed in init containers.
+
+*Now we are porting some of the functions from existing `Python` [SDK](github.com/microsoft/pai/contrib/python-sdk) and command line tool. The whole functionality of this SDK will be ready soon.*
 
 ## Installation
 
 ```bash
-npm install --save microsoft/pai#openpai-js-sdk
+npm install --save microsoft/openpaisdk
 ```
-
-## RESTful APIs
 
 Initialize the `openPAIClient`
 
@@ -22,303 +26,76 @@ const cluster: IPAICluster = {
 const openPAIClient = new OpenPAIClient(cluster);
 ```
 
-### Job related
+### Installation of CLI tool
 
-- [x] List jobs (GET /api/v1/jobs)
+The SDK offers a command line interface (CLI) prefixed by `pai`. For end users that use CLI only, we provide an easy way to install it via `pip` and the `Python` package `nodeenv`. 
 
-    ```ts
-    list = await openPAIClient.job.list();
-    list = await openPAIClient.job.list('username=xxx');
+```bash
+pip install nodeenv
+nodeenv myenv
+myenv/Scripts/activate
+npm i -g microsoft/openpaisdk
+```
+
+This installation commands will generate a virtual environment with latest `node` in the directory `./myenv`, and install the CLI in it. Then user could use `pai` command by any of below methods
+
+- activate the virtual environment first
+    ```bash
+    myenv/Scripts/activate
+    pai -h
     ```
-
-- [x] Get job (GET /api/v2/user/{username}/jobs/{jobname})
-
-    ```ts
-    job = await openPAIClient.job.get(username, jobname);
+- use a absolute path to `pai`
+    ```bash
+    myenv/Scripts/pai -h
     ```
+- add `myenv/Scripts` to environment variable `path`
 
-- [x] Get framework info (GET /api/v2/jobs/{username}~{jobname})
 
-    ```ts
-    info = await openPAIClient.job.getFrameworkInfo(username, jobname);
-    ```
+## RESTful API
+The SDK provides ease-of-use `JavaScript` and `TypeScript` wrapping of  [OpenPAI RESTful APIs](https://github.com/microsoft/pai/blob/master/docs/rest-server/API.md). 
 
-- [x] Get job config (GET /api/v2/jobs/{username}~{jobname}/config)
+Details are in [rest-api.md](docs/rest-api.md).
 
-    ```ts
-    config = await openPAIClient.job.getConfig(username, jobname);
-    ```
+## Storage Operations
 
-- [x] Get job ssh info (GET /api/v1/user/{username}/jobs/{jobname}/ssh)
+Multiple types of storages are supported by OpenPAI, however, the end user and developers should not be bothered by too much details of it. The SDK provides an abstract storage accessing methods to let users access the storages.
 
-    ```ts
-    sshInfo = await openPAIClient.job.getSshInfo(username, jobname);
-    ```
+For the cluster (client) object in SDK, it would provide path parsing and storage accessing methods (`getinfo, listdir, upload, download, delete`) with the following type of path
 
-- [x] Submit v1 job (POST /api/v1/user/{username}/jobs)
+```ts
+list = await openPAIClient.storageOperation.getinfo(
+    configname, 
+    mountpoint, 
+    remotePath
+    );
+await openPAIClient.storageOperation.upload(
+    localSrcpath, 
+    configname, 
+    mountpoint, 
+    remotePath
+    );
+```
 
-    ```ts
-    await openPAIClient.job.submitV1((userName, config)
-    ```
+Here `configname` and `moutpoint` could be found in the the retrieved [storage config](https://github.com/microsoft/pai/tree/master/contrib/storage_plugin#config-data-structure-) by the [get storage config API](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/microsoft/pai/master/src/rest-server/docs/swagger.yaml#operation/getStorageConfigs), and `remotePath` is your destination path relative to the mount point.
 
-- [x] Submit v2 job (POST /api/v2/jobs)
+The users of CLI could be able to access the storage configs provisioned by the cluster like below
+```bash
+pai getinfo ${cluster-alias} ${storageconfig} ${mountpoint} remotePath
+```
 
-    ```ts
-    await openPAIClient.job.submit(config);
-    ```
+Details are in [storage.md](docs/storage.md).
 
-- [x] Remove job (DELETE /api/v2/user/{username}/jobs/{jobname})
+## Local Cluster Management
 
-    ```ts
-    await openPAIClient.job.delete(username, jobname);
-    ```
+In some scenarios (e.g. cli or notebook extension), it is required to store the cluster information locally.
 
-- [x] Start/Stop job (PUT /api/v2/user/{username}/jobs/{jobname}/executionType)
+## Unified error handling
 
-    ```ts
-    await openPAIClient.job.execute(username, jobname, 'START');
-    await openPAIClient.job.execute(username, jobname, 'STOP');
-    ```
+The SDK will center the error handling, thus all front ends depending on it could share the same way to warn users.
 
-### User related
+## Common job config processing
 
-- [x] Get user (GET /api/v2/user/{username})
-
-    ```ts
-    user = await openPAIClient.user.get(username);
-    ```
-
-- [x] List users (GET /api/v2/user/)
-
-    ```ts
-    list = await openPAIClient.user.list();
-    ```
-
-- [x] Create user (POST /api/v2/user/)
-
-    ```ts
-    await openPAIClient.user.create(username, password, admin, email, virtualClusters);
-    ```
-
-- [x] Delete user (DELETE /api/v2/user/{username})
-
-    ```ts
-    await openPAIClient.user.delete(username);
-    ```
-
-- [x] Update user extension (PUT /api/v2/user/{username}/extension)
-
-    ```ts
-    await openPAIClient.user.updateExtension(username, {
-        "extension-key1": "extension-value1",
-        "extension-key2": "extension-value2",
-        ...
-    });
-    ```
-
-- [x] Update user virtual cluster (PUT /api/v2/user/{username}/virtualcluster)
-
-    ```ts
-    await openPAIClient.user.updateVirtualcluster(username, ['vc1', 'vc2', ...]);
-    ```
-
-- [x] Update user password (PUT /api/v2/user/{username}/password)
-
-    ```ts
-    await openPAIClient.user.updatePassword(username, oldPassword, newPassword);
-    ```
-
-- [x] Update user email (PUT /api/v2/user/{username}/email)
-
-    ```ts
-    await openPAIClient.user.updateEmail(username, newEmail);
-    ```
-
-- [x] Update user admin permission (PUT /api/v2/user/{username}/admin)
-
-    ```ts
-    await openPAIClient.user.updateAdminPermission(username, newAdminPermission);
-    ```
-
-- [x] Update user group list (PUT /api/v2/user/{username}/grouplist)
-
-    ```ts
-    await openPAIClient.user.updateGroupList(username, ['group1', 'group2', ...]);
-    ```
-
-- [x] Add group into user group list (PUT /api/v2/user/{username}/group)
-
-    ```ts
-    await openPAIClient.user.addGroup(username, groupName);
-    ```
-
-- [x] Remove group from user group list (DELETE /api/v2/user/{username}/group)
-
-    ```ts
-    await openPAIClient.user.removeGroup(username, groupName);
-    ```
-
-### VC related
-
-- [x] List all virtual clusters (GET /api/v2/virtual-clusters)
-
-    ```ts
-    list = await openPAIClient.virtualCluster.list();
-    ```
-
-- [x] Get node resource (GET /api/v2/virtual-clusters/nodeResource)
-
-    ```ts
-    resource = await openPAIClient.virtualCluster.getNodeResource();
-    ```
-
-- [x] Get virtual cluster (GET /api/v2/virtual-clusters/{vcName})
-
-    ```ts
-    vc = await openPAIClient.virtualCluster.get(vcName);
-    ```
-
-- [x] Create or update virtual cluster (PUT /api/v1/virtual-clusters/{vcName})
-
-    ```ts
-    await openPAIClient.virtualCluster.createOrUpdate(vcName, vcCapacity, vcMaxCapacity);
-    ```
-
-- [x] Remove virtual cluster (DELETE /api/v1/virtual-clusters/{vcName})
-
-    ```ts
-    await openPAIClient.virtualCluster.delete(vcName);
-    ```
-
-- [x] Change virtual cluster status (PUT /api/v1/virtual-clusters/{vcName}/status)
-
-    ```ts
-    await openPAIClient.virtualCluster.changeStatus(vcName, newStatus);
-    ```
-
-- [ ] Get virtual cluster available resourceUnit (GET /api/v2/virtual-clusters/{vcName}/resourceUnits)
-
-    ```json
-    {
-        "code":"NotImplementedError",
-        "message":"getResourceUnits not implemented in yarn"
-    }
-    ```
-
-### Auth related
-
-- [x] Get token (POST /api/v1/token)
-
-    ```ts
-    token = await openPAIClient.token();
-    ```
-
-- [x] Get auth info (GET /api/v1/authn/info)
-
-    ```ts
-    info = await openPAIClient.authn.info();
-    ```
-
-- [x] Basic login (POST /api/v1/authn/basic/login)
-
-    ```ts
-    loginInfo = await openPAIClient.authn.login();
-    ```
-
-- [x] OIDC login (GET /api/v1/authn/oidc/login)
-
-    ```ts
-    redirect = await openPAIClient.authn.oidcLogin();
-    ```
-
-- [x] OIDC logout (GET /api/v1/authn/oidc/logout)
-
-    ```ts
-    redirect = await openPAIClient.authn.oidcLogout();
-    ```
-
-- [x] Get list of available tokens (portal token + application token) (GET /api/v1/token)
-
-    ```ts
-    tokens = await openPAIClient.auth.getTokens();
-    ```
-
-- [x] Create an application access token (POST /api/v1/token/application)
-
-    ```ts
-    token = await openPAIClient.auth.createApplicationToken();
-    ```
-
-- [x] Revoke a token (DELETE /api/v1/token/{token})
-
-    ```ts
-    await openPAIClient.auth.deleteToken(token);
-    ```
-
-- [ ] OIDC return (GET/POST /api/v1/authn/oidc/return)
-
-    ```text
-    Web-browser will call this API automatically after OIDC login step.
-    ```
-
-### Group related
-
-- [ ] Create a group (POST /api/v2/group)
-- [ ] Change a group's extension
-      (POST /api/v2/group/:groupname/extension)
-- [ ] Change a specific attribute in a nested group extension
-      (PUT /api/v2/group/:groupname/extension/path/to/attr)
-- [ ] Change a group's description
-      (POST /api/v2/group/:groupname/description)
-- [ ] Change a group's externalname, and bind it with another external group
-      (POST /api/v2/group/:groupname/externalname)
-- [ ] Delete a group from system (DELETE /api/v2/group/:groupname)
-
-### Storage
-
-- [x] Get storage server data in the system (GET /api/v2/storage/server/{storage})
-
-    ```ts
-    await openPAIClient.storage.getServerByName(storage);
-    ```
-
-- [ ] Remove storage server in the system (DELETE /api/v2/storage/server/{storage})
-- [x] Get storage server data in the system (GET /api/v2/storage/server)
-
-    ```ts
-    await openPAIClient.storage.getServer();
-    await openPAIClient.storage.getServer(names);
-    ```
-
-- [ ] Create storage server in the system (POST /api/v2/storage/server)
-- [ ] Update storage server in the system (PUT /api/v2/storage/server)
-- [x] Get storage config data in the system (GET /api/v2/storage/config/{storage})
-
-    ```ts
-    await openPAIClient.storage.getConfigByName(storage);
-    ```
-
-- [ ] Remove storage config in the system (DELETE /api/v2/storage/config/{storage})
-- [x] Get storage config data in the system (GET /api/v2/storage/config)
-
-    ```ts
-    await openPAIClient.storage.getConfig();
-    await openPAIClient.storage.getConfig(names);
-    ```
-
-- [ ] Create storage config in system (POST /api/v2/storage/config)
-- [ ] Update storage config in system (PUT /api/v2/storage/config)
-
-### Job history
-
-- [ ] Check if job attempts is healthy (GET /api/v2/jobs/{user}~{job}/job-attempts/healthz)
-- [ ] Get all attempts of a job (GET /api/v2/jobs/{user}~{job}/job-attempts)
-- [ ] Get a specific attempt by attempt index
-      (GET /api/v2/jobs/{user}~{job}/job-attempts/{attempt})
-
-## Useful tools
-
-- [ ] To be added...
+The interoperation of `OpenPAI` components depends on the [job protocol](github.com/microsoft/openpaiprotocol), and there have been some common operations of it, such as validation, preprocessing before submission (e.g. embedding essential user information). The SDK will provide essential common operations for all the front ends.
 
 # Contributing
 
