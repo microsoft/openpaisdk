@@ -36,24 +36,17 @@ export class baseStorageNode implements IStorageNode {
     delete(path: string): void {
         throw new Error("Method not implemented.");
     }
-    exists(path: string): boolean {
+    existsSync(path: string): boolean {
         throw new Error("Method not implemented.");
     }
-    isdir(path: string): boolean {
+    isdirSync(path: string): boolean {
         throw new Error("Method not implemented.");
     }
-    isfile(path: string): boolean {
+    uploadFolder(localPath: string, remotePath: string, opts?: {} | undefined): void {
         throw new Error("Method not implemented.");
     }
-    makedirs(path: string): boolean {
+    downloadFolder(remotePath: string, localPath: string, opts?: {} | undefined): void {
         throw new Error("Method not implemented.");
     }
-    uploadFolder(localPath: string, remotePath: string): boolean {
-        throw new Error("Method not implemented.");
-    }
-    downloadFolder(remotePath: string, localPath: string): boolean {
-        throw new Error("Method not implemented.");
-    }
-
 
 }

@@ -44,10 +44,8 @@ export interface IStorageNode {
     download(remotePath: string, localPath: string, opts?: {}): void
     delete(path: string): void
     // Non-essential methods
-    exists(path: string): boolean
-    isdir(path: string): boolean
-    isfile(path: string): boolean
-    makedirs(path: string): boolean
-    uploadFolder(localPath: string, remotePath: string): boolean
-    downloadFolder(remotePath: string, localPath: string): boolean
+    existsSync(path: string): boolean
+    isdirSync(path: string): boolean
+    uploadFolder(localPath: string, remotePath: string, opts?: {}): void
+    downloadFolder(remotePath: string, localPath: string, opts?: {}): void
 }

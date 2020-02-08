@@ -6,10 +6,8 @@ export declare class baseStorageNode implements IStorageNode {
     upload(localPath: string, remotePath: string, opts?: {} | undefined): void;
     download(remotePath: string, localPath: string, opts?: {} | undefined): void;
     delete(path: string): void;
-    exists(path: string): boolean;
-    isdir(path: string): boolean;
-    isfile(path: string): boolean;
-    makedirs(path: string): boolean;
-    uploadFolder(localPath: string, remotePath: string): boolean;
-    downloadFolder(remotePath: string, localPath: string): boolean;
+    existsSync(path: string): boolean;
+    isdirSync(path: string): boolean;
+    uploadFolder(localPath: string, remotePath: string, opts?: {} | undefined): void;
+    downloadFolder(remotePath: string, localPath: string, opts?: {} | undefined): void;
 }

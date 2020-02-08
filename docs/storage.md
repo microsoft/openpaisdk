@@ -42,8 +42,8 @@ The `IStorageNode` object provides essential methods to access the storage, such
 
   ```ts
   let stat: IFileInfo = await storageNode.getinfo(path);
-  let flagExists: bool = await storageNode.exists(path);
-  let flagIsFolder: bool = await storageNode.isdir(path);
+  let flagExists: bool = storageNode.existsSync(path);
+  let flagIsFolder: bool = storageNode.isdirSync(path);
   ``` 
 
 - list directory of a path
@@ -64,13 +64,13 @@ The `IStorageNode` object provides essential methods to access the storage, such
 
 - copy from local file (upload)
   ```ts
-  await storageNode.upload(localPath, path)
+  await storageNode.upload(localPath, path)  // will call uploadFolder if path is a folder
   await storageNode.uploadFolder(localPath, path)
   ```
 
 - copy to local file (download)
   ```ts
-  await storageNode.download(path, localPath)
+  await storageNode.download(path, localPath)  // will call downloadFolder if path is a folder
   await storageNode.downloadFolder(path, localPath)
   ```
 
