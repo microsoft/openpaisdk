@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-"use strict";
 // Copyright (c) Microsoft Corporation
 // All rights reserved.
 //
@@ -16,4 +14,38 @@
 // NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-console.log("hello, typescript");
+
+/**
+ * An abstractful File System based on file operation
+ */
+
+export enum FileType {
+    FILE,
+    DIRECTORY,
+}
+
+export interface IFileInfo {
+    mode: string
+    owner: string
+    group: string
+    size: number // 
+    blksize: number
+    type: FileType
+    atime: Date
+    mtime: Date
+}
+
+export interface IStorageNode {
+    // Essential methods
+    getinfo(path: string): Promise<IFileInfo>
+    listdir(path: string): Promise<string[]>
+    makedir(path: string, mode?: string): void
+    upload(localPath: string, remotePath: string, opts?: {}): void
+    download(remotePath: string, localPath: string, opts?: {}): void
+    delete(path: string): void
+    // Non-essential methods
+    existsSync(path: string): boolean
+    isdirSync(path: string): boolean
+    uploadFolder(localPath: string, remotePath: string, opts?: {}): void
+    downloadFolder(remotePath: string, localPath: string, opts?: {}): void
+}
