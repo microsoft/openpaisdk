@@ -60,7 +60,7 @@ Details are in [rest-api.md](docs/rest-api.md).
 
 Multiple types of storages are supported by OpenPAI, however, the end user and developers should not be bothered by too much details of it. The SDK provides an abstract storage accessing methods to let users access the storages.
 
-User could get the [IStorageNode](../src/models/storageOperation.ts#38) object for each cluster provisioned storage by 
+User could get the `IStorageNode` object for each cluster provisioned storage by 
 ```ts
 let storageNode: IStorageNode = await openPAIClient.storageOperation.getStorageNode(storageNodeName)
 ```
