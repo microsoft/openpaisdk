@@ -3,7 +3,7 @@
 Multiple types of storages are supported by OpenPAI, however, the end user and developers should not be bothered by too much details of it. The SDK offers an abstract storage accessing layer to let users access the cluster provisioned storages.
 
 ## Fetch storage object
-User could get the [IStorageNode](../src/models/storageOperation.ts#38) object for each cluster provisioned storage by 
+User could get the `IStorageNode` object for each cluster provisioned storage by 
 
 ```ts
 // get a storage object with its name
