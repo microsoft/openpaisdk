@@ -60,28 +60,11 @@ Details are in [rest-api.md](docs/rest-api.md).
 
 Multiple types of storages are supported by OpenPAI, however, the end user and developers should not be bothered by too much details of it. The SDK provides an abstract storage accessing methods to let users access the storages.
 
-For the cluster (client) object in SDK, it would provide path parsing and storage accessing methods (`getinfo, listdir, upload, download, delete`) with the following type of path
-
+User could get the [IStorageNode](../src/models/storageOperation.ts#38) object for each cluster provisioned storage by 
 ```ts
-list = await openPAIClient.storageOperation.getinfo(
-    configname, 
-    mountpoint, 
-    remotePath
-    );
-await openPAIClient.storageOperation.upload(
-    localSrcpath, 
-    configname, 
-    mountpoint, 
-    remotePath
-    );
+let storageNode: IStorageNode = await openPAIClient.storageOperation.getStorageNode(storageNodeName)
 ```
-
-Here `configname` and `moutpoint` could be found in the the retrieved [storage config](https://github.com/microsoft/pai/tree/master/contrib/storage_plugin#config-data-structure-) by the [get storage config API](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/microsoft/pai/master/src/rest-server/docs/swagger.yaml#operation/getStorageConfigs), and `remotePath` is your destination path relative to the mount point.
-
-The users of CLI could be able to access the storage configs provisioned by the cluster like below
-```bash
-pai getinfo ${cluster-alias} ${storageconfig} ${mountpoint} remotePath
-```
+It would provide storage accessing methods (`getinfo, listdir, makedir, upload, download, delete`) and CLI storage operations.
 
 Details are in [storage.md](docs/storage.md).
 
