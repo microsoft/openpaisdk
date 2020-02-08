@@ -42,7 +42,7 @@ export interface IStorageNode {
     makedir(path: string, mode?: string): void
     upload(localPath: string, remotePath: string, opts?: {}): void
     download(remotePath: string, localPath: string, opts?: {}): void
-    remove(path: string): void
+    delete(path: string): void
     // Non-essential methods
     exists(path: string): boolean
     isdir(path: string): boolean

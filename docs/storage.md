@@ -74,6 +74,8 @@ The `IStorageNode` object provides essential methods to access the storage, such
   await storageNode.downloadFolder(path, localPath)
   ```
 
+- [TBD] open read or write file stream
+
 ## CLI interface
 
 The users of CLI could be able to access the storage configs provisioned by the cluster like below
