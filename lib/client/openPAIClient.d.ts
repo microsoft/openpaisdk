@@ -3,6 +3,7 @@ import { IPAICluster } from '../models/cluster';
 import { OpenPAIBaseClient } from './baseClient';
 import { JobClient } from './jobClient';
 import { StorageClient } from './storageClient';
+import { StorageOperation } from './storageOperation';
 import { UserClient } from './userClient';
 import { VirtualClusterClient } from './virtualClusterClient';
 /**
@@ -29,5 +30,9 @@ export declare class OpenPAIClient extends OpenPAIBaseClient {
      * OpenPAI Storage Client.
      */
     storage: StorageClient;
+    /**
+     * OpenPAI Storage Operation
+     */
+    storageOperation: StorageOperation;
     constructor(cluster: IPAICluster);
 }

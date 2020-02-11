@@ -15,21 +15,25 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import { StorageClient } from './storageClient'
-import { IStorageConfig, IStorageServer, IMountInfo } from '../models/storage'
-import { StorageNode } from './storageNode'
+import { IMountInfo, IStorageConfig, IStorageServer } from '../models/storage';
 
+import { StorageClient } from './storageClient';
+import { StorageNode } from './storageNode';
+
+/**
+ * StorageOperation class
+ */
 export class StorageOperation {
-    private client: StorageClient
+    private client: StorageClient;
 
     constructor(client: StorageClient) {
-        this.client = client
+        this.client = client;
     }
 
-    public async getStorageNode(name: string, index: number = 0) {
-        let storageConfig: IStorageConfig = await this.client.getConfigByName(name)
-        let mountInfo: IMountInfo = storageConfig.mountInfos[index]
-        let server = await this.client.getServerByName(mountInfo.server)
-        return new StorageNode(mountInfo, server)
+    public async getStorageNode(name: string, index: number = 0): Promise<StorageNode> {
+        const storageConfig: IStorageConfig = await this.client.getConfigByName(name);
+        const mountInfo: IMountInfo = storageConfig.mountInfos[index];
+        const server: IStorageServer = await this.client.getServerByName(mountInfo.server);
+        return new StorageNode(mountInfo, server);
     }
 }

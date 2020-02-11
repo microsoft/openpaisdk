@@ -20,6 +20,7 @@ import * as request from 'request-promise-native';
 import { Util } from '../commom/util';
 import { IAuthnInfo, ILoginInfo } from '../models/authn';
 import { IPAICluster } from '../models/cluster';
+
 import { OpenPAIBaseClient } from './baseClient';
 
 /**
@@ -29,15 +30,15 @@ export class AuthnClient extends OpenPAIBaseClient {
     private authnInfo?: IAuthnInfo;
 
     constructor(cluster: IPAICluster) {
-        super(cluster)
+        super(cluster);
     }
 
     /**
      * Get authn information.
      */
     public async info(): Promise<IAuthnInfo> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/authn/info`);
-        if(this.authnInfo === undefined) {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/authn/info`);
+        if (this.authnInfo === undefined) {
             this.authnInfo = JSON.parse(await request.get(url));
         }
 
@@ -48,10 +49,10 @@ export class AuthnClient extends OpenPAIBaseClient {
      * OpenID Connect login.
      */
     public async oidcLogin(queryString?: string): Promise<any> {
-        const url = queryString ?
+        const url: string = queryString ?
             Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/authn/oidc/login?${queryString}`) :
             Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/authn/oidc/login`);
-        const res = await request.get(url);
+        const res: string = await request.get(url);
 
         return res;
     }
@@ -60,10 +61,10 @@ export class AuthnClient extends OpenPAIBaseClient {
      * OpenID Connect logout.
      */
     public async oidcLogout(queryString?: string): Promise<any> {
-        const url = queryString ?
+        const url: string = queryString ?
             Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/authn/oidc/logout?${queryString}`) :
             Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/authn/oidc/logout`);
-        const res = await request.get(url);
+        const res: string = await request.get(url);
 
         return res;
     }
@@ -72,11 +73,11 @@ export class AuthnClient extends OpenPAIBaseClient {
      * Get list of available tokens (portal token + application token).
      */
     public async getTokens(token?: string): Promise<any> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/token`);
-        if(token === undefined) {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/token`);
+        if (token === undefined) {
             token = await super.token();
         }
-        const res = await request.get(url, {
+        const res: string = await request.get(url, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -89,11 +90,11 @@ export class AuthnClient extends OpenPAIBaseClient {
      * Create an application access token.
      */
     public async createApplicationToken(token?: string): Promise<any> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/token/application`);
-        if(token === undefined) {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/token/application`);
+        if (token === undefined) {
             token = await super.token();
         }
-        const res = await request.post(url, {
+        const res: string = await request.post(url, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -106,11 +107,11 @@ export class AuthnClient extends OpenPAIBaseClient {
      * Revoke a token.
      */
     public async deleteToken(deleteToken: string, accessToken?: string): Promise<any> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/token/${deleteToken}`);
-        if(accessToken === undefined) {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/token/${deleteToken}`);
+        if (accessToken === undefined) {
             accessToken = await super.token();
         }
-        const res = await request.delete(url, {
+        const res: string = await request.delete(url, {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
                 'Content-Type': 'application/json'

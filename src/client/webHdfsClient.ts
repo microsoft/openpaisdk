@@ -15,33 +15,40 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import { IMountInfo, IStorageServer } from '../models/storage'
-import { IStorageNodeClient, IFileInfo } from '../models/storageOperation'
+import { IMountInfo, IStorageServer } from '../models/storage';
+import { IFileInfo, IStorageNodeClient } from '../models/storageOperation';
 
+/**
+ * Web HDFS Client.
+ */
 export class WebHdfsClient implements IStorageNodeClient {
-    public mkdirAllowRecursive: boolean = true
+    public mkdirAllowRecursive: boolean = true;
 
     constructor(config: IMountInfo, server: IStorageServer) {
-        throw new Error("Method not implemented.")
-    }
-    async getinfo(path: string): Promise<IFileInfo> {
-        throw new Error("Method not implemented.")
-    }
-    async listdir(path: string): Promise<string[]> {
-        throw new Error("Method not implemented.")
-    }
-    async makedir(path: string, mode?: string | undefined): Promise<void> {
-        throw new Error("Method not implemented.")
-    }
-    async upload(localPath: string, remotePath: string, opts?: {} | undefined): Promise<void> {
-        throw new Error("Method not implemented.")
-    }
-    async download(remotePath: string, localPath: string, opts?: {} | undefined): Promise<void> {
-        throw new Error("Method not implemented.")
-    }
-    async delete(path: string): Promise<void> {
-        throw new Error("Method not implemented.")
+        throw new Error('Method not implemented.');
     }
 
+    public async getinfo(path: string): Promise<IFileInfo> {
+        throw new Error('Method not implemented.');
+    }
 
+    public async listdir(path: string): Promise<string[]> {
+        throw new Error('Method not implemented.');
+    }
+
+    public async makedir(path: string, mode?: string | undefined): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    public async upload(localPath: string, remotePath: string, opts?: {} | undefined): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    public async download(remotePath: string, localPath: string, opts?: {} | undefined): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
+    public async delete(path: string): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
 }

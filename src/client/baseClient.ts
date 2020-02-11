@@ -42,11 +42,11 @@ export class OpenPAIBaseClient {
         if (this.cluster.token) {
             return this.cluster.token;
         } else if (!this.cacheToken || this.cacheToken.expireTime < Date.now()) {
-            const res = await this.login();
+            const res: ILoginInfo = await this.login();
             this.cacheToken = {
                 expireTime: Date.now() + 3600 * 1000,
                 token: res.token
-            }
+            };
         }
         return this.cacheToken!.token;
     }
@@ -55,8 +55,8 @@ export class OpenPAIBaseClient {
      * Basic login.
      */
     public async login(): Promise<ILoginInfo> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/authn/basic/login`);
-        const res = await request.post(url, {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/authn/basic/login`);
+        const res: ILoginInfo = await request.post(url, {
             form: {
                 expiration: 4000,
                 password: this.cluster.password,
@@ -73,8 +73,8 @@ export class OpenPAIBaseClient {
      * Get OpenPAI cluster info, will call /api/v1.
      */
     public async getClusterInfo(): Promise<IPAIClusterInfo> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/`);
-        const res = await request.get(url);
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/`);
+        const res: any = await request.get(url);
         return JSON.parse(res);
     }
 }

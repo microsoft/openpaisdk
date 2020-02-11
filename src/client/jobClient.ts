@@ -21,6 +21,7 @@ import * as request from 'request-promise-native';
 import { Util } from '../commom/util';
 import { IPAICluster } from '../models/cluster';
 import { IJobConfig, IJobConfigV1, IJobFrameworkInfo, IJobInfo, IJobSshInfo, IJobStatus } from '../models/job';
+
 import { OpenPAIBaseClient } from './baseClient';
 
 /**
@@ -28,7 +29,7 @@ import { OpenPAIBaseClient } from './baseClient';
  */
 export class JobClient extends OpenPAIBaseClient {
     constructor(cluster: IPAICluster) {
-        super(cluster)
+        super(cluster);
     }
 
     /**
@@ -36,7 +37,7 @@ export class JobClient extends OpenPAIBaseClient {
      * @param query The query string.
      */
     public async list(query?: string): Promise<IJobInfo[]> {
-        const url = query === undefined ?
+        const url: string = query === undefined ?
             Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/jobs`) :
             Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/jobs?${query}`) ;
         return await request.get(url);
@@ -48,8 +49,8 @@ export class JobClient extends OpenPAIBaseClient {
      * @param jobName The job name.
      */
     public async get(userName: string, jobName: string): Promise<IJobStatus> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}/jobs/${jobName}`);
-        const res = await request.get(url);
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}/jobs/${jobName}`);
+        const res: string = await request.get(url);
         return JSON.parse(res);
     }
 
@@ -60,11 +61,11 @@ export class JobClient extends OpenPAIBaseClient {
      * @param token Specific an access token (optional).
      */
     public async delete(userName: string, jobName: string, token?: string): Promise<IJobStatus> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}/jobs/${jobName}`);
-        if(token === undefined) {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}/jobs/${jobName}`);
+        if (token === undefined) {
             token = await super.token();
         }
-        const res = await request.delete(url, {
+        const res: any = await request.delete(url, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -80,8 +81,8 @@ export class JobClient extends OpenPAIBaseClient {
      * @param jobName The job name.
      */
     public async getFrameworkInfo(userName: string, jobName: string): Promise<IJobFrameworkInfo> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/jobs/${userName}~${jobName}`);
-        const res = await request.get(url);
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/jobs/${userName}~${jobName}`);
+        const res: string = await request.get(url);
         return JSON.parse(res);
     }
 
@@ -91,8 +92,8 @@ export class JobClient extends OpenPAIBaseClient {
      * @param jobName The job name.
      */
     public async getConfig(userName: string, jobName: string): Promise<IJobConfig> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/jobs/${userName}~${jobName}/config`);
-        const res = await request.get(url);
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/jobs/${userName}~${jobName}/config`);
+        const res: any = await request.get(url);
         return yaml.safeLoad(res);
     }
 
@@ -104,11 +105,11 @@ export class JobClient extends OpenPAIBaseClient {
      * @param token Specific an access token (optional).
      */
     public async execute(userName: string, jobName: string, type: 'START' | 'STOP', token?: string): Promise<any> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}/jobs/${jobName}/executionType`);
-        if(token === undefined) {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}/jobs/${jobName}/executionType`);
+        if (token === undefined) {
             token = await super.token();
         }
-        const res = await request.put(url, {
+        const res: any = await request.put(url, {
             body: JSON.stringify({
                 value: type
             }),
@@ -126,9 +127,9 @@ export class JobClient extends OpenPAIBaseClient {
      * @param jobConfig The job config.
      */
     public async submit(jobConfig: IJobConfig, token?: string): Promise<void> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/jobs`);
-        const text = yaml.safeDump(jobConfig);
-        if(token === undefined) {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/jobs`);
+        const text: string = yaml.safeDump(jobConfig);
+        if (token === undefined) {
             token = await super.token();
         }
         await request.post(url, {
@@ -147,8 +148,8 @@ export class JobClient extends OpenPAIBaseClient {
      * @param jobConfig The job config.
      */
     public async submitV1(userName: string, jobConfig: IJobConfigV1, token?: string): Promise<void> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/user/${userName}/jobs`);
-        if(token === undefined) {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/user/${userName}/jobs`);
+        if (token === undefined) {
             token = await super.token();
         }
         return await request.post(url, {
@@ -178,13 +179,13 @@ export class JobClient extends OpenPAIBaseClient {
     public async getSshInfo(jobName: string): Promise<IJobSshInfo>;
 
     public async getSshInfo(param1: string, param2?: string): Promise<IJobSshInfo> {
-        const userName = param2 ? param1 : undefined;
-        const jobName = param2 ? param2 : param1;
+        const userName: string | undefined = param2 ? param1 : undefined;
+        const jobName: string | undefined = param2 ? param2 : param1;
 
-        const url = userName ?
+        const url: string = userName ?
             Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/user/${userName}/jobs/${jobName}/ssh`) :
             Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/jobs/${jobName}/ssh`);
-        const res = await request.get(url);
+        const res: any = await request.get(url);
         return JSON.parse(res);
     }
 }

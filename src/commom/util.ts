@@ -29,4 +29,4 @@ class UtilClass {
     }
 }
 
-export const Util = new UtilClass();
+export const Util: UtilClass = new UtilClass();

@@ -97,7 +97,7 @@ export interface IJobConfig {
     description?: string;
 
     /** Each item is the protocol for data, script, dockerimage, or output type. */
-    prerequisites?: Array<{
+    prerequisites?: {
         /** If omitted, follow the protocolVersion in root. */
         protocolVersion?: string | number;
         name: string;
@@ -116,7 +116,7 @@ export interface IJobConfig {
         };
         /** Only when the type is data can the uri be a list. */
         uri: string | string[];
-    }>;
+    }[];
 
     /**
      * If specified, the whole parameters object can be referenced as `$parameters`.
@@ -225,7 +225,7 @@ export interface IJobConfig {
      * One could have many deployments, but only one deployment can be activated at runtime by specifying in "defaults".
      * User can choose the deployment and specify in "defaults" at submission time.
      */
-    deployments?: Array<{
+    deployments?: {
         name: string;
         taskRoles: {
             /** Should be in taskRoles. */
@@ -236,7 +236,7 @@ export interface IJobConfig {
                 postCommands: string[];
             }
         }
-    }>;
+    }[];
 
     /** Optional, default cluster specific settings. */
     defaults?: {

@@ -17,12 +17,13 @@
 
 import { AuthnClient } from '..';
 import { IPAICluster } from '../models/cluster';
+
 import { OpenPAIBaseClient } from './baseClient';
 import { JobClient } from './jobClient';
 import { StorageClient } from './storageClient';
+import { StorageOperation } from './storageOperation';
 import { UserClient } from './userClient';
 import { VirtualClusterClient } from './virtualClusterClient';
-import { StorageOperation } from './storageOperation';
 
 /**
  * OpenPAI Client.
@@ -56,7 +57,7 @@ export class OpenPAIClient extends OpenPAIBaseClient {
     /**
      * OpenPAI Storage Operation
      */
-    public storageOperation: StorageOperation
+    public storageOperation: StorageOperation;
 
     constructor(cluster: IPAICluster) {
         super(cluster);

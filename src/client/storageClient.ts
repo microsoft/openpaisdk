@@ -15,19 +15,21 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+// tslint:disable-next-line:match-default-export-name
+import axios, { AxiosResponse } from 'axios';
+
 import { Util } from '../commom/util';
 import { IPAICluster } from '../models/cluster';
 import { IStorageConfig, IStorageServer } from '../models/storage';
-import { OpenPAIBaseClient } from './baseClient';
 
-import axios from 'axios';
+import { OpenPAIBaseClient } from './baseClient';
 
 /**
  * OpenPAI Job client.
  */
 export class StorageClient extends OpenPAIBaseClient {
     constructor(cluster: IPAICluster) {
-        super(cluster)
+        super(cluster);
     }
 
     /**
@@ -35,17 +37,17 @@ export class StorageClient extends OpenPAIBaseClient {
      * @param names Filter storage server with names, default name empty will be ignored.
      */
     public async getServer(names?: string, token?: string): Promise<IStorageServer[]> {
-        const query = names ? `?names=${names}` : '';
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/storage/server${query}`, this.cluster.https);
-        if(token === undefined) {
+        const query: string = names ? `?names=${names}` : '';
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/storage/server${query}`, this.cluster.https);
+        if (token === undefined) {
             token = await super.token();
         }
-        const res = await axios.get<IStorageServer[]>(url, {
+        const res: AxiosResponse<IStorageServer[]> = await axios.get<IStorageServer[]>(url, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'content-type': 'application/json'
             }
-        })
+        });
         return res.data;
     }
 
@@ -54,16 +56,16 @@ export class StorageClient extends OpenPAIBaseClient {
      * @param storage The storage name.
      */
     public async getServerByName(storage: string, token?: string): Promise<IStorageServer> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/storage/server/${storage}`, this.cluster.https);
-        if(token === undefined) {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/storage/server/${storage}`, this.cluster.https);
+        if (token === undefined) {
             token = await super.token();
         }
-        const res = await axios.get<IStorageServer>(url, {
+        const res: AxiosResponse<IStorageServer> = await axios.get<IStorageServer>(url, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'content-type': 'application/json'
             }
-        })
+        });
         return res.data;
     }
 
@@ -72,17 +74,17 @@ export class StorageClient extends OpenPAIBaseClient {
      * @param names Filter storage server with names, default name empty will be ignored.
      */
     public async getConfig(names?: string, token?: string): Promise<IStorageConfig[]> {
-        const query = names ? `?names=${names}` : '';
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/storage/config${query}`, this.cluster.https);
-        if(token === undefined) {
+        const query: string = names ? `?names=${names}` : '';
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/storage/config${query}`, this.cluster.https);
+        if (token === undefined) {
             token = await super.token();
         }
-        const res = await axios.get<IStorageConfig[]>(url, {
+        const res: AxiosResponse<IStorageConfig[]> = await axios.get<IStorageConfig[]>(url, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'content-type': 'application/json'
             }
-        })
+        });
         return res.data;
     }
 
@@ -91,16 +93,16 @@ export class StorageClient extends OpenPAIBaseClient {
      * @param storage The storage name.
      */
     public async getConfigByName(storage: string, token?: string): Promise<IStorageConfig> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/storage/config/${storage}`, this.cluster.https);
-        if(token === undefined) {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/storage/config/${storage}`, this.cluster.https);
+        if (token === undefined) {
             token = await super.token();
         }
-        const res = await axios.get<IStorageConfig>(url, {
+        const res: AxiosResponse<IStorageConfig> = await axios.get<IStorageConfig>(url, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'content-type': 'application/json'
             }
-        })
+        });
         return res.data;
     }
 }
