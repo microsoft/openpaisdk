@@ -11,7 +11,6 @@ let storageNodeName: string = storageConfigName + '~' + mountPoint
 let storageNode: IStorageNode = await openPAIClient.storageOperation.getStorageNode(storageNodeName)
 // list all storage objects
 let storageNodes = await openPAIClient.storageOperation.listAllStorageNodes();
-
 ```
 
 The `storageNodeName` is the unique name for each storage node. Currently it is combined by the name of storage config (`storageConfigName`) and the mount point specified in it (`mountPoint`). The storage config could be queried by by the [get storage config API](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/microsoft/pai/master/src/rest-server/docs/swagger.yaml#operation/getStorageConfigs), the response of which looks like below (more details about storage configuration refer to [here](https://github.com/microsoft/pai/tree/master/contrib/storage_plugin#config-data-structure-))
@@ -53,7 +52,7 @@ The `IStorageNode` object provides essential methods to access the storage, such
 
 - delete (remove) a path
   ```ts
-  await stoageNode.delete(path)  // will call deleteFolder if path is a folder
+  await stoageNode.delete(path)
   await stoageNode.deleteFolder(path)
   ```
 
@@ -64,13 +63,13 @@ The `IStorageNode` object provides essential methods to access the storage, such
 
 - copy from local file (upload)
   ```ts
-  await storageNode.upload(localPath, path)  // will call uploadFolder if path is a folder
+  await storageNode.upload(localPath, path)
   await storageNode.uploadFolder(localPath, path)
   ```
 
 - copy to local file (download)
   ```ts
-  await storageNode.download(path, localPath)  // will call downloadFolder if path is a folder
+  await storageNode.download(path, localPath)
   await storageNode.downloadFolder(path, localPath)
   ```
 
