@@ -15,6 +15,7 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+// tslint:disable-next-line:missing-jsdoc
 import { AuthnClient } from './client/authnClient';
 import { JobClient } from './client/jobClient';
 import { OpenPAIClient } from './client/openPAIClient';
@@ -23,7 +24,7 @@ import { UserClient } from './client/userClient';
 import { VirtualClusterClient } from './client/virtualClusterClient';
 import { IAuthnInfo, ILoginInfo } from './models/authn';
 import { IPAICluster } from './models/cluster';
-import { IJobConfig, IJobFrameworkInfo, IJobInfo, IJobSshInfo } from './models/job';
+import { IJobConfig, IJobFrameworkInfo, IJobInfo, IJobSshInfo, IJobStatus } from './models/job';
 import { IMountInfo, IStorageConfig, IStorageServer } from './models/storage';
 import { ITokenItem } from './models/token';
 import { IUserInfo } from './models/user';
@@ -49,5 +50,6 @@ export {
     ILoginInfo,
     IStorageServer,
     IStorageConfig,
-    IMountInfo
+    IMountInfo,
+    IJobStatus
 };

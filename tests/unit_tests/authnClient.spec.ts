@@ -15,67 +15,73 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+// tslint:disable-next-line:missing-jsdoc
 import * as chai from 'chai';
+import { expect } from 'chai';
 import * as dirtyChai from 'dirty-chai';
 import * as nock from 'nock';
 
-import { expect } from 'chai';
-import { AuthnClient } from '../../src/client/authnClient';
-import { IAuthnInfo } from '../../src/models/authn';
-import { IPAICluster } from '../../src/models/cluster';
+import { AuthnClient, IAuthnInfo, IPAICluster } from '../../src';
 
-const testUri = 'openpai-js-sdk.test/rest-server';
+const testUri: string = 'openpai-js-sdk.test/rest-server';
 
 const cluster: IPAICluster = {
     password: 'test',
     rest_server_uri: testUri,
     username: 'test'
 };
-const authnClient = new AuthnClient(cluster);
 
 chai.use(dirtyChai);
-nock(`http://${testUri}`).post(`/api/v1/token`).reply(200, { token: 'token' });
-nock(`http://${testUri}`).post(`/api/v1/authn/basic/login`).reply(200, { token: 'token' });
+beforeEach(() => {
+    nock(`http://${testUri}`).post('/api/v1/token').reply(200, { token: 'token' });
+    nock(`http://${testUri}`).post('/api/v1/authn/basic/login').reply(200, { token: 'token' });
+});
 
 describe('Get authn infomation', () => {
     const response: IAuthnInfo = {
-        'authn_type': 'basic',
-        'loginURI': '/api/v1/authn/basic/login',
-        'loginURIMethod': 'post'
+        authn_type: 'basic',
+        loginURI: '/api/v1/authn/basic/login',
+        loginURIMethod: 'post'
     };
-    nock(`http://${testUri}`).get(`/api/v1/authn/info`).reply(200, response);
+    before(() =>
+        nock(`http://${testUri}`).get('/api/v1/authn/info').reply(200, response)
+    );
 
     it('should return the user info', async () => {
-        const result = await authnClient.info();
+        const authnClient: AuthnClient = new AuthnClient(cluster);
+        const result: IAuthnInfo = await authnClient.info();
         expect(result).to.be.eql(response);
     });
 });
 
 describe('Basic login', () => {
-    const response = {
+    const response: any = {
         token: 'token'
     };
 
     it('should return the login info', async () => {
-        const result = await authnClient.login();
+        const authnClient: AuthnClient = new AuthnClient(cluster);
+        const result: any = await authnClient.login();
         expect(result).to.be.eql(response);
     });
 });
 
 describe('OIDC login', () => {
     it('should return something', async () => {
-        nock(`http://${testUri}`).get(`/api/v1/authn/oidc/login`).reply(200, 'test');
-        const result = await authnClient.oidcLogin();
+        nock(`http://${testUri}`).get('/api/v1/authn/oidc/login').reply(200, 'test');
+        const authnClient: AuthnClient = new AuthnClient(cluster);
+        const result: any = await authnClient.oidcLogin();
 
         expect(result).to.be.a('string');
-    })
+    });
 });
 
 describe('OIDC logout', () => {
     it('should return something', async () => {
-        nock(`http://${testUri}`).get(`/api/v1/authn/oidc/logout`).reply(200, 'test');
-        const result = await authnClient.oidcLogout();
+        nock(`http://${testUri}`).get('/api/v1/authn/oidc/logout').reply(200, 'test');
+        const authnClient: AuthnClient = new AuthnClient(cluster);
+        const result: any = await authnClient.oidcLogout();
 
         expect(result).to.be.a('string');
-    })
+    });
 });

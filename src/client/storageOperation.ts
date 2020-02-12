@@ -15,26 +15,25 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// tslint:disable-next-line:missing-jsdoc
-import { IJobInfo } from '../../../src/models/job';
+import { IMountInfo, IStorageConfig, IStorageServer } from '../models/storage';
 
-export const testJobList: IJobInfo[] = [{
-    appExitCode: 0,
-    completedTime: 1563499887777,
-    createdTime: 1563499625106,
-    executionType: 'STOP',
-    name: 'sklearn-mnist',
-    retries: 0,
-    retryDetails: {
-        platform: 0,
-        resource: 0,
-        user: 0
-    },
-    state: 'SUCCEEDED',
-    subState: 'FRAMEWORK_COMPLETED',
-    totalGpuNumber: 0,
-    totalTaskNumber: 1,
-    totalTaskRoleNumber: 1,
-    username: 'test',
-    virtualCluster: 'default'
-}];
+import { StorageClient } from './storageClient';
+import { StorageNode } from './storageNode';
+
+/**
+ * StorageOperation class
+ */
+export class StorageOperation {
+    private client: StorageClient;
+
+    constructor(client: StorageClient) {
+        this.client = client;
+    }
+
+    public async getStorageNode(name: string, index: number = 0): Promise<StorageNode> {
+        const storageConfig: IStorageConfig = await this.client.getConfigByName(name);
+        const mountInfo: IMountInfo = storageConfig.mountInfos[index];
+        const server: IStorageServer = await this.client.getServerByName(mountInfo.server);
+        return new StorageNode(mountInfo, server);
+    }
+}

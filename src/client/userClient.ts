@@ -20,6 +20,7 @@ import * as request from 'request-promise-native';
 import { Util } from '../commom/util';
 import { IPAICluster } from '../models/cluster';
 import { IUserInfo } from '../models/user';
+
 import { OpenPAIBaseClient } from './baseClient';
 
 /**
@@ -27,7 +28,7 @@ import { OpenPAIBaseClient } from './baseClient';
  */
 export class UserClient extends OpenPAIBaseClient {
     constructor(cluster: IPAICluster) {
-        super(cluster)
+        super(cluster);
     }
 
     /**
@@ -36,13 +37,13 @@ export class UserClient extends OpenPAIBaseClient {
      * @param token Specific an access token (optional).
      */
     public async get(userName: string, token?: string): Promise<IUserInfo> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}`);
-        if(token === undefined) {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}`);
+        if (token === undefined) {
             token = await super.token();
         }
-        const res = await request.get(url, {
+        const res: any = await request.get(url, {
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             }
         });
         return JSON.parse(res);
@@ -53,13 +54,13 @@ export class UserClient extends OpenPAIBaseClient {
      * @param token Specific an access token (optional).
      */
     public async list(token?: string): Promise<IUserInfo[]> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/`);
-        if(token === undefined) {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/`);
+        if (token === undefined) {
             token = await super.token();
         }
-        const res = await request.get(url, {
+        const res: any = await request.get(url, {
             headers: {
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${token}`
             }
         });
         return JSON.parse(res);
@@ -84,11 +85,11 @@ export class UserClient extends OpenPAIBaseClient {
         extension?: {},
         token?: string
     ): Promise<any> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/`);
-        if(token === undefined) {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/`);
+        if (token === undefined) {
             token = await super.token();
         }
-        const res = await request.post(url, {
+        const res: any = await request.post(url, {
             body: JSON.stringify({username, email, password, admin, virtualCluster, extension}),
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -111,11 +112,11 @@ export class UserClient extends OpenPAIBaseClient {
      * @param token Specific an access token (optional).
      */
     public async updateExtension(userName: string, extension: {}, token?: string): Promise<any> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}/extension`);
-        if(token === undefined) {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}/extension`);
+        if (token === undefined) {
             token = await super.token();
         }
-        const res = await this.sendPutRequestWithToken(url, {extension}, token);
+        const res: any = await this.sendPutRequestWithToken(url, {extension}, token);
 
         return JSON.parse(res);
     }
@@ -126,11 +127,11 @@ export class UserClient extends OpenPAIBaseClient {
      * @param token Specific an access token (optional).
      */
     public async delete(userName: string, token?: string): Promise<any> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}`);
-        if(token === undefined) {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}`);
+        if (token === undefined) {
             token = await super.token();
         }
-        const res = await request.delete(url, {
+        const res: any = await request.delete(url, {
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -149,11 +150,11 @@ export class UserClient extends OpenPAIBaseClient {
      * @param token Specific an access token (optional).
      */
     public async updateVirtualcluster(userName: string, virtualCluster: string[], token?: string): Promise<any> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}/virtualcluster`);
-        if(token === undefined) {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}/virtualcluster`);
+        if (token === undefined) {
             token = await super.token();
         }
-        const res = await this.sendPutRequestWithToken(url, {virtualCluster}, token);
+        const res: any = await this.sendPutRequestWithToken(url, {virtualCluster}, token);
         return JSON.parse(res);
     }
 
@@ -165,11 +166,11 @@ export class UserClient extends OpenPAIBaseClient {
      * @param token Specific an access token (optional).
      */
     public async updatePassword(userName: string, oldPassword?: string, newPassword?: string, token?: string): Promise<any> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}/password`);
-        if(token === undefined) {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}/password`);
+        if (token === undefined) {
             token = await super.token();
         }
-        const res = await this.sendPutRequestWithToken(url, {oldPassword, newPassword}, token);
+        const res: any = await this.sendPutRequestWithToken(url, {oldPassword, newPassword}, token);
         return JSON.parse(res);
     }
 
@@ -180,11 +181,11 @@ export class UserClient extends OpenPAIBaseClient {
      * @param token Specific an access token (optional).
      */
     public async updateEmail(userName: string, email: string, token?: string): Promise<any> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}/email`);
-        if(token === undefined) {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}/email`);
+        if (token === undefined) {
             token = await super.token();
         }
-        const res = await this.sendPutRequestWithToken(url, {email}, token);
+        const res: any = await this.sendPutRequestWithToken(url, {email}, token);
         return JSON.parse(res);
     }
 
@@ -195,11 +196,11 @@ export class UserClient extends OpenPAIBaseClient {
      * @param token Specific an access token (optional).
      */
     public async updateAdminPermission(userName: string, admin: boolean, token?: string): Promise<any> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}/admin`);
-        if(token === undefined) {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}/admin`);
+        if (token === undefined) {
             token = await super.token();
         }
-        const res = await this.sendPutRequestWithToken(url, {admin}, token);
+        const res: any = await this.sendPutRequestWithToken(url, {admin}, token);
         return JSON.parse(res);
     }
 
@@ -210,11 +211,11 @@ export class UserClient extends OpenPAIBaseClient {
      * @param token Specific an access token (optional).
      */
     public async updateGroupList(userName: string, grouplist: string[], token?: string): Promise<any> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}/grouplist`);
-        if(token === undefined) {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}/grouplist`);
+        if (token === undefined) {
             token = await super.token();
         }
-        const res = await this.sendPutRequestWithToken(url, {grouplist}, token);
+        const res: any = await this.sendPutRequestWithToken(url, {grouplist}, token);
         return JSON.parse(res);
     }
 
@@ -225,11 +226,11 @@ export class UserClient extends OpenPAIBaseClient {
      * @param token Specific an access token (optional).
      */
     public async addGroup(userName: string, groupname: string, token?: string): Promise<any> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}/group`);
-        if(token === undefined) {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}/group`);
+        if (token === undefined) {
             token = await super.token();
         }
-        const res = await this.sendPutRequestWithToken(url, {groupname}, token);
+        const res: any = await this.sendPutRequestWithToken(url, {groupname}, token);
         return JSON.parse(res);
     }
 
@@ -240,11 +241,11 @@ export class UserClient extends OpenPAIBaseClient {
      * @param token Specific an access token (optional).
      */
     public async removeGroup(userName: string, groupname: string, token?: string): Promise<any> {
-        const url = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}/group`);
-        if(token === undefined) {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/user/${userName}/group`);
+        if (token === undefined) {
             token = await super.token();
         }
-        const res = await request.delete(url, {
+        const res: any = await request.delete(url, {
             body: JSON.stringify({groupname}),
             headers: {
                 Authorization: `Bearer ${token}`,

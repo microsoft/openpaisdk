@@ -15,48 +15,50 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+// tslint:disable-next-line:missing-jsdoc
 import * as chai from 'chai';
+import { expect } from 'chai';
 import * as dirtyChai from 'dirty-chai';
 import * as nock from 'nock';
 
-import { expect } from 'chai';
+import { IPAICluster } from '../../src';
 import { OpenPAIBaseClient } from '../../src/client/baseClient';
-import { IPAICluster } from '../../src/models/cluster';
 
-const testUri = 'openpai-js-sdk.test/rest-server';
+const testUri: string = 'openpai-js-sdk.test/rest-server';
 
 const cluster: IPAICluster = {
     password: 'test',
     rest_server_uri: testUri,
     username: 'test'
 };
-const baseClient = new OpenPAIBaseClient(cluster);
 
 chai.use(dirtyChai);
 
 describe('Get token', () => {
-    const response = {
+    const response: any = {
         token: 'eyJhb...'
     };
-    nock(`http://${testUri}`).post(`/api/v1/token`).reply(200, response);
+    before(() => nock(`http://${testUri}`).post('/api/v1/token').reply(200, response));
 
     it('should return a token', async () => {
-        const result = await baseClient.token();
+        const baseClient: OpenPAIBaseClient = new OpenPAIBaseClient(cluster);
+        const result: any = await baseClient.token();
         expect(result).to.be.a('string');
     });
 });
 
 describe('Get cluster info', () => {
-    const response = {
-        authnMethod: "basic",
-        launcherType: "yarn",
-        name: "PAI RESTful API",
-        version: "v0.14.0"
+    const response: any = {
+        authnMethod: 'basic',
+        launcherType: 'yarn',
+        name: 'PAI RESTful API',
+        version: 'v0.14.0'
     };
-    nock(`http://${testUri}`).get(`/api/v1/`).reply(200, response);
+    before(() => nock(`http://${testUri}`).get('/api/v1/').reply(200, response));
 
     it('should return the cluster info', async () => {
-        const result = await baseClient.getClusterInfo();
+        const baseClient: OpenPAIBaseClient = new OpenPAIBaseClient(cluster);
+        const result: any = await baseClient.getClusterInfo();
         expect(result).to.be.eql(response);
     });
 });

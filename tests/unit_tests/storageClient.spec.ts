@@ -15,89 +15,92 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+// tslint:disable-next-line:missing-jsdoc
 import * as chai from 'chai';
+import { expect } from 'chai';
 import * as dirtyChai from 'dirty-chai';
 import * as nock from 'nock';
 
-import { expect } from 'chai';
 import { StorageClient } from '../../src/client/storageClient';
 import { IPAICluster } from '../../src/models/cluster';
 import { IStorageConfig, IStorageServer } from '../../src/models/storage';
 
-const testUri = 'openpai-js-sdk.test/rest-server';
+const testUri: string = 'openpai-js-sdk.test/rest-server';
 
 const cluster: IPAICluster = {
     https: true,
     rest_server_uri: testUri,
-    token: 'token',
+    token: 'token'
 };
-const storageClient = new StorageClient(cluster);
 
 chai.use(dirtyChai);
-nock(`http://${testUri}`).post(`/api/v1/authn/basic/login`).reply(200, { token: 'token' });
+beforeEach(() => nock(`http://${testUri}`).post('/api/v1/authn/basic/login').reply(200, { token: 'token' }));
 
 describe('Get storage infomation by storage name', () => {
     const response: IStorageServer = {
-        'data': {
-            'test': 'test'
+        data: {
+            test: 'test'
         },
-        'extension': {},
-        'spn': 'test',
-        'type': 'azureblob'
+        extension: {},
+        spn: 'test',
+        type: 'azureblob'
     };
-    const testName = 'testStorage';
-    nock(`https://${testUri}`).get(`/api/v2/storage/server/${testName}`).reply(200, response);
+    const testName: string = 'testStorage';
+    before(() => nock(`https://${testUri}`).get(`/api/v2/storage/server/${testName}`).reply(200, response));
 
     it('should return the storage info', async () => {
-        const result = await storageClient.getServerByName(testName);
+        const storageClient: StorageClient = new StorageClient(cluster);
+        const result: any = await storageClient.getServerByName(testName);
         expect(result).to.be.eql(response);
     });
 });
 
 describe('Get storage information list', () => {
     const response: IStorageServer[] = [{
-        'data': {
-            'test': 'test'
+        data: {
+            test: 'test'
         },
-        'extension': {},
-        'spn': 'test',
-        'type': 'azureblob'
+        extension: {},
+        spn: 'test',
+        type: 'azureblob'
     }];
-    nock(`https://${testUri}`).get(`/api/v2/storage/server`).reply(200, response);
+    before(() => nock(`https://${testUri}`).get('/api/v2/storage/server').reply(200, response));
 
     it('should return the storage info', async () => {
-        const result = await storageClient.getServer();
+        const storageClient: StorageClient = new StorageClient(cluster);
+        const result: any = await storageClient.getServer();
         expect(result).to.be.eql(response);
     });
 });
 
 describe('Get storage config by storage name', () => {
     const response: IStorageConfig = {
-        "name": "PAI_SHARE",
-        "default": true,
-        "servers": [
-            "PAI_SHARE_SERVER"
+        name: 'PAI_SHARE',
+        default: true,
+        servers: [
+            'PAI_SHARE_SERVER'
         ],
-        "mountInfos": [
+        mountInfos: [
             {
-                "mountPoint": "/data",
-                "path": "data",
-                "server": "PAI_SHARE_SERVER",
-                "permission": "rw"
+                mountPoint: '/data',
+                path: 'data',
+                server: 'PAI_SHARE_SERVER',
+                permission: 'rw'
             },
             {
-                "mountPoint": "/home",
-                "path": "users/${PAI_USER_NAME}",
-                "server": "PAI_SHARE_SERVER",
-                "permission": "rw"
+                mountPoint: '/home',
+                path: 'users/\${PAI_USER_NAME}',
+                server: 'PAI_SHARE_SERVER',
+                permission: 'rw'
             }
         ]
-    }
-    const testName = 'testStorage';
-    nock(`https://${testUri}`).get(`/api/v2/storage/config/${testName}`).reply(200, response);
+    };
+    const testName: string = 'testStorage';
+    before(() => nock(`https://${testUri}`).get(`/api/v2/storage/config/${testName}`).reply(200, response));
 
     it('should return the storage info', async () => {
-        const result = await storageClient.getConfigByName(testName);
+        const storageClient: StorageClient = new StorageClient(cluster);
+        const result: any = await storageClient.getConfigByName(testName);
         expect(result).to.be.eql(response);
     });
 });
@@ -105,31 +108,32 @@ describe('Get storage config by storage name', () => {
 describe('Get storage config list', () => {
     const response: IStorageConfig[] = [
         {
-            "name": "PAI_SHARE",
-            "default": true,
-            "servers": [
-                "PAI_SHARE_SERVER"
+            name: 'PAI_SHARE',
+            default: true,
+            servers: [
+                'PAI_SHARE_SERVER'
             ],
-            "mountInfos": [
+            mountInfos: [
                 {
-                    "mountPoint": "/data",
-                    "path": "data",
-                    "server": "PAI_SHARE_SERVER",
-                    "permission": "rw"
+                    mountPoint: '/data',
+                    path: 'data',
+                    server: 'PAI_SHARE_SERVER',
+                    permission: 'rw'
                 },
                 {
-                    "mountPoint": "/home",
-                    "path": "users/${PAI_USER_NAME}",
-                    "server": "PAI_SHARE_SERVER",
-                    "permission": "rw"
+                    mountPoint: '/home',
+                    path: 'users/\${PAI_USER_NAME}',
+                    server: 'PAI_SHARE_SERVER',
+                    permission: 'rw'
                 }
             ]
         }
-    ]
-    nock(`https://${testUri}`).get(`/api/v2/storage/config`).reply(200, response);
+    ];
+    before(() => nock(`https://${testUri}`).get('/api/v2/storage/config').reply(200, response));
 
     it('should return the storage info', async () => {
-        const result = await storageClient.getConfig();
+        const storageClient: StorageClient = new StorageClient(cluster);
+        const result: any = await storageClient.getConfig();
         expect(result).to.be.eql(response);
     });
 });
