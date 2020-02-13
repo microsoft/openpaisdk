@@ -15,6 +15,7 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import { AzureBlobClient } from '..';
 import { IMountInfo, IStorageConfig, IStorageServer } from '../models/storage';
 import { IFileInfo, IStorageNode, IStorageNodeClient } from '../models/storageOperation';
 
@@ -40,8 +41,11 @@ export class StorageNode implements IStorageNode {
     public createClient(): IStorageNodeClient {
         if (this.type() === 'hdfs') {
             return new WebHdfsClient(this.config, this.server);
+        } else if (this.type() === 'azureblob') {
+            return new AzureBlobClient(this.config, this.server);
+        } else {
+            throw new Error(`Storage protocol ${this.type()} unsupported yet`);
         }
-        throw new Error(`Storage protocol ${this.type()} unsupported yet`);
     }
 
     public type(): string {
@@ -99,6 +103,10 @@ export class StorageNode implements IStorageNode {
     }
 
     public async deleteFolder(path: string): Promise<void> {
-        throw new Error('Method not implemented.');
+        if (this.type() === 'azureblob') {
+            return (<AzureBlobClient> this.client).deleteFolder(path);
+        } else {
+            throw new Error('Method not implemented.');
+        }
     }
 }
