@@ -103,9 +103,10 @@ export class StorageNode implements IStorageNode {
     }
 
     public async deleteFolder(path: string): Promise<void> {
-        if (this.type() === 'azureblob') {
-            return (<AzureBlobClient> this.client).deleteFolder(path);
+        if (this.client.deleteFolder) {
+            return this.client.deleteFolder(path);
         } else {
+            // TODO: handle deletion recursively here
             throw new Error('Method not implemented.');
         }
     }
