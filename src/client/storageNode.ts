@@ -95,11 +95,21 @@ export class StorageNode implements IStorageNode {
      * otherwise implement it recursively
      */
     public async uploadFolder(localPath: string, remotePath: string, opts?: {} | undefined): Promise<void> {
-        throw new Error('Method not implemented.');
+        if (this.client.uploadFolder) {
+            return this.client.uploadFolder(localPath, remotePath, opts);
+        } else {
+            // TODO: handle upload recursively here
+            throw new Error('Method not implemented.');
+        }
     }
 
     public async downloadFolder(remotePath: string, localPath: string, opts?: {} | undefined): Promise<void> {
-        throw new Error('Method not implemented.');
+        if (this.client.downloadFolder) {
+            return this.client.downloadFolder(remotePath, localPath, opts);
+        } else {
+            // TODO: handle download recursively here
+            throw new Error('Method not implemented.');
+        }
     }
 
     public async deleteFolder(path: string): Promise<void> {
