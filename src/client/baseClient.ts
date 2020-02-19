@@ -16,11 +16,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import * as request from 'request-promise-native';
+import { URL } from 'url';
 
 import { Util } from '../commom/util';
 import { ILoginInfo } from '../models/authn';
 import { IPAICluster, IPAIClusterInfo } from '../models/cluster';
 import { ITokenItem } from '../models/token';
+import { utils } from 'mocha';
 
 /**
  * OpenPAI basic client.
@@ -32,7 +34,28 @@ export class OpenPAIBaseClient {
     private cacheToken?: ITokenItem;
 
     constructor(cluster: IPAICluster) {
-        this.cluster = cluster;
+        this.cluster = OpenPAIBaseClient.parsePaiUri(cluster);
+    }
+
+    /**
+     * parse information from pai_uri
+     * refer to tests/unit_tests/baseClient.spec.ts
+     */
+
+    public static parsePaiUri(cluster: IPAICluster): IPAICluster {
+        if (cluster.pai_uri) {
+            let paiUri = new URL(Util.fixUrl(cluster.pai_uri!));
+            if (!cluster.https) {
+                cluster.https = paiUri.protocol == 'https:';
+            }
+            if (!cluster.rest_server_uri) {
+                cluster.rest_server_uri = paiUri.host + '/rest-server';
+            }
+            if (!cluster.alias) {
+                cluster.alias = paiUri.hostname;
+            }
+        }
+        return cluster;
     }
 
     /**

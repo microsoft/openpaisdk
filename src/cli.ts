@@ -17,4 +17,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // tslint:disable-next-line:missing-jsdoc
-console.log('hello, typescript');
+import * as argparse from 'argparse';
+
+interface IArgOpt {
+    name: string | string[];
+    options: argparse.ArgumentOptions;
+}
+
+class CLI {
+    public parser: argparse.ArgumentParser;
+    public subparsers: argparse.SubParser;
+    public executors: { [index: string]: () => {}; };
+    constructor() {
+        this.parser = new argparse.ArgumentParser({
+            version: '0.1',
+            addHelp: true,
+            description: 'command line tool for OpenPAI (github.com/microsoft/pai)'
+        });
+        this.subparsers = this.parser.addSubparsers({ title: 'subcommands' });
+        this.executors = {};
+    }
+
+    public registerCommand(subCommand: string, args: IArgOpt[], func: () => {}): void {
+        let parser = this.subparsers.addParser(subCommand, { addHelp: true });
+        for (const a of args) {
+            parser.addArgument(a.name, a.options);
+        }
+        this.executors[subCommand] = func;
+    }
+}
+
+let cli = new CLI();
+
+cli.registerCommand(
+    'list-cluster', [], async () => {
+
+    }
+);

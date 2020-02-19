@@ -9,6 +9,11 @@ export declare class OpenPAIBaseClient {
     private cacheToken?;
     constructor(cluster: IPAICluster);
     /**
+     * parse information from pai_uri
+     * refer to tests/unit_tests/baseClient.spec.ts
+     */
+    static parsePaiUri(cluster: IPAICluster): IPAICluster;
+    /**
      * Get OpenPAI access token, will call /api/v1/token.
      */
     token(): Promise<string>;
