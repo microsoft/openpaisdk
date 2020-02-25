@@ -19,10 +19,12 @@ declare type CommandCallback = (a: IArgument) => any;
 export declare class CliEngine {
     [index: string]: any;
     clusterConfigFile?: string;
-    parser: argparse.ArgumentParser;
-    subparsers: argparse.SubParser;
+    private parser;
+    private subparsers;
+    private formatters;
     constructor(clusterFile?: string);
     registerCommand(subCommand: ISubParserOptions, args: IArgumentOptions[], cb: CommandCallback, exclusiveArgs?: IExclusiveArgGroup[]): void;
-    execute(): void;
+    registerFormatter(name: string, cb: (result: object) => void): void;
+    evaluate(params?: string[], toScreen?: boolean): Promise<any>;
 }
 export {};

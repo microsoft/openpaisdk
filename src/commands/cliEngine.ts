@@ -17,6 +17,7 @@
 
 import * as argparse from 'argparse';
 import { Util } from '../commom/util';
+import { restore } from 'nock';
 
 interface ISubParserOptions extends argparse.SubArgumentParserOptions {
     name: string;
@@ -43,8 +44,9 @@ type CommandCallback = (a: IArgument) => any;
 export class CliEngine {
     [index: string]: any;
     public clusterConfigFile?: string;
-    public parser: argparse.ArgumentParser;
-    public subparsers: argparse.SubParser;
+    private parser: argparse.ArgumentParser;
+    private subparsers: argparse.SubParser;
+    private formatters: { [index: string]: (result: object) => void; } = {};
 
     constructor(clusterFile?: string) {
         if (clusterFile) {
@@ -84,24 +86,33 @@ export class CliEngine {
         CliEngine.prototype[cmd] = cb;
     }
 
-    public execute(): void {
-        let args = this.parser.parseArgs();
+    public registerFormatter(name: string, cb: (result: object) => void): void {
+        this.formatters[name] = (result) => {
+            cb(result);
+        };
+    }
+
+
+    public async evaluate(params?: string[], toScreen: boolean = false) {
+        let args = this.parser.parseArgs(params);
         let cmd = args.subcommand;
         delete args.subcommand;
-        try {
-            (async () => {
-                Util.debug(cmd, args);
-                let result = await Promise.resolve(this[cmd](args));
-                Util.debug('results received', result);
+        Util.debug(cmd, args);
+
+        let result = await Promise.resolve(this[cmd](args));
+        if (toScreen) {
+            Util.debug('results received', result);
+            if (cmd in this.formatters) {
+                this.formatters[cmd](result);
+            } else {
                 if (result != null) {
                     console.dir(result);
                 } else {
                     console.log();
                 }
-            })();
-        } catch (e) {
-            console.error(e);
+            }
         }
+        return result;
     }
 
 }
