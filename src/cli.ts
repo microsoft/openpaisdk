@@ -16,5 +16,15 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// tslint:disable-next-line:missing-jsdoc
-console.log('hello, typescript');
+import { CliEngine, registerBuiltinCommands } from './commands';
+
+const cli = new CliEngine(undefined);
+registerBuiltinCommands(cli);
+
+try {
+    (async () => {
+        await cli.evaluate(undefined, true);
+    })();
+} catch (e) {
+    console.error(e);
+}

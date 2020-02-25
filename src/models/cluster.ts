@@ -20,14 +20,14 @@
  */
 export interface IPAICluster {
     info?: IPAIClusterInfo;
+    alias?: string;
     username?: string;
     password?: string;
     token?: string;
     https?: boolean;
+    pai_uri?: string;
     rest_server_uri?: string;
-    webhdfs_uri?: string;
     grafana_uri?: string;
-    hdfs_uri?: string;
     k8s_dashboard_uri?: string;
     web_portal_uri?: string;
     protocol_version?: string;

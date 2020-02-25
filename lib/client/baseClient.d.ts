@@ -9,6 +9,11 @@ export declare class OpenPAIBaseClient {
     private cacheToken?;
     constructor(cluster: IPAICluster);
     /**
+     * parse information from pai_uri
+     * refer to tests/unit_tests/baseClient.spec.ts
+     */
+    static parsePaiUri(cluster: IPAICluster): IPAICluster;
+    /**
      * Get OpenPAI access token, will call /api/v1/token.
      */
     token(): Promise<string>;
@@ -17,7 +22,16 @@ export declare class OpenPAIBaseClient {
      */
     login(): Promise<ILoginInfo>;
     /**
-     * Get OpenPAI cluster info, will call /api/v1.
+     * get cluster configuration / info
      */
-    getClusterInfo(): Promise<IPAIClusterInfo>;
+    config: {
+        /**
+         * username from cluster config
+         */
+        username: () => string | undefined;
+        /**
+         * Get OpenPAI cluster info, will call /api/v1.
+         */
+        clusterInfo: () => Promise<IPAIClusterInfo>;
+    };
 }

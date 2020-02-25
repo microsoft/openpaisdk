@@ -58,7 +58,22 @@ describe('Get cluster info', () => {
 
     it('should return the cluster info', async () => {
         const baseClient: OpenPAIBaseClient = new OpenPAIBaseClient(cluster);
-        const result: any = await baseClient.getClusterInfo();
+        const result: any = await baseClient.config.clusterInfo();
         expect(result).to.be.eql(response);
+    });
+});
+
+describe('parse uri', () => {
+    it('should parse pai uri', () => {
+        let check = (input: IPAICluster, expected: IPAICluster) => {
+            const result = OpenPAIBaseClient.parsePaiUri(input);
+            expect(result).to.be.eql(expected);
+        };
+        check({ pai_uri: 'https://test.uri/' }, { pai_uri: 'https://test.uri/', alias: 'test.uri', rest_server_uri: 'test.uri/rest-server', https: true });
+        check({ pai_uri: 'http://test.uri/' }, { pai_uri: 'http://test.uri/', alias: 'test.uri', rest_server_uri: 'test.uri/rest-server', https: false });
+        check({ pai_uri: 'test.uri/' }, { pai_uri: 'test.uri/', alias: 'test.uri', rest_server_uri: 'test.uri/rest-server', https: false });
+        check({ pai_uri: 'test.uri/', alias: 'test' }, { pai_uri: 'test.uri/', alias: 'test', rest_server_uri: 'test.uri/rest-server', https: false });
+        check({ pai_uri: 'test.uri/', alias: 'test', rest_server_uri: '' }, { pai_uri: 'test.uri/', alias: 'test', rest_server_uri: 'test.uri/rest-server', https: false });
+        check({ pai_uri: 'test.uri:8080/' }, { pai_uri: 'test.uri:8080/', alias: 'test.uri', rest_server_uri: 'test.uri:8080/rest-server', https: false });
     });
 });
