@@ -26,8 +26,19 @@ export const registerJobCommands = (cli: CliEngine) => {
         ],
         async (a) => {
             let client = await getClusterClient(cli, a.alias);
-            return client.job.list();
-        }
+            if (a.all) {
+                return client.job.list();
+            }
+            return client.job.list(`username=${a.user || client.config.username()}`);
+        },
+        [
+            {
+                args: [
+                    { name: ['--user', '-u'], help: 'username (default is user in cluster config)' },
+                    { name: ['--all', '-a'], help: 'list jobs from all users', action: 'storeTrue' }
+                ]
+            }
+        ]
     );
 
 };

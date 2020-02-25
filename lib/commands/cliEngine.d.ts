@@ -5,6 +5,10 @@ interface ISubParserOptions extends argparse.SubArgumentParserOptions {
 interface IArgumentOptions extends argparse.ArgumentOptions {
     name: string | string[];
 }
+interface IExclusiveArgGroup {
+    required?: boolean;
+    args: IArgumentOptions[];
+}
 /**
  * fix error TS2339: Property 'xxx' does not exist on type 'Namespace'.
  */
@@ -18,7 +22,7 @@ export declare class CliEngine {
     parser: argparse.ArgumentParser;
     subparsers: argparse.SubParser;
     constructor(clusterFile?: string);
-    registerCommand(subCommand: ISubParserOptions, args: IArgumentOptions[], cb: CommandCallback): void;
+    registerCommand(subCommand: ISubParserOptions, args: IArgumentOptions[], cb: CommandCallback, exclusiveArgs?: IExclusiveArgGroup[]): void;
     execute(): void;
 }
 export {};

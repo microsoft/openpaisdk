@@ -22,7 +22,16 @@ export declare class OpenPAIBaseClient {
      */
     login(): Promise<ILoginInfo>;
     /**
-     * Get OpenPAI cluster info, will call /api/v1.
+     * get cluster configuration / info
      */
-    getClusterInfo(): Promise<IPAIClusterInfo>;
+    config: {
+        /**
+         * username from cluster config
+         */
+        username: () => string | undefined;
+        /**
+         * Get OpenPAI cluster info, will call /api/v1.
+         */
+        clusterInfo: () => Promise<IPAIClusterInfo>;
+    };
 }

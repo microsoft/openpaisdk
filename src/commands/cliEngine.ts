@@ -26,6 +26,11 @@ interface IArgumentOptions extends argparse.ArgumentOptions {
     name: string | string[];
 }
 
+interface IExclusiveArgGroup {
+    required?: boolean;
+    args: IArgumentOptions[];
+}
+
 /**
  * fix error TS2339: Property 'xxx' does not exist on type 'Namespace'.
  */
@@ -53,17 +58,28 @@ export class CliEngine {
         this.subparsers = this.parser.addSubparsers({ title: 'commands', dest: 'subcommand' });
     }
 
-    public registerCommand(subCommand: ISubParserOptions, args: IArgumentOptions[], cb: CommandCallback): void {
+    public registerCommand(subCommand: ISubParserOptions, args: IArgumentOptions[], cb: CommandCallback, exclusiveArgs?: IExclusiveArgGroup[]): void {
+        const addArgument = (ps: argparse.ArgumentParser | argparse.ArgumentGroup, a: IArgumentOptions) => {
+            let name = a.name;
+            delete a.name;
+            ps.addArgument(name, a as argparse.ArgumentOptions);
+        };
         let cmd = subCommand.name;
         delete subCommand.name;
         if (subCommand.addHelp == null) { // null or undefined
             subCommand.addHelp = true;
         }
         let parser = this.subparsers.addParser(cmd, subCommand);
-        for (const a of args) {
-            let name = a.name;
-            delete a.name;
-            parser.addArgument(name, a as argparse.ArgumentOptions);
+        for (const arg of args) {
+            addArgument(parser, arg);
+        }
+        if (exclusiveArgs) {
+            for (const g of exclusiveArgs) {
+                let group = parser.addMutuallyExclusiveGroup({ required: g.required || false });
+                for (const arg of g.args) {
+                    addArgument(group, arg);
+                }
+            }
         }
         CliEngine.prototype[cmd] = cb;
     }

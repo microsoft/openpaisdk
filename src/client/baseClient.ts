@@ -93,11 +93,23 @@ export class OpenPAIBaseClient {
     }
 
     /**
-     * Get OpenPAI cluster info, will call /api/v1.
+     * get cluster configuration / info
      */
-    public async getClusterInfo(): Promise<IPAIClusterInfo> {
-        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/`);
-        const res: any = await request.get(url);
-        return JSON.parse(res);
-    }
+    public config = {
+        /**
+         * username from cluster config
+         */
+        username: () => {
+            return this.cluster.username;
+        },
+
+        /**
+         * Get OpenPAI cluster info, will call /api/v1.
+         */
+        clusterInfo: async (): Promise<IPAIClusterInfo> => {
+            const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/`);
+            const res: any = await request.get(url);
+            return JSON.parse(res);
+        }
+    };
 }

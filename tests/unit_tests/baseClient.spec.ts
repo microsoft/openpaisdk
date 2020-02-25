@@ -58,7 +58,7 @@ describe('Get cluster info', () => {
 
     it('should return the cluster info', async () => {
         const baseClient: OpenPAIBaseClient = new OpenPAIBaseClient(cluster);
-        const result: any = await baseClient.getClusterInfo();
+        const result: any = await baseClient.config.clusterInfo();
         expect(result).to.be.eql(response);
     });
 });
