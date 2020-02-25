@@ -15,6 +15,7 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import { AzureBlobClient } from '..';
 import { IMountInfo, IStorageConfig, IStorageServer } from '../models/storage';
 import { IFileInfo, IStorageNode, IStorageNodeClient } from '../models/storageOperation';
 
@@ -40,8 +41,11 @@ export class StorageNode implements IStorageNode {
     public createClient(): IStorageNodeClient {
         if (this.type() === 'hdfs') {
             return new WebHdfsClient(this.config, this.server);
+        } else if (this.type() === 'azureblob') {
+            return new AzureBlobClient(this.config, this.server);
+        } else {
+            throw new Error(`Storage protocol ${this.type()} unsupported yet`);
         }
-        throw new Error(`Storage protocol ${this.type()} unsupported yet`);
     }
 
     public type(): string {
@@ -91,14 +95,29 @@ export class StorageNode implements IStorageNode {
      * otherwise implement it recursively
      */
     public async uploadFolder(localPath: string, remotePath: string, opts?: {} | undefined): Promise<void> {
-        throw new Error('Method not implemented.');
+        if (this.client.uploadFolder) {
+            return this.client.uploadFolder(localPath, remotePath, opts);
+        } else {
+            // TODO: handle upload recursively here
+            throw new Error('Method not implemented.');
+        }
     }
 
     public async downloadFolder(remotePath: string, localPath: string, opts?: {} | undefined): Promise<void> {
-        throw new Error('Method not implemented.');
+        if (this.client.downloadFolder) {
+            return this.client.downloadFolder(remotePath, localPath, opts);
+        } else {
+            // TODO: handle download recursively here
+            throw new Error('Method not implemented.');
+        }
     }
 
     public async deleteFolder(path: string): Promise<void> {
-        throw new Error('Method not implemented.');
+        if (this.client.deleteFolder) {
+            return this.client.deleteFolder(path);
+        } else {
+            // TODO: handle deletion recursively here
+            throw new Error('Method not implemented.');
+        }
     }
 }

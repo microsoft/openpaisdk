@@ -22,7 +22,7 @@ export interface IStorageServer {
     spn: string;
     type: 'nfs' | 'samba' | 'azurefile' | 'azureblob' | 'hdfs' | 'other';
     data: {
-        [prop: string]: string;
+        [prop: string]: any;
     };
     extension: any;
 }
