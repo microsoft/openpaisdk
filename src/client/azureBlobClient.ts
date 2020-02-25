@@ -75,10 +75,10 @@ export class AzureBlobClient implements IStorageNodeClient {
             new StorageSharedKeyCredential(server.data.accountName, server.data.key);
         const blobClient: BlobServiceClient = new BlobServiceClient(
             `https://${server.data.accountName}.blob.core.windows.net`, credential);
+        this.client = blobClient.getContainerClient(server.data.containerName);
 
         this.config = config;
         this.server = server;
-        this.client = blobClient.getContainerClient(server.data.containerName);
     }
 
     /**

@@ -41,10 +41,10 @@ beforeEach(() => {
             spn: 'SRV_AB',
             type: 'azureblob',
             data: {
-                dataStore: '',
-                containerName: '',
-                accountName: '',
-                key: '',
+                dataStore: 'dataStore',
+                containerName: 'containerName',
+                accountName: 'accountName',
+                key: 'key',
                 extension: {}
             },
             extension: {}
@@ -53,10 +53,23 @@ beforeEach(() => {
 });
 
 describe('Get status of a path', () => {
-    before(() => nock(`http://${testUri}`).get('/api/v1/authn/info').reply(200));
-
     const filePath: string = 'users/yiyi/folder/natives_blob.bin';
     const folderPath: string = 'users/yiyi/folder';
+    const response: string = '<?xml version="1.0" encoding="utf-8"?>' +
+        '<EnumerationResults>' +
+        '<Blobs><Blob><Name>users/yiyi/folder/natives_blob.bin</Name></Blob></Blobs><NextMarker />' +
+        '</EnumerationResults>';
+
+    before(() => {
+        nock(`http://${testUri}`).get('/api/v1/authn/info').reply(200);
+        nock('https://accountname.blob.core.windows.net')
+            .head('/containerName/users%2Fyiyi%2Ffolder%2Fnatives_blob.bin')
+            .reply(200)
+            .head('/containerName/users%2Fyiyi%2Ffolder')
+            .reply(404, '', {'x-ms-error-code': 'BlobNotFound'})
+            .get('/containerName?prefix=users%2Fyiyi%2Ffolder%2F&delimiter=%2F&maxresults=1&include=metadata&restype=container&comp=list')
+            .reply(200, response, {'Content-Type': 'application/xml'});
+    });
 
     // tslint:disable-next-line:mocha-no-side-effect-code
     it('should be a file', async () => {
@@ -74,6 +87,22 @@ describe('Get status of a path', () => {
 describe('List directory of a path', () => {
     const folderPath1: string = 'users/yiyi/folder';
     const folderPath2: string = 'users/yiyi/test';
+    const response: string = '<?xml version="1.0" encoding="utf-8"?>' +
+        '<EnumerationResults>' +
+        '<Blobs><Blob><Name>users/yiyi/folder/natives_blob.bin</Name></Blob></Blobs><NextMarker />' +
+        '</EnumerationResults>';
+    const empty: string = '<?xml version="1.0" encoding="utf-8"?>' +
+        '<EnumerationResults>' +
+        '<Blobs /><NextMarker />' +
+        '</EnumerationResults>';
+
+    before(() => {
+        nock('https://accountname.blob.core.windows.net')
+            .get('/containerName?prefix=users%2Fyiyi%2Ffolder%2F&delimiter=%2F&maxresults=20&include=metadata&restype=container&comp=list')
+            .reply(200, response, {'Content-Type': 'application/xml'})
+            .get('/containerName?prefix=users%2Fyiyi%2Ftest%2F&delimiter=%2F&maxresults=20&include=metadata&restype=container&comp=list')
+            .reply(200, empty, {'Content-Type': 'application/xml'});
+    });
 
     // tslint:disable-next-line:mocha-no-side-effect-code
     it('should return a list', async () => {
@@ -89,6 +118,23 @@ describe('List directory of a path', () => {
 });
 
 describe('Create folder and delete', () => {
+    const response: string = '<?xml version="1.0" encoding="utf-8"?>' +
+        '<EnumerationResults>' +
+        '<Blobs><Blob><Name>users/yiyi/testFolder</Name></Blob></Blobs><NextMarker />' +
+        '</EnumerationResults>';
+    const empty: string = '<?xml version="1.0" encoding="utf-8"?>' +
+        '<EnumerationResults>' +
+        '<Blobs /><NextMarker />' +
+        '</EnumerationResults>';
+
+    before(() => {
+        nock('https://accountname.blob.core.windows.net')
+            .put('/containerName/users%2Fyiyi%2FtestFolder')
+            .reply(201)
+            .get('/containerName?prefix=users%2Fyiyi%2F&delimiter=%2F&maxresults=20&include=metadata&restype=container&comp=list')
+            .reply(200, response, {'Content-Type': 'application/xml'});
+    });
+
     const folderPath: string = 'users/yiyi/testFolder';
 
     // tslint:disable-next-line:mocha-no-side-effect-code
@@ -97,6 +143,12 @@ describe('Create folder and delete', () => {
         let list: string[] = await client.listdir(path.dirname(folderPath));
 
         expect(list).contain(path.basename(folderPath));
+
+        nock('https://accountname.blob.core.windows.net')
+            .delete('/containerName/users%2Fyiyi%2FtestFolder')
+            .reply(202)
+            .get('/containerName?prefix=users%2Fyiyi%2F&delimiter=%2F&maxresults=20&include=metadata&restype=container&comp=list')
+            .reply(200, empty, {'Content-Type': 'application/xml'});
 
         await client.delete(folderPath);
         list = await client.listdir(path.dirname(folderPath));
@@ -108,6 +160,18 @@ describe('Upload and download', () => {
     const localPath: string = 'E:/Repos/Projects/pai-jobs/test.py';
     const newLocalPath: string = 'E:/Repos/Projects/pai-jobs/new_test.py';
     const filePath: string = 'users/yiyi/test_upload_download.py';
+
+    before(() => {
+        nock('https://accountname.blob.core.windows.net')
+            .put('/containerName/users%2Fyiyi%2Ftest_upload_download.py')
+            .reply(201)
+            .get('/containerName/users%2Fyiyi%2Ftest_upload_download.py')
+            .reply(200, 'print(\'hello kitty\')', {
+                'Content-Type': 'application/octet-stream',
+                'Content-Length': [ '20' ],
+                ETag: '0x8D7B9FC84AD5D1F'
+            });
+    });
 
     // tslint:disable-next-line:mocha-no-side-effect-code
     it('should upload a file and download it', async () => {
