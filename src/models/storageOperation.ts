@@ -62,4 +62,8 @@ export interface IStorageNodeClient {
     upload(localPath: string, remotePath: string, opts?: {}): Promise<void>;
     download(remotePath: string, localPath: string, opts?: {}): Promise<void>;
     delete(path: string): Promise<void>;
+
+    uploadFolder?(localPath: string, remotePath: string, opts?: {}): Promise<void>;
+    downloadFolder?(remotePath: string, localPath: string, opts?: {}): Promise<void>;
+    deleteFolder?(path: string): Promise<void>;
 }
