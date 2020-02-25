@@ -1,2 +1,3 @@
 #!/usr/bin/env node
-export {};
+import { CliEngine } from './commands/cliEngine';
+export declare const registerBuiltinCommands: (cli: CliEngine) => void;

@@ -16,41 +16,18 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-// tslint:disable-next-line:missing-jsdoc
-import * as argparse from 'argparse';
+import { CliEngine } from './commands/cliEngine';
+import { registerClusterCommands } from './commands/clusterCommands';
+import { registerJobCommands } from './commands/jobCommands';
+import { Util } from './commom/util';
 
-interface IArgOpt {
-    name: string | string[];
-    options: argparse.ArgumentOptions;
-}
+export const registerBuiltinCommands = (cli: CliEngine) => {
+    registerClusterCommands(cli);
+    registerJobCommands(cli);
+};
 
-class CLI {
-    public parser: argparse.ArgumentParser;
-    public subparsers: argparse.SubParser;
-    public executors: { [index: string]: () => {}; };
-    constructor() {
-        this.parser = new argparse.ArgumentParser({
-            version: '0.1',
-            addHelp: true,
-            description: 'command line tool for OpenPAI (github.com/microsoft/pai)'
-        });
-        this.subparsers = this.parser.addSubparsers({ title: 'subcommands' });
-        this.executors = {};
-    }
 
-    public registerCommand(subCommand: string, args: IArgOpt[], func: () => {}): void {
-        let parser = this.subparsers.addParser(subCommand, { addHelp: true });
-        for (const a of args) {
-            parser.addArgument(a.name, a.options);
-        }
-        this.executors[subCommand] = func;
-    }
-}
-
-let cli = new CLI();
-
-cli.registerCommand(
-    'list-cluster', [], async () => {
-
-    }
-);
+let cli = new CliEngine(undefined);
+// Util.debugMode = true;
+registerBuiltinCommands(cli);
+cli.execute();

@@ -15,34 +15,19 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import { IPAICluster } from '../models/cluster';
-import { OpenPAIClient } from './openPAIClient';
-import { dirname } from 'path';
-import * as fs from 'fs-extra';
+import { CliEngine } from "./cliEngine";
+import { getClusterClient } from "./clusterCommands";
 
-export class LocalClustersManager {
-    public clustersFilePath: string = '~/openpai/clusters.json';
-    public clusters: IPAICluster[] = [];
-
-    constructor(pth?: string | undefined, clusters?: IPAICluster[] | undefined) {
-        if (pth) {
-            this.clustersFilePath = pth;
+export const registerJobCommands = (cli: CliEngine) => {
+    cli.registerCommand(
+        { name: 'listj', help: 'list jobs', aliases: ['list-jobs'] },
+        [
+            { name: 'alias', help: 'cluster alias' },
+        ],
+        async (a) => {
+            let client = await getClusterClient(cli, a.alias);
+            return client.job.list();
         }
-        if (clusters) {
-            this.clusters = clusters;
-        }
-    }
+    );
 
-    public async load(): Promise<void> {
-        if (fs.existsSync(this.clustersFilePath)) {
-            this.clusters = await fs.readJson(this.clustersFilePath);
-        }
-    }
-
-    public async store(): Promise<void> {
-        let folder: string = dirname(this.clustersFilePath);
-        await fs.ensureDir(dirname(this.clustersFilePath));
-        await fs.writeJSON(this.clustersFilePath, this.clusters);
-    }
-
-}
+};
