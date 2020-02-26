@@ -51,7 +51,7 @@ const notEmpty = (result: any) => {
 };
 
 const testCases = [
-    { name: 'listc', command: ['listc'], checkers: [notEmpty, (r: any) => expect(r.alias).is.equal(F.alias)] },
+    { name: 'listc', command: ['listc'], checkers: [notEmpty, (r: any) => expect(r[0].alias).is.equal(F.alias)] },
     { name: 'list all jobs', command: ['listj', F.alias, '-a'], checkers: [notEmpty], dependencies: [F.listJobs] },
     { name: 'list your own jobs', command: ['listj', F.alias], checkers: [notEmpty], dependencies: [F.listJobsQuery] }
 ];

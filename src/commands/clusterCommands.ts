@@ -83,6 +83,19 @@ export const registerClusterCommands = (cli: CliEngine) => {
             await manager.store();
         }
     );
+
+    cli.registerCommand(
+        { name: 'delc', help: 'delete cluster' },
+        [
+            { name: 'alias', help: 'alias to remove' }
+        ],
+        async (a) => {
+            let manager = new LocalClustersManager(cli.clusterConfigFile);
+            await manager.load();
+            manager.remove(a.alias);
+            await manager.store();
+        }
+    );
 };
 
 export const getClusterConfig = async (cli: CliEngine, alias: string): Promise<IPAICluster> => {

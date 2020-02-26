@@ -15,14 +15,30 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import { CliEngine } from './cliEngine';
-import { registerClusterCommands } from './clusterCommands';
-import { registerJobCommands } from './jobCommands';
-import { registerStorageCommands } from './storageCommands';
+import { CliEngine } from "./cliEngine";
+import { getClusterClient } from "./clusterCommands";
 
-const registerBuiltinCommands = (cli: CliEngine) => {
-    registerClusterCommands(cli);
-    registerJobCommands(cli);
-    registerStorageCommands(cli);
+export const registerStorageCommands = (cli: CliEngine) => {
+    cli.registerCommand(
+        { name: 'lists', help: 'list storages', aliases: ['list-storages'] },
+        [
+            { name: 'alias', help: 'cluster alias' },
+        ],
+        async (a) => {
+            let client = await getClusterClient(cli, a.alias);
+            return client.storage.getStorages();
+        }
+    );
+
+    cli.registerCommand(
+        { name: 'getinfo', help: 'get info of destination path in storage' },
+        [
+            { name: 'alias', help: 'cluster alias' },
+            { name: 'storage', help: 'storage name' }
+        ],
+        async (a) => {
+            let client = await getClusterClient(cli, a.alias);
+            return client.storage.getStorageByName(a.storage);
+        }
+    );
 };
-export { CliEngine, registerBuiltinCommands };

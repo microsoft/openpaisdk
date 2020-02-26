@@ -42,10 +42,10 @@ interface IArgument extends argparse.Namespace {
 type CommandCallback = (a: IArgument) => any;
 
 export class CliEngine {
-    [index: string]: any;
     public clusterConfigFile?: string;
     private parser: argparse.ArgumentParser;
     private subparsers: argparse.SubParser;
+    private executors: { [index: string]: CommandCallback; } = {};
     private formatters: { [index: string]: (result: object) => void; } = {};
 
     constructor(clusterFile?: string) {
@@ -83,7 +83,7 @@ export class CliEngine {
                 }
             }
         }
-        CliEngine.prototype[cmd] = cb;
+        this.executors[cmd] = cb;
     }
 
     public registerFormatter(name: string, cb: (result: object) => void): void {
@@ -99,7 +99,7 @@ export class CliEngine {
         delete args.subcommand;
         Util.debug(cmd, args);
 
-        let result = await Promise.resolve(this[cmd](args));
+        let result = await Promise.resolve(this.executors[cmd](args));
         if (toScreen) {
             Util.debug('results received', result);
             if (cmd in this.formatters) {

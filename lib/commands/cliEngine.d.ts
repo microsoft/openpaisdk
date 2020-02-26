@@ -17,10 +17,10 @@ interface IArgument extends argparse.Namespace {
 }
 declare type CommandCallback = (a: IArgument) => any;
 export declare class CliEngine {
-    [index: string]: any;
     clusterConfigFile?: string;
     private parser;
     private subparsers;
+    private executors;
     private formatters;
     constructor(clusterFile?: string);
     registerCommand(subCommand: ISubParserOptions, args: IArgumentOptions[], cb: CommandCallback, exclusiveArgs?: IExclusiveArgGroup[]): void;

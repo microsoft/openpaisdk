@@ -22,3 +22,27 @@ export interface IMountInfo {
     path: string;
     permission?: string;
 }
+export interface IStorageSummaryItem {
+    name: string;
+    share: boolean;
+    volumeName: string;
+}
+export interface IStorageSummary {
+    storages: IStorageSummaryItem[];
+}
+export interface IStorageDetail extends IStorageSummaryItem {
+    type?: 'nfs' | 'samba' | 'azureFile' | 'azureBlob' | 'other' | 'unknown';
+    data?: {
+        server?: string;
+        path?: string;
+        address?: string;
+        username?: string;
+        password?: string;
+        shareName?: string;
+        containerName?: string;
+        accountName?: string;
+        accountKey?: string;
+    };
+    secretName?: string;
+    mountOptions?: string[];
+}
