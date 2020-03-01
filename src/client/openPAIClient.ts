@@ -24,6 +24,7 @@ import { StorageClient } from './storageClient';
 import { StorageOperation } from './storageOperation';
 import { UserClient } from './userClient';
 import { VirtualClusterClient } from './virtualClusterClient';
+import { CacheClient, ICacheRecord } from './cacheClient';
 
 /**
  * OpenPAI Client.
@@ -55,17 +56,27 @@ export class OpenPAIClient extends OpenPAIBaseClient {
     public storage: StorageClient;
 
     /**
+     * OpenPAI cluster cache client
+     */
+    public cache: CacheClient;
+
+    /**
      * OpenPAI Storage Operation
      */
     public storageOperation: StorageOperation;
 
-    constructor(cluster: IPAICluster) {
+    constructor(cluster: IPAICluster, cache?: ICacheRecord[]) {
         super(cluster);
         this.job = new JobClient(cluster);
         this.user = new UserClient(cluster);
         this.virtualCluster = new VirtualClusterClient(cluster);
         this.authn = new AuthnClient(cluster);
         this.storage = new StorageClient(cluster);
+
+        this.cache = new CacheClient(cache);
+        this.cache.delegate(this.storage, this.storage.getStorages);
+        this.cache.delegate(this.storage, this.storage.getStorageByName);
+
         this.storageOperation = new StorageOperation(this.storage);
     }
 }

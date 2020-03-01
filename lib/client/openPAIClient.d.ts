@@ -6,6 +6,7 @@ import { StorageClient } from './storageClient';
 import { StorageOperation } from './storageOperation';
 import { UserClient } from './userClient';
 import { VirtualClusterClient } from './virtualClusterClient';
+import { CacheClient, ICacheRecord } from './cacheClient';
 /**
  * OpenPAI Client.
  */
@@ -31,8 +32,12 @@ export declare class OpenPAIClient extends OpenPAIBaseClient {
      */
     storage: StorageClient;
     /**
+     * OpenPAI cluster cache client
+     */
+    cache: CacheClient;
+    /**
      * OpenPAI Storage Operation
      */
     storageOperation: StorageOperation;
-    constructor(cluster: IPAICluster);
+    constructor(cluster: IPAICluster, cache?: ICacheRecord[]);
 }

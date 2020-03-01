@@ -17,13 +17,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import { CliEngine, registerBuiltinCommands } from './commands';
-
-const cli = new CliEngine(undefined);
-registerBuiltinCommands(cli);
+import * as path from 'path';
+import { Util } from './commom/util';
 
 try {
     (async () => {
-        await cli.evaluate(undefined, true);
+        Util.debugMode = true;
+        const cli = new CliEngine();
+        registerBuiltinCommands(cli);
+        await cli.load();
+        let result = await cli.evaluate();
+        cli.toScreen(result);
+        await cli.store();
     })();
 } catch (e) {
     console.error(e);

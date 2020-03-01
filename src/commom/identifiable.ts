@@ -19,19 +19,26 @@
 /**
  * the container for identifiable objects(:T) with unique ID (:U)
  */
-export class Identifiable<T, U> {
-    public data: Array<T> = [];
-    public uidOf: (element: T) => U;
-    public uidEq: (element: T, uid: U) => boolean;
+export abstract class Identifiable<T, U> {
+    protected data: Array<T> = [];
+    protected abstract uidOf(element: T): U;
 
-    constructor(funcGetUid: (element: T) => U, data?: T[]) {
-        this.uidOf = funcGetUid;
-        this.uidEq = (element: T, uid: U) => {
-            return this.uidOf(element) == uid;
-        };
+    protected uidEq(element: T, uid: U): boolean {
+        return this.uidOf(element) == uid;
+    }
+
+    constructor(data?: T[]) {
         if (data) {
             this.data = data;
         }
+    }
+
+    public getData = () => this.data;
+    public copyData(data: T[]) {
+        this.data = JSON.parse(JSON.stringify(data));
+    }
+    public assignData(data: T[]) {
+        Object.assign(this.data, data);
     }
 
     public identities(): Array<U> {
@@ -52,11 +59,20 @@ export class Identifiable<T, U> {
         return undefined;
     }
 
-    public add(element: T): void {
-        if (this.indexOf(this.uidOf(element)) > -1) {
+    public add(element: T, denyIfExists: boolean = false): void {
+        const uid = this.uidOf(element);
+        if (uid == null) {
+            throw new Error(`UnIdentifiable`);
+        }
+        const idx = this.indexOf(uid);
+        if (denyIfExists && idx > -1) {
             throw new Error(`AlreadyExists: of ${this.uidOf(element)}`);
         }
-        this.data.push(element);
+        if (idx == -1) {
+            this.data.push(element);
+        } else {
+            this.data[idx] = element;
+        }
     }
 
     public remove(uid: U): void {

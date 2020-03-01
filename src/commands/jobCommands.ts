@@ -16,7 +16,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import { CliEngine } from "./cliEngine";
-import { getClusterClient } from "./clusterCommands";
 
 export const registerJobCommands = (cli: CliEngine) => {
     cli.registerCommand(
@@ -25,7 +24,7 @@ export const registerJobCommands = (cli: CliEngine) => {
             { name: 'alias', help: 'cluster alias' },
         ],
         async (a) => {
-            let client = await getClusterClient(cli, a.alias);
+            let client = cli.manager.getClusterClient(a.alias);
             if (a.all) {
                 return client.job.list();
             }

@@ -16,54 +16,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import { CliEngine } from './cliEngine';
-import { OpenPAIBaseClient } from '../client/baseClient';
 import { IPAICluster, OpenPAIClient } from '..';
-
-import { Util } from '../commom/util';
-import { Identifiable } from '../commom/identifiable';
-import { dirname } from 'path';
-import * as fs from 'fs-extra';
-import { MINIMAL_SCHEMA } from 'js-yaml';
-
-export class LocalClustersManager extends Identifiable<IPAICluster, string> {
-    public clustersFilePath: string = '~/.openpai/clusters.json';
-
-    constructor(pth?: string | undefined, clusters?: IPAICluster[] | undefined) {
-        super((a: IPAICluster) => {
-            return a.alias!;
-        }, clusters);
-        this.clustersFilePath = Util.expandUser(pth ? pth : this.clustersFilePath);
-    }
-
-    public async load(): Promise<void> {
-        try {
-            Util.debug(`try to load clusters from ${this.clustersFilePath}`);
-            this.data = await fs.readJson(this.clustersFilePath);
-            Util.debug(undefined, this.data);
-        } catch (e) {
-            console.warn((e as Error).message);
-        }
-    }
-
-    public async store(): Promise<void> {
-        Util.debug(undefined, this.data);
-        Util.debug(`try to save clusters to ${this.clustersFilePath}`);
-        let folder: string = dirname(this.clustersFilePath);
-        await fs.ensureDir(dirname(this.clustersFilePath));
-        await fs.writeJSON(this.clustersFilePath, this.data);
-        Util.debug(`saved to ${this.clustersFilePath}`);
-    }
-
-}
 
 export const registerClusterCommands = (cli: CliEngine) => {
     cli.registerCommand(
         { name: 'listc', help: 'list clusters' },
         [],
-        async (a) => {
-            let manager = new LocalClustersManager(cli.clusterConfigFile);
-            await manager.load();
-            return manager.data;
+        (a) => {
+            const result = cli.manager.getData();
+            return result.map((a) => a.cluster);
         }
     );
 
@@ -75,12 +36,8 @@ export const registerClusterCommands = (cli: CliEngine) => {
             { name: 'token' },
             { name: ['--alias', '-a'], help: 'cluster alias' }
         ],
-        async (a) => {
-            let manager = new LocalClustersManager(cli.clusterConfigFile);
-            await manager.load();
-            let cluster = OpenPAIBaseClient.parsePaiUri(a as IPAICluster);
-            manager.add(cluster);
-            await manager.store();
+        (a) => {
+            cli.manager.add({ cluster: OpenPAIClient.parsePaiUri(a as IPAICluster) });
         }
     );
 
@@ -89,26 +46,8 @@ export const registerClusterCommands = (cli: CliEngine) => {
         [
             { name: 'alias', help: 'alias to remove' }
         ],
-        async (a) => {
-            let manager = new LocalClustersManager(cli.clusterConfigFile);
-            await manager.load();
-            manager.remove(a.alias);
-            await manager.store();
+        (a) => {
+            cli.manager.remove(a.alias);
         }
     );
-};
-
-export const getClusterConfig = async (cli: CliEngine, alias: string): Promise<IPAICluster> => {
-    let manager = new LocalClustersManager(cli.clusterConfigFile);
-    await manager.load();
-    const result = manager.find(alias);
-    if (result) {
-        return result;
-    }
-    throw new Error(`AliasNotFound: ${alias}`);
-};
-
-export const getClusterClient = async (cli: CliEngine, alias: string): Promise<OpenPAIClient> => {
-    let config = await getClusterConfig(cli, alias);
-    return new OpenPAIClient(config);
 };

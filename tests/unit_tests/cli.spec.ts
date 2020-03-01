@@ -29,14 +29,16 @@ import { IJobConfigV1, IJobSshInfo } from '../../lib/models/job';
 import { IJobInfo, IJobStatus, IPAICluster, JobClient } from '../../src';
 import { OpenPAIBaseClient } from '../../src/client/baseClient';
 import { fakeRestSrv as F } from '../common/restServer';
+import * as path from 'path';
 
-
-const cfgFile = '.tests/clusters.json';
 chai.use(dirtyChai);
 
-fs.outputJsonSync(cfgFile, [OpenPAIBaseClient.parsePaiUri(F.cluster)]);
+const cache = '.tests';
+fs.ensureDirSync(cache);
+fs.emptyDirSync(cache);
+fs.outputJsonSync(path.join(cache, 'clusters.json'), [OpenPAIBaseClient.parsePaiUri(F.cluster)]);
 
-let cli = new CliEngine(cfgFile);
+let cli = new CliEngine('.tests');
 registerBuiltinCommands(cli);
 
 interface TestCase {
@@ -62,7 +64,7 @@ for (const tc of testCases) {
             before(d);
         }
         it(tc.name, async () => {
-            let result = await cli.evaluate(tc.command);
+            let result = (await cli.evaluate(tc.command)).result;
             for (const ck of tc.checkers) {
                 ck(result);
             }
