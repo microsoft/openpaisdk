@@ -15,9 +15,14 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import { CliEngine } from "./cliEngine";
+import { OpenPAIClient } from '..';
 
-export const registerStorageCommands = (cli: CliEngine) => {
+import { CliEngine } from './cliEngine';
+
+/**
+ * register storage related commands
+ */
+export function registerStorageCommands(cli: CliEngine): void {
     cli.registerCommand(
         { name: 'lists', help: 'list storages', aliases: ['list-storages'] },
         [
@@ -25,7 +30,7 @@ export const registerStorageCommands = (cli: CliEngine) => {
             { name: ['--skip-cache', '-k'], help: 'skip cached record, fetch latest value', action: 'storeTrue' }
         ],
         async (a) => {
-            let client = cli.manager.getClusterClient(a.alias);
+            const client: OpenPAIClient = cli.manager.getClusterClient(a.alias);
             return await client.cache.functions.getStorages(a.skip_cache);
         }
     );
@@ -38,8 +43,8 @@ export const registerStorageCommands = (cli: CliEngine) => {
             { name: ['--skip-cache', '-k'], help: 'skip cached record, fetch latest value', action: 'storeTrue' }
         ],
         async (a) => {
-            let client = cli.manager.getClusterClient(a.alias);
+            const client: OpenPAIClient = cli.manager.getClusterClient(a.alias);
             return await client.cache.functions.getStorageByName(a.skip_cache, a.storage);
         }
     );
-};
+}

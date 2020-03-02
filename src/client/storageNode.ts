@@ -19,8 +19,6 @@ import { AzureBlobClient } from '..';
 import { IStorageDetail } from '../models/storage';
 import { IFileInfo, IStorageNode, IStorageNodeClient } from '../models/storageOperation';
 
-import { WebHdfsClient } from './webHdfsClient';
-
 /**
  * StorageNode class.
  */
@@ -39,8 +37,8 @@ export class StorageNode implements IStorageNode {
     public createClient(): IStorageNodeClient {
         switch (this.config.type) {
             case 'azureBlob': return new AzureBlobClient(this.config);
+            default: throw new Error(`NotImplemented`);
         }
-        throw new Error(`NotImplemented`);
     }
 
     public async getinfo(path: string): Promise<IFileInfo> {

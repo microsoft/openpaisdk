@@ -15,14 +15,17 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import { Util } from '../commom/util';
-import { Identifiable } from '../commom/identifiable';
-import { dirname } from 'path';
 import * as fs from 'fs-extra';
+import { dirname } from 'path';
 
+import { Util } from '../commom/util';
+
+/**
+ * utils functions
+ */
 export async function readJson<T extends object>(pth: string, val?: T): Promise<T> {
     try {
-        let data: T = await fs.readJson(pth);
+        const data: T = await fs.readJson(pth);
         Util.debug(`data loaded from ${pth}`, data);
         return data;
     } catch (e) {
@@ -32,31 +35,10 @@ export async function readJson<T extends object>(pth: string, val?: T): Promise<
         }
         return val;
     }
-};
+}
 
 export async function writeJson<T extends object>(pth: string, val: T): Promise<void> {
     await fs.ensureDir(dirname(pth));
     await fs.writeJSON(pth, val);
     Util.debug(`saved to ${pth}`);
 }
-
-
-export abstract class PersistentObjects<T, U> extends Identifiable<T, U>{
-    protected filename: string;
-
-    constructor(filename: string, data?: T[]) {
-        super(data);
-        this.filename = Util.expandUser(filename);
-    }
-
-    public async load(): Promise<void> {
-        this.data = await readJson(this.filename, []);
-    }
-
-    public async store(): Promise<void> {
-        await writeJson(this.filename, this.data);
-    }
-
-}
-
-

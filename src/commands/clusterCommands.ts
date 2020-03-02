@@ -15,16 +15,20 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import { CliEngine } from './cliEngine';
 import { IPAICluster, OpenPAIClient } from '..';
 
+import { CliEngine, IClusterWithCache } from './cliEngine';
+
+/**
+ *  register commands related to cluster management
+ */
 export const registerClusterCommands = (cli: CliEngine) => {
     cli.registerCommand(
         { name: 'listc', help: 'list clusters' },
         [],
         (a) => {
-            const result = cli.manager.getData();
-            return result.map((a) => a.cluster);
+            const result: IClusterWithCache[] = cli.manager.getData();
+            return result.map((x) => x.cluster);
         }
     );
 

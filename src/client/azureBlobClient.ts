@@ -28,10 +28,8 @@ import {
 } from '@azure/storage-blob';
 import * as Path from 'path';
 
+import { IAzureBlobCfg, IStorageDetail } from '../models/storage';
 import { IFileInfo, IStorageNodeClient } from '../models/storageOperation';
-import { IStorageDetail, IAzureBlobCfg } from '../models/storage';
-import { Util } from '../commom/util';
-import { utils } from 'mocha';
 
 export type BlobIter = PagedAsyncIterableIterator<({
     kind: 'prefix';
@@ -65,7 +63,7 @@ export class AzureBlobClient implements IStorageNodeClient {
 
     constructor(config: IStorageDetail) {
         this.config = config;
-        const data = config.data as IAzureBlobCfg;
+        const data: IAzureBlobCfg = config.data as IAzureBlobCfg;
         if (config.type !== 'azureBlob' ||
             !data ||
             !data.accountName ||
@@ -76,7 +74,7 @@ export class AzureBlobClient implements IStorageNodeClient {
         }
 
         if (data.accountKey) { // use the accountKey
-            let credential: StorageSharedKeyCredential =
+            const credential: StorageSharedKeyCredential =
                 new StorageSharedKeyCredential(data.accountName, data.accountKey!);
             const blobClient: BlobServiceClient = new BlobServiceClient(
                 `https://${data.accountName}.blob.core.windows.net`, credential);

@@ -2,7 +2,7 @@ import * as argparse from 'argparse';
 import { IPAICluster, OpenPAIClient } from '..';
 import { ICacheRecord } from '../client/cacheClient';
 import { Identifiable } from '../commom/identifiable';
-interface IClusterWithCache {
+export interface IClusterWithCache {
     cluster: IPAICluster;
     cache?: ICacheRecord[];
 }
@@ -28,14 +28,21 @@ export interface IResult {
     args?: IArgument;
     result: any | undefined;
 }
+/**
+ * LocalClustersManager handles the prestored array of clusters and caches
+ * by providing filtering, and client construction
+ */
 declare class LocalClustersManager extends Identifiable<IClusterWithCache, string> {
-    protected uidOf: (a: IClusterWithCache) => string;
     getClusterConfig(alias: string): IPAICluster;
     getClusterClient(alias: string): OpenPAIClient;
+    protected uidOf: (a: IClusterWithCache) => string;
 }
+/**
+ * CliEngine is the executor of CLI commands processing
+ */
 export declare class CliEngine {
-    protected clustersFileName?: string;
     manager: LocalClustersManager;
+    protected clustersFileName?: string;
     protected parser: argparse.ArgumentParser;
     protected subparsers: argparse.SubParser;
     protected executors: {

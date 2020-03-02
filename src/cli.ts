@@ -16,20 +16,18 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import { CliEngine, registerBuiltinCommands } from './commands';
-import * as path from 'path';
-import { Util } from './commom/util';
+import { registerBuiltinCommands, CliEngine } from './commands';
+import { IResult } from './commands/cliEngine';
 
-try {
-    (async () => {
-        // Util.debugMode = true;
-        const cli = new CliEngine();
-        registerBuiltinCommands(cli);
-        await cli.load();
-        let result = await cli.evaluate();
-        cli.toScreen(result);
-        await cli.store();
-    })();
-} catch (e) {
-    console.error(e);
-}
+/**
+ * the main entry point of the command line tool `pai`
+ */
+(async () => {
+    // Util.debugMode = true;
+    const cli: CliEngine = new CliEngine();
+    registerBuiltinCommands(cli);
+    await cli.load();
+    const result: IResult = await cli.evaluate();
+    cli.toScreen(result);
+    await cli.store();
+})().catch(err => console.error(err));

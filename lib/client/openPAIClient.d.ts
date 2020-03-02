@@ -1,11 +1,11 @@
 import { AuthnClient } from '..';
 import { IPAICluster } from '../models/cluster';
 import { OpenPAIBaseClient } from './baseClient';
+import { CacheClient, ICacheRecord } from './cacheClient';
 import { JobClient } from './jobClient';
 import { StorageClient } from './storageClient';
 import { UserClient } from './userClient';
 import { VirtualClusterClient } from './virtualClusterClient';
-import { CacheClient, ICacheRecord } from './cacheClient';
 /**
  * OpenPAI Client.
  */

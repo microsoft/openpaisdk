@@ -1,5 +1,5 @@
 import { IPAICluster } from '../models/cluster';
-import { IStorageConfig, IStorageServer, IStorageSummary, IStorageDetail } from '../models/storage';
+import { IStorageConfig, IStorageDetail, IStorageServer, IStorageSummary } from '../models/storage';
 import { OpenPAIBaseClient } from './baseClient';
 /**
  * OpenPAI Job client.

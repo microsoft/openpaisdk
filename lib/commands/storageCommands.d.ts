@@ -1,2 +1,5 @@
-import { CliEngine } from "./cliEngine";
-export declare const registerStorageCommands: (cli: CliEngine) => void;
+import { CliEngine } from './cliEngine';
+/**
+ * register storage related commands
+ */
+export declare function registerStorageCommands(cli: CliEngine): void;

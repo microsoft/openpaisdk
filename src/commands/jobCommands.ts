@@ -15,16 +15,21 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import { CliEngine } from "./cliEngine";
+import { OpenPAIClient } from '..';
 
-export const registerJobCommands = (cli: CliEngine) => {
+import { CliEngine } from './cliEngine';
+
+/**
+ * register job realted commands
+ */
+export function registerJobCommands(cli: CliEngine): void {
     cli.registerCommand(
         { name: 'listj', help: 'list jobs', aliases: ['list-jobs'] },
         [
-            { name: 'alias', help: 'cluster alias' },
+            { name: 'alias', help: 'cluster alias' }
         ],
         async (a) => {
-            let client = cli.manager.getClusterClient(a.alias);
+            const client: OpenPAIClient = cli.manager.getClusterClient(a.alias);
             if (a.all) {
                 return client.job.list();
             }
@@ -40,4 +45,4 @@ export const registerJobCommands = (cli: CliEngine) => {
         ]
     );
 
-};
+}

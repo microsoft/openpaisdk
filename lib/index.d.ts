@@ -8,7 +8,7 @@ import { VirtualClusterClient } from './client/virtualClusterClient';
 import { IAuthnInfo, ILoginInfo } from './models/authn';
 import { IPAICluster } from './models/cluster';
 import { IJobConfig, IJobFrameworkInfo, IJobInfo, IJobSshInfo, IJobStatus } from './models/job';
-import { IMountInfo, IStorageConfig, IStorageServer, IStorageSummary, IStorageDetail } from './models/storage';
+import { IMountInfo, IStorageConfig, IStorageDetail, IStorageServer, IStorageSummary } from './models/storage';
 import { IFileInfo } from './models/storageOperation';
 import { ITokenItem } from './models/token';
 import { IUserInfo } from './models/user';
