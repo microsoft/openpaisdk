@@ -1,18 +1,16 @@
-import { IMountInfo, IStorageServer } from '../models/storage';
+import { IStorageDetail } from '../models/storage';
 import { IFileInfo, IStorageNode, IStorageNodeClient } from '../models/storageOperation';
 /**
  * StorageNode class.
  */
 export declare class StorageNode implements IStorageNode {
-    config: IMountInfo;
-    server: IStorageServer;
+    config: IStorageDetail;
     client: IStorageNodeClient;
-    constructor(config: IMountInfo, server: IStorageServer);
+    constructor(config: IStorageDetail);
     /**
      * create client according to type.
      */
     createClient(): IStorageNodeClient;
-    type(): string;
     getinfo(path: string): Promise<IFileInfo>;
     listdir(path: string): Promise<string[]>;
     makedir(path: string, mode?: string | undefined): Promise<void>;

@@ -30,19 +30,29 @@ export interface IStorageSummaryItem {
 export interface IStorageSummary {
     storages: IStorageSummaryItem[];
 }
+export interface INfsCfg {
+    server: string;
+    path: string;
+}
+export interface ISambaCfg {
+    address: string;
+    username?: string;
+    password?: string;
+}
+export interface IAzureFileCfg {
+    shareName: string;
+    accountName?: string;
+    accountKey?: string;
+}
+export interface IAzureBlobCfg {
+    containerName: string;
+    accountName?: string;
+    accountKey?: string;
+    accountSASToken?: string;
+}
 export interface IStorageDetail extends IStorageSummaryItem {
-    type?: 'nfs' | 'samba' | 'azureFile' | 'azureBlob' | 'other' | 'unknown';
-    data?: {
-        server?: string;
-        path?: string;
-        address?: string;
-        username?: string;
-        password?: string;
-        shareName?: string;
-        containerName?: string;
-        accountName?: string;
-        accountKey?: string;
-    };
+    type: 'nfs' | 'samba' | 'azureFile' | 'azureBlob' | 'other' | 'unknown';
+    data: INfsCfg | ISambaCfg | IAzureFileCfg | IAzureFileCfg | Object;
     secretName?: string;
     mountOptions?: string[];
 }

@@ -22,7 +22,7 @@ import { Util } from './commom/util';
 
 try {
     (async () => {
-        Util.debugMode = true;
+        // Util.debugMode = true;
         const cli = new CliEngine();
         registerBuiltinCommands(cli);
         await cli.load();

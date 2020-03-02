@@ -15,25 +15,23 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import { IMountInfo, IStorageConfig, IStorageServer } from '../models/storage';
+// tslint:disable-next-line:missing-jsdoc
+import { IStorageSummary, IStorageDetail } from "../../../src";
 
-import { StorageClient } from './storageClient';
-import { StorageNode } from './storageNode';
+export const testStorageSummary: IStorageSummary = {
+    storages: [
+        { name: 'azureBlobStorage', share: true, volumeName: 'azBlobVol' }
+    ]
+};
 
-/**
- * StorageOperation class
- */
-export class StorageOperation {
-    private client: StorageClient;
-
-    constructor(client: StorageClient) {
-        this.client = client;
+export const testAzureBlobInfo: IStorageDetail = {
+    name: 'azureBlobStorage',
+    share: true,
+    volumeName: 'azBlobVol',
+    type: 'azureBlob',
+    data: {
+        containerName: 'containerName',
+        accountName: 'accountName',
+        accountKey: 'key'
     }
-
-    public async getStorageNode(name: string, index: number = 0): Promise<StorageNode> {
-        const storageConfig: IStorageConfig = await this.client.getConfigByName(name);
-        const mountInfo: IMountInfo = storageConfig.mountInfos[index];
-        const server: IStorageServer = await this.client.getServerByName(mountInfo.server);
-        return new StorageNode(mountInfo, server);
-    }
-}
+};

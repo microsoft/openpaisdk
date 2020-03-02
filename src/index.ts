@@ -26,7 +26,7 @@ import { VirtualClusterClient } from './client/virtualClusterClient';
 import { IAuthnInfo, ILoginInfo } from './models/authn';
 import { IPAICluster } from './models/cluster';
 import { IJobConfig, IJobFrameworkInfo, IJobInfo, IJobSshInfo, IJobStatus } from './models/job';
-import { IMountInfo, IStorageConfig, IStorageServer } from './models/storage';
+import { IMountInfo, IStorageConfig, IStorageServer, IStorageSummary, IStorageDetail } from './models/storage';
 import { IFileInfo } from './models/storageOperation';
 import { ITokenItem } from './models/token';
 import { IUserInfo } from './models/user';
@@ -52,6 +52,8 @@ export {
     ILoginInfo,
     IStorageServer,
     IStorageConfig,
+    IStorageSummary,
+    IStorageDetail,
     IMountInfo,
     IJobStatus,
     AzureBlobClient,

@@ -19,7 +19,7 @@
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as dirtyChai from 'dirty-chai';
-import * as fs from 'fs-extra';
+import * as mockfs from 'mock-fs';
 
 import { CliEngine, registerBuiltinCommands } from '../../src/commands';
 import { Util } from '../../src/commom/util';
@@ -30,16 +30,19 @@ import { IJobInfo, IJobStatus, IPAICluster, JobClient } from '../../src';
 import { OpenPAIBaseClient } from '../../src/client/baseClient';
 import { fakeRestSrv as F } from '../common/restServer';
 import * as path from 'path';
+import mock = require('mock-fs');
 
 chai.use(dirtyChai);
 
-const cache = '.tests';
-fs.ensureDirSync(cache);
-fs.emptyDirSync(cache);
-fs.outputJsonSync(path.join(cache, 'clusters.json'), [OpenPAIBaseClient.parsePaiUri(F.cluster)]);
-
-let cli = new CliEngine('.tests');
-registerBuiltinCommands(cli);
+beforeEach(async () => {
+    const mockDirectory: any = {};
+    mockDirectory[Util.expandUser('~/.openpai')] = {
+        'clusters.json': JSON.stringify([
+            { cluster: OpenPAIBaseClient.parsePaiUri(F.cluster) }
+        ])
+    };
+    mockfs(mockDirectory);
+});
 
 interface TestCase {
     name: string;
@@ -64,6 +67,10 @@ for (const tc of testCases) {
             before(d);
         }
         it(tc.name, async () => {
+            let cli = new CliEngine();
+            registerBuiltinCommands(cli);
+            await cli.load();
+
             let result = (await cli.evaluate(tc.command)).result;
             for (const ck of tc.checkers) {
                 ck(result);

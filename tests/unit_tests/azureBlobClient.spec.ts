@@ -26,32 +26,14 @@ import * as os from 'os';
 import * as path from 'path';
 
 import { AzureBlobClient, IFileInfo } from '../../src';
+import { testAzureBlobInfo } from '../common/test_data/testStorages';
 
 const testUri: string = 'openpai-js-sdk.test/rest-server';
 let client: AzureBlobClient;
 
 chai.use(dirtyChai);
 beforeEach(() => {
-    client = new AzureBlobClient(
-        {
-            mountPoint: '/home',
-            path: 'users/\${PAI_USER_NAME}',
-            server: 'TEST',
-            permission: 'rw'
-        },
-        {
-            spn: 'TEST',
-            type: 'azureblob',
-            data: {
-                dataStore: 'dataStore',
-                containerName: 'containerName',
-                accountName: 'accountName',
-                key: 'key',
-                extension: {}
-            },
-            extension: {}
-        }
-    );
+    client = new AzureBlobClient(testAzureBlobInfo);
 });
 
 describe('Get status of a path', () => {
@@ -68,9 +50,9 @@ describe('Get status of a path', () => {
             .head('/containerName/.tests%2Ffolder%2Ftest_blob.txt')
             .reply(200)
             .head('/containerName/.tests%2Ffolder')
-            .reply(404, '', {'x-ms-error-code': 'BlobNotFound'})
+            .reply(404, '', { 'x-ms-error-code': 'BlobNotFound' })
             .get('/containerName?prefix=.tests%2Ffolder%2F&delimiter=%2F&maxresults=1&include=metadata&restype=container&comp=list')
-            .reply(200, response, {'Content-Type': 'application/xml'});
+            .reply(200, response, { 'Content-Type': 'application/xml' });
     });
 
     // tslint:disable-next-line:mocha-no-side-effect-code
@@ -80,7 +62,7 @@ describe('Get status of a path', () => {
     }).timeout(10000);
 
     // tslint:disable-next-line:mocha-no-side-effect-code
-    it('should be a folder', async() => {
+    it('should be a folder', async () => {
         const res: IFileInfo = await client.getinfo(folderPath);
         expect(res.type).to.be.equal('directory');
     }).timeout(10000);
@@ -101,9 +83,9 @@ describe('List directory of a path', () => {
     before(() => {
         nock('https://accountname.blob.core.windows.net')
             .get('/containerName?prefix=.tests%2Ffolder%2F&delimiter=%2F&maxresults=20&include=metadata&restype=container&comp=list')
-            .reply(200, response, {'Content-Type': 'application/xml'})
+            .reply(200, response, { 'Content-Type': 'application/xml' })
             .get('/containerName?prefix=.tests%2Ftest%2F&delimiter=%2F&maxresults=20&include=metadata&restype=container&comp=list')
-            .reply(200, empty, {'Content-Type': 'application/xml'});
+            .reply(200, empty, { 'Content-Type': 'application/xml' });
     });
 
     // tslint:disable-next-line:mocha-no-side-effect-code
@@ -113,7 +95,7 @@ describe('List directory of a path', () => {
     }).timeout(10000);
 
     // tslint:disable-next-line:mocha-no-side-effect-code
-    it('should return an empty list', async() => {
+    it('should return an empty list', async () => {
         const res: string[] = await client.listdir(folderPath2);
         expect(res).to.be.empty();
     }).timeout(10000);
@@ -134,7 +116,7 @@ describe('Create folder and delete', () => {
             .put('/containerName/.tests%2FtestFolder')
             .reply(201)
             .get('/containerName?prefix=.tests%2F&delimiter=%2F&maxresults=20&include=metadata&restype=container&comp=list')
-            .reply(200, response, {'Content-Type': 'application/xml'});
+            .reply(200, response, { 'Content-Type': 'application/xml' });
     });
 
     const folderPath: string = '.tests/testFolder';
@@ -150,7 +132,7 @@ describe('Create folder and delete', () => {
             .delete('/containerName/.tests%2FtestFolder')
             .reply(202)
             .get('/containerName?prefix=.tests%2F&delimiter=%2F&maxresults=20&include=metadata&restype=container&comp=list')
-            .reply(200, empty, {'Content-Type': 'application/xml'});
+            .reply(200, empty, { 'Content-Type': 'application/xml' });
 
         await client.delete(folderPath);
         list = await client.listdir(path.dirname(folderPath));
@@ -172,7 +154,7 @@ describe('Upload and download', () => {
             .get('/containerName/.tests%2Ftest_upload_download.py')
             .reply(200, 'test content', {
                 'Content-Type': 'application/octet-stream',
-                'Content-Length': [ '12' ],
+                'Content-Length': ['12'],
                 ETag: '0x8D7B9FC84AD5D1F'
             });
     });

@@ -16,7 +16,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import { AzureBlobClient } from '..';
-import { IMountInfo, IStorageConfig, IStorageServer } from '../models/storage';
+import { IStorageDetail } from '../models/storage';
 import { IFileInfo, IStorageNode, IStorageNodeClient } from '../models/storageOperation';
 
 import { WebHdfsClient } from './webHdfsClient';
@@ -25,13 +25,11 @@ import { WebHdfsClient } from './webHdfsClient';
  * StorageNode class.
  */
 export class StorageNode implements IStorageNode {
-    public config: IMountInfo;
-    public server: IStorageServer;
+    public config: IStorageDetail;
     public client: IStorageNodeClient;
 
-    constructor(config: IMountInfo, server: IStorageServer) {
+    constructor(config: IStorageDetail) {
         this.config = config;
-        this.server = server;
         this.client = this.createClient();
     }
 
@@ -39,17 +37,10 @@ export class StorageNode implements IStorageNode {
      * create client according to type.
      */
     public createClient(): IStorageNodeClient {
-        if (this.type() === 'hdfs') {
-            return new WebHdfsClient(this.config, this.server);
-        } else if (this.type() === 'azureblob') {
-            return new AzureBlobClient(this.config, this.server);
-        } else {
-            throw new Error(`Storage protocol ${this.type()} unsupported yet`);
+        switch (this.config.type) {
+            case 'azureBlob': return new AzureBlobClient(this.config);
         }
-    }
-
-    public type(): string {
-        return this.server.type;
+        throw new Error(`NotImplemented`);
     }
 
     public async getinfo(path: string): Promise<IFileInfo> {

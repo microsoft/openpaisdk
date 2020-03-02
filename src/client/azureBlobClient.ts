@@ -28,8 +28,10 @@ import {
 } from '@azure/storage-blob';
 import * as Path from 'path';
 
-import { IMountInfo, IStorageServer } from '..';
 import { IFileInfo, IStorageNodeClient } from '../models/storageOperation';
+import { IStorageDetail, IAzureBlobCfg } from '../models/storage';
+import { Util } from '../commom/util';
+import { utils } from 'mocha';
 
 export type BlobIter = PagedAsyncIterableIterator<({
     kind: 'prefix';
@@ -58,27 +60,30 @@ export type BlobValue = ({
 export class AzureBlobClient implements IStorageNodeClient {
     public mkdirAllowRecursive: boolean = true;
 
-    public config: IMountInfo;
-    public server: IStorageServer;
+    public config: IStorageDetail;
     private client: ContainerClient;
 
-    constructor(config: IMountInfo, server: IStorageServer) {
-        if (server.type !== 'azureblob' ||
-            !server.data ||
-            !server.data.key ||
-            !server.data.containerName
+    constructor(config: IStorageDetail) {
+        this.config = config;
+        const data = config.data as IAzureBlobCfg;
+        if (config.type !== 'azureBlob' ||
+            !data ||
+            !data.accountName ||
+            !data.containerName ||
+            !(data.accountKey || data.accountSASToken)
         ) {
-            throw new Error('Can\'t connect to the server.');
+            throw new Error(`WrongStorageDetail: ${JSON.stringify(config)}`);
         }
 
-        const credential: StorageSharedKeyCredential =
-            new StorageSharedKeyCredential(server.data.accountName, server.data.key);
-        const blobClient: BlobServiceClient = new BlobServiceClient(
-            `https://${server.data.accountName}.blob.core.windows.net`, credential);
-
-        this.config = config;
-        this.server = server;
-        this.client = blobClient.getContainerClient(server.data.containerName);
+        if (data.accountKey) { // use the accountKey
+            let credential: StorageSharedKeyCredential =
+                new StorageSharedKeyCredential(data.accountName, data.accountKey!);
+            const blobClient: BlobServiceClient = new BlobServiceClient(
+                `https://${data.accountName}.blob.core.windows.net`, credential);
+            this.client = blobClient.getContainerClient(data.containerName);
+        } else { // SAS token
+            throw new Error('NotImplemented');
+        }
     }
 
     /**
@@ -90,13 +95,13 @@ export class AzureBlobClient implements IStorageNodeClient {
         try {
             const properties: BlobGetPropertiesResponse = await blobClient.getProperties();
             if (!properties.metadata || !properties.metadata.hdi_isfolder) {
-                return <IFileInfo> {
+                return <IFileInfo>{
                     size: properties.contentLength,
                     type: 'file',
                     mtime: properties.lastModified
                 };
             } else {
-                return <IFileInfo> {
+                return <IFileInfo>{
                     type: 'directory',
                     mtime: properties.lastModified
                 };
@@ -114,7 +119,7 @@ export class AzureBlobClient implements IStorageNodeClient {
                 const prefixes: BlobPrefix[] | undefined = iter.value.segment.blobPrefixes;
                 const blobs: BlobItem[] = iter.value.segment.blobItems;
                 if ((prefixes && prefixes.length > 0) || blobs.length > 0) {
-                    return <IFileInfo> {
+                    return <IFileInfo>{
                         type: 'directory'
                     };
                 }

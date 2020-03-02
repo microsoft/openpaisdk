@@ -62,7 +62,9 @@ Multiple types of storages are supported by OpenPAI, however, the end user and d
 
 User could get the `IStorageNode` object for each cluster provisioned storage by 
 ```ts
-let storageNode: IStorageNode = await openPAIClient.storageOperation.getStorageNode(storageNodeName)
+// get a storage object with its name
+let storageDetail: IStorageDetail = await opanPAIClient.storage.getStorageByName(name)
+let storageNode: IStorageNode = new StorageNode(storageDetail)
 ```
 It would provide storage accessing methods (`getinfo, listdir, makedir, upload, download, delete`) and CLI storage operations.
 
