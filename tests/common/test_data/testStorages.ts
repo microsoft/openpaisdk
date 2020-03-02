@@ -16,7 +16,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // tslint:disable-next-line:missing-jsdoc
-import { IStorageSummary, IStorageDetail } from "../../../src";
+import { IStorageDetail, IStorageSummary } from '../../../src';
 
 export const testStorageSummary: IStorageSummary = {
     storages: [
@@ -24,7 +24,7 @@ export const testStorageSummary: IStorageSummary = {
     ]
 };
 
-export const testAzureBlobInfo: IStorageDetail = {
+export const testAzureBlobInfoShareKey: IStorageDetail = {
     name: 'azureBlobStorage',
     share: true,
     volumeName: 'azBlobVol',
@@ -33,5 +33,17 @@ export const testAzureBlobInfo: IStorageDetail = {
         containerName: 'containerName',
         accountName: 'accountName',
         accountKey: 'key'
+    }
+};
+
+export const testAzureBlobInfoSasToken: IStorageDetail = {
+    name: 'azureBlobStorage',
+    share: true,
+    volumeName: 'azBlobVol',
+    type: 'azureBlob',
+    data: {
+        containerName: 'containerName',
+        accountName: 'accountName',
+        accountSASToken: 'queryString'
     }
 };

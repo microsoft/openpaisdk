@@ -78,7 +78,7 @@ export interface IAzureBlobCfg {
 
 export interface IStorageDetail extends IStorageSummaryItem {
     type: 'nfs' | 'samba' | 'azureFile' | 'azureBlob' | 'other' | 'unknown';
-    data: INfsCfg | ISambaCfg | IAzureFileCfg | IAzureFileCfg | Object;
+    data: INfsCfg | ISambaCfg | IAzureBlobCfg | IAzureFileCfg | Object;
     secretName?: string;
     mountOptions?: string[];
 }

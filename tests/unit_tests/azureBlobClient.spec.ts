@@ -26,14 +26,17 @@ import * as os from 'os';
 import * as path from 'path';
 
 import { AzureBlobClient, IFileInfo } from '../../src';
-import { testAzureBlobInfo } from '../common/test_data/testStorages';
+import {
+    testAzureBlobInfoSasToken,
+    testAzureBlobInfoShareKey
+} from '../common/test_data/testStorages';
 
 const testUri: string = 'openpai-js-sdk.test/rest-server';
 let client: AzureBlobClient;
 
 chai.use(dirtyChai);
 beforeEach(() => {
-    client = new AzureBlobClient(testAzureBlobInfo);
+    client = new AzureBlobClient(testAzureBlobInfoShareKey);
 });
 
 describe('Get status of a path', () => {

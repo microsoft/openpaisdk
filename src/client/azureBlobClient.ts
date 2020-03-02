@@ -63,10 +63,9 @@ export class AzureBlobClient implements IStorageNodeClient {
 
     constructor(config: IStorageDetail) {
         this.config = config;
-        const data: IAzureBlobCfg = config.data as IAzureBlobCfg;
+        const data: IAzureBlobCfg = <IAzureBlobCfg> config.data;
         if (config.type !== 'azureBlob' ||
             !data ||
-            !data.accountName ||
             !data.containerName ||
             !(data.accountKey || data.accountSASToken)
         ) {
@@ -75,12 +74,17 @@ export class AzureBlobClient implements IStorageNodeClient {
 
         if (data.accountKey) { // use the accountKey
             const credential: StorageSharedKeyCredential =
-                new StorageSharedKeyCredential(data.accountName, data.accountKey!);
+                new StorageSharedKeyCredential(data.accountName!, data.accountKey!);
             const blobClient: BlobServiceClient = new BlobServiceClient(
                 `https://${data.accountName}.blob.core.windows.net`, credential);
             this.client = blobClient.getContainerClient(data.containerName);
         } else { // SAS token
-            throw new Error('NotImplemented');
+            let url: string = data.accountSASToken!;
+            if (!url.startsWith('https://')) {
+                url = `https://${data.accountName}.blob.core.windows.net${data.accountSASToken}`;
+            }
+            const blobClient: BlobServiceClient = new BlobServiceClient(url);
+            this.client = blobClient.getContainerClient(data.containerName);
         }
     }
 
