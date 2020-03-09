@@ -7,11 +7,11 @@ User could get the `IStorageNode` object for each cluster provisioned storage by
 
 ```ts
 // get a storage object with its name
-let storageNodeName: string = storageConfigName + '~' + mountPoint
-let storageNode: IStorageNode = await openPAIClient.storageOperation.getStorageNode(storageNodeName)
-// list all storage objects
-let storageNodes = await openPAIClient.storageOperation.listAllStorageNodes();
+let storageDetail: IStorageDetail = await opanPAIClient.storage.getStorageByName(name)
+let storageNode: IStorageNode = new StorageNode(storageDetail)
 ```
+
+**ToDo: change to new API document**
 
 The `storageNodeName` is the unique name for each storage node. Currently it is combined by the name of storage config (`storageConfigName`) and the mount point specified in it (`mountPoint`). The storage config could be queried by by the [get storage config API](https://redocly.github.io/redoc/?url=https://raw.githubusercontent.com/microsoft/pai/master/src/rest-server/docs/swagger.yaml#operation/getStorageConfigs), the response of which looks like below (more details about storage configuration refer to [here](https://github.com/microsoft/pai/tree/master/contrib/storage_plugin#config-data-structure-))
 

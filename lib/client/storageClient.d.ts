@@ -1,5 +1,5 @@
 import { IPAICluster } from '../models/cluster';
-import { IStorageConfig, IStorageServer } from '../models/storage';
+import { IStorageConfig, IStorageDetail, IStorageServer, IStorageSummary } from '../models/storage';
 import { OpenPAIBaseClient } from './baseClient';
 /**
  * OpenPAI Job client.
@@ -26,4 +26,6 @@ export declare class StorageClient extends OpenPAIBaseClient {
      * @param storage The storage name.
      */
     getConfigByName(storage: string, token?: string): Promise<IStorageConfig>;
+    getStorages(token?: string): Promise<IStorageSummary>;
+    getStorageByName(name: string, token?: string): Promise<IStorageDetail>;
 }

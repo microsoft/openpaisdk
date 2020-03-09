@@ -20,55 +20,42 @@ import * as chai from 'chai';
 import { expect } from 'chai';
 import * as dirtyChai from 'dirty-chai';
 import * as fs from 'fs';
+import * as mockFs from 'mock-fs';
 import * as nock from 'nock';
+import * as os from 'os';
 import * as path from 'path';
 
 import { AzureBlobClient, IFileInfo } from '../../src';
+import {
+    testAzureBlobInfoSasToken,
+    testAzureBlobInfoShareKey
+} from '../common/test_data/testStorages';
 
 const testUri: string = 'openpai-js-sdk.test/rest-server';
 let client: AzureBlobClient;
 
 chai.use(dirtyChai);
 beforeEach(() => {
-    client = new AzureBlobClient(
-        {
-            mountPoint: '/home',
-            path: 'users/\${PAI_USER_NAME}',
-            server: 'SRV_AB',
-            permission: 'rw'
-        },
-        {
-            spn: 'SRV_AB',
-            type: 'azureblob',
-            data: {
-                dataStore: 'dataStore',
-                containerName: 'containerName',
-                accountName: 'accountName',
-                key: 'key',
-                extension: {}
-            },
-            extension: {}
-        }
-    );
+    client = new AzureBlobClient(testAzureBlobInfoShareKey);
 });
 
 describe('Get status of a path', () => {
-    const filePath: string = 'users/yiyi/folder/natives_blob.bin';
-    const folderPath: string = 'users/yiyi/folder';
+    const filePath: string = '.tests/folder/test_blob.txt';
+    const folderPath: string = '.tests/folder';
     const response: string = '<?xml version="1.0" encoding="utf-8"?>' +
         '<EnumerationResults>' +
-        '<Blobs><Blob><Name>users/yiyi/folder/natives_blob.bin</Name></Blob></Blobs><NextMarker />' +
+        '<Blobs><Blob><Name>.tests/folder/test_blob.txt</Name></Blob></Blobs><NextMarker />' +
         '</EnumerationResults>';
 
     before(() => {
         nock(`http://${testUri}`).get('/api/v1/authn/info').reply(200);
         nock('https://accountname.blob.core.windows.net')
-            .head('/containerName/users%2Fyiyi%2Ffolder%2Fnatives_blob.bin')
+            .head('/containerName/.tests%2Ffolder%2Ftest_blob.txt')
             .reply(200)
-            .head('/containerName/users%2Fyiyi%2Ffolder')
-            .reply(404, '', {'x-ms-error-code': 'BlobNotFound'})
-            .get('/containerName?prefix=users%2Fyiyi%2Ffolder%2F&delimiter=%2F&maxresults=1&include=metadata&restype=container&comp=list')
-            .reply(200, response, {'Content-Type': 'application/xml'});
+            .head('/containerName/.tests%2Ffolder')
+            .reply(404, '', { 'x-ms-error-code': 'BlobNotFound' })
+            .get('/containerName?prefix=.tests%2Ffolder%2F&delimiter=%2F&maxresults=1&include=metadata&restype=container&comp=list')
+            .reply(200, response, { 'Content-Type': 'application/xml' });
     });
 
     // tslint:disable-next-line:mocha-no-side-effect-code
@@ -78,18 +65,18 @@ describe('Get status of a path', () => {
     }).timeout(10000);
 
     // tslint:disable-next-line:mocha-no-side-effect-code
-    it('should be a folder', async() => {
+    it('should be a folder', async () => {
         const res: IFileInfo = await client.getinfo(folderPath);
         expect(res.type).to.be.equal('directory');
     }).timeout(10000);
 });
 
 describe('List directory of a path', () => {
-    const folderPath1: string = 'users/yiyi/folder';
-    const folderPath2: string = 'users/yiyi/test';
+    const folderPath1: string = '.tests/folder';
+    const folderPath2: string = '.tests/test';
     const response: string = '<?xml version="1.0" encoding="utf-8"?>' +
         '<EnumerationResults>' +
-        '<Blobs><Blob><Name>users/yiyi/folder/natives_blob.bin</Name></Blob></Blobs><NextMarker />' +
+        '<Blobs><Blob><Name>.tests/folder/test_blob.txt</Name></Blob></Blobs><NextMarker />' +
         '</EnumerationResults>';
     const empty: string = '<?xml version="1.0" encoding="utf-8"?>' +
         '<EnumerationResults>' +
@@ -98,10 +85,10 @@ describe('List directory of a path', () => {
 
     before(() => {
         nock('https://accountname.blob.core.windows.net')
-            .get('/containerName?prefix=users%2Fyiyi%2Ffolder%2F&delimiter=%2F&maxresults=20&include=metadata&restype=container&comp=list')
-            .reply(200, response, {'Content-Type': 'application/xml'})
-            .get('/containerName?prefix=users%2Fyiyi%2Ftest%2F&delimiter=%2F&maxresults=20&include=metadata&restype=container&comp=list')
-            .reply(200, empty, {'Content-Type': 'application/xml'});
+            .get('/containerName?prefix=.tests%2Ffolder%2F&delimiter=%2F&maxresults=20&include=metadata&restype=container&comp=list')
+            .reply(200, response, { 'Content-Type': 'application/xml' })
+            .get('/containerName?prefix=.tests%2Ftest%2F&delimiter=%2F&maxresults=20&include=metadata&restype=container&comp=list')
+            .reply(200, empty, { 'Content-Type': 'application/xml' });
     });
 
     // tslint:disable-next-line:mocha-no-side-effect-code
@@ -111,7 +98,7 @@ describe('List directory of a path', () => {
     }).timeout(10000);
 
     // tslint:disable-next-line:mocha-no-side-effect-code
-    it('should return an empty list', async() => {
+    it('should return an empty list', async () => {
         const res: string[] = await client.listdir(folderPath2);
         expect(res).to.be.empty();
     }).timeout(10000);
@@ -120,7 +107,7 @@ describe('List directory of a path', () => {
 describe('Create folder and delete', () => {
     const response: string = '<?xml version="1.0" encoding="utf-8"?>' +
         '<EnumerationResults>' +
-        '<Blobs><Blob><Name>users/yiyi/testFolder</Name></Blob></Blobs><NextMarker />' +
+        '<Blobs><Blob><Name>.tests/testFolder</Name></Blob></Blobs><NextMarker />' +
         '</EnumerationResults>';
     const empty: string = '<?xml version="1.0" encoding="utf-8"?>' +
         '<EnumerationResults>' +
@@ -129,13 +116,13 @@ describe('Create folder and delete', () => {
 
     before(() => {
         nock('https://accountname.blob.core.windows.net')
-            .put('/containerName/users%2Fyiyi%2FtestFolder')
+            .put('/containerName/.tests%2FtestFolder')
             .reply(201)
-            .get('/containerName?prefix=users%2Fyiyi%2F&delimiter=%2F&maxresults=20&include=metadata&restype=container&comp=list')
-            .reply(200, response, {'Content-Type': 'application/xml'});
+            .get('/containerName?prefix=.tests%2F&delimiter=%2F&maxresults=20&include=metadata&restype=container&comp=list')
+            .reply(200, response, { 'Content-Type': 'application/xml' });
     });
 
-    const folderPath: string = 'users/yiyi/testFolder';
+    const folderPath: string = '.tests/testFolder';
 
     // tslint:disable-next-line:mocha-no-side-effect-code
     it('should makedir and delete it', async () => {
@@ -145,10 +132,10 @@ describe('Create folder and delete', () => {
         expect(list).contain(path.basename(folderPath));
 
         nock('https://accountname.blob.core.windows.net')
-            .delete('/containerName/users%2Fyiyi%2FtestFolder')
+            .delete('/containerName/.tests%2FtestFolder')
             .reply(202)
-            .get('/containerName?prefix=users%2Fyiyi%2F&delimiter=%2F&maxresults=20&include=metadata&restype=container&comp=list')
-            .reply(200, empty, {'Content-Type': 'application/xml'});
+            .get('/containerName?prefix=.tests%2F&delimiter=%2F&maxresults=20&include=metadata&restype=container&comp=list')
+            .reply(200, empty, { 'Content-Type': 'application/xml' });
 
         await client.delete(folderPath);
         list = await client.listdir(path.dirname(folderPath));
@@ -157,24 +144,29 @@ describe('Create folder and delete', () => {
 });
 
 describe('Upload and download', () => {
-    const localPath: string = 'E:/Repos/Projects/pai-jobs/test.py';
-    const newLocalPath: string = 'E:/Repos/Projects/pai-jobs/new_test.py';
-    const filePath: string = 'users/yiyi/test_upload_download.py';
+    let localPath: string;
+    let newLocalPath: string;
+    const filePath: string = '.tests/test_upload_download.py';
 
     before(() => {
+        localPath = path.join(os.tmpdir(), './.test/test.py');
+        newLocalPath = path.join(os.tmpdir(), './.test/new_test.py');
         nock('https://accountname.blob.core.windows.net')
-            .put('/containerName/users%2Fyiyi%2Ftest_upload_download.py')
+            .put('/containerName/.tests%2Ftest_upload_download.py')
             .reply(201)
-            .get('/containerName/users%2Fyiyi%2Ftest_upload_download.py')
-            .reply(200, 'print(\'hello kitty\')', {
+            .get('/containerName/.tests%2Ftest_upload_download.py')
+            .reply(200, 'test content', {
                 'Content-Type': 'application/octet-stream',
-                'Content-Length': [ '20' ],
+                'Content-Length': ['12'],
                 ETag: '0x8D7B9FC84AD5D1F'
             });
     });
 
     // tslint:disable-next-line:mocha-no-side-effect-code
     it('should upload a file and download it', async () => {
+        const mockDirectory: any = {};
+        mockDirectory[localPath] = 'test content';
+        mockFs(mockDirectory);
         const upload: string = fs.readFileSync(localPath, 'utf8');
         await client.upload(localPath, filePath);
         await client.download(filePath, newLocalPath);
@@ -182,4 +174,6 @@ describe('Upload and download', () => {
 
         expect(download).to.be.eq(upload);
     }).timeout(10000);
+
+    after(() => mockFs.restore());
 });

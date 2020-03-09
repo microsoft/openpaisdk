@@ -55,13 +55,13 @@ export declare class JobClient extends OpenPAIBaseClient {
      */
     submitV1(userName: string, jobConfig: IJobConfigV1, token?: string): Promise<void>;
     /**
-     * Get job SSH infomation, will call /api/v1/user/${userName}/jobs/${jobName}/ssh.
+     * Get job SSH information, will call /api/v1/user/${userName}/jobs/${jobName}/ssh.
      * @param userName The user name.
      * @param jobName The job name.
      */
     getSshInfo(userName: string, jobName: string): Promise<IJobSshInfo>;
     /**
-     * Get job SSH infomation, will call /api/v1/jobs/${jobName}/ssh.
+     * Get job SSH information, will call /api/v1/jobs/${jobName}/ssh.
      * @param jobName The job name.
      */
     getSshInfo(jobName: string): Promise<IJobSshInfo>;

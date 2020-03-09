@@ -15,26 +15,29 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-
 /**
  * the container for identifiable objects(:T) with unique ID (:U)
  */
-export class Identifiable<T, U> {
-    public data: Array<T> = [];
-    public uidOf: (element: T) => U;
-    public uidEq: (element: T, uid: U) => boolean;
+export abstract class Identifiable<T, U> {
+    protected data: T[] = [];
 
-    constructor(funcGetUid: (element: T) => U, data?: T[]) {
-        this.uidOf = funcGetUid;
-        this.uidEq = (element: T, uid: U) => {
-            return this.uidOf(element) == uid;
-        };
+    constructor(data?: T[]) {
         if (data) {
             this.data = data;
         }
     }
 
-    public identities(): Array<U> {
+    public getData = () => this.data;
+
+    public copyData(data: T[]): void {
+        this.data = JSON.parse(JSON.stringify(data));
+    }
+
+    public assignData(data: T[]): void {
+        Object.assign(this.data, data);
+    }
+
+    public identities(): U[] {
         return this.data.map((a) => {
             return this.uidOf(a);
         });
@@ -44,25 +47,31 @@ export class Identifiable<T, U> {
         return this.identities().indexOf(uid);
     }
 
-    public find(uid: U): T | undefined {
-        let idx = this.indexOf(uid);
-        if (idx > -1) {
-            return this.data[idx];
+    public add(element: T, denyIfExists: boolean = false): void {
+        const uid: U = this.uidOf(element);
+        if (uid == null) {
+            throw new Error(`UnIdentifiable`);
         }
-        return undefined;
-    }
-
-    public add(element: T): void {
-        if (this.indexOf(this.uidOf(element)) > -1) {
+        const idx: number = this.indexOf(uid);
+        if (denyIfExists && idx > -1) {
             throw new Error(`AlreadyExists: of ${this.uidOf(element)}`);
         }
-        this.data.push(element);
+        if (idx === -1) {
+            this.data.push(element);
+        } else {
+            this.data[idx] = element;
+        }
     }
 
     public remove(uid: U): void {
-        let idx = this.indexOf(uid);
+        const idx: number = this.indexOf(uid);
         if (idx > -1) {
             this.data.splice(idx, 1);
         }
+    }
+    protected abstract uidOf(element: T): U;
+
+    protected uidEq(element: T, uid: U): boolean {
+        return this.uidOf(element) === uid;
     }
 }

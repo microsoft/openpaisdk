@@ -19,7 +19,7 @@
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as dirtyChai from 'dirty-chai';
-import * as fs from 'fs-extra';
+import * as mockfs from 'mock-fs';
 
 import { CliEngine, registerBuiltinCommands } from '../../src/commands';
 import { Util } from '../../src/commom/util';
@@ -29,15 +29,20 @@ import { IJobConfigV1, IJobSshInfo } from '../../lib/models/job';
 import { IJobInfo, IJobStatus, IPAICluster, JobClient } from '../../src';
 import { OpenPAIBaseClient } from '../../src/client/baseClient';
 import { fakeRestSrv as F } from '../common/restServer';
+import * as path from 'path';
+import mock = require('mock-fs');
 
-
-const cfgFile = '.tests/clusters.json';
 chai.use(dirtyChai);
 
-fs.outputJsonSync(cfgFile, [OpenPAIBaseClient.parsePaiUri(F.cluster)]);
-
-let cli = new CliEngine(cfgFile);
-registerBuiltinCommands(cli);
+beforeEach(async () => {
+    const mockDirectory: any = {};
+    mockDirectory[Util.expandUser('~/.openpai')] = {
+        'clusters.json': JSON.stringify([
+            { cluster: OpenPAIBaseClient.parsePaiUri(F.cluster) }
+        ])
+    };
+    mockfs(mockDirectory);
+});
 
 interface TestCase {
     name: string;
@@ -51,7 +56,7 @@ const notEmpty = (result: any) => {
 };
 
 const testCases = [
-    { name: 'listc', command: ['listc'], checkers: [notEmpty, (r: any) => expect(r.alias).is.equal(F.alias)] },
+    { name: 'listc', command: ['listc'], checkers: [notEmpty, (r: any) => expect(r[0].alias).is.equal(F.alias)] },
     { name: 'list all jobs', command: ['listj', F.alias, '-a'], checkers: [notEmpty], dependencies: [F.listJobs] },
     { name: 'list your own jobs', command: ['listj', F.alias], checkers: [notEmpty], dependencies: [F.listJobsQuery] }
 ];
@@ -62,7 +67,11 @@ for (const tc of testCases) {
             before(d);
         }
         it(tc.name, async () => {
-            let result = await cli.evaluate(tc.command);
+            let cli = new CliEngine();
+            registerBuiltinCommands(cli);
+            await cli.load();
+
+            let result = (await cli.evaluate(tc.command)).result;
             for (const ck of tc.checkers) {
                 ck(result);
             }

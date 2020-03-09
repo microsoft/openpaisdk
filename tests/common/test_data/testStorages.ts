@@ -15,34 +15,35 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import { OpenPAIClient } from '..';
+// tslint:disable-next-line:missing-jsdoc
+import { IStorageDetail, IStorageSummary } from '../../../src';
 
-import { CliEngine } from './cliEngine';
+export const testStorageSummary: IStorageSummary = {
+    storages: [
+        { name: 'azureBlobStorage', share: true, volumeName: 'azBlobVol' }
+    ]
+};
 
-/**
- * register job realted commands
- */
-export function registerJobCommands(cli: CliEngine): void {
-    cli.registerCommand(
-        { name: 'listj', help: 'list jobs', aliases: ['list-jobs'] },
-        [
-            { name: 'alias', help: 'cluster alias' }
-        ],
-        async (a) => {
-            const client: OpenPAIClient = cli.manager.getClusterClient(a.alias);
-            if (a.all) {
-                return client.job.list();
-            }
-            return client.job.list(`username=${a.user || client.config.username()}`);
-        },
-        [
-            {
-                args: [
-                    { name: ['--user', '-u'], help: 'username (default is user in cluster config)' },
-                    { name: ['--all', '-a'], help: 'list jobs from all users', action: 'storeTrue' }
-                ]
-            }
-        ]
-    );
+export const testAzureBlobInfoShareKey: IStorageDetail = {
+    name: 'azureBlobStorage',
+    share: true,
+    volumeName: 'azBlobVol',
+    type: 'azureBlob',
+    data: {
+        containerName: 'containerName',
+        accountName: 'accountName',
+        accountKey: 'key'
+    }
+};
 
-}
+export const testAzureBlobInfoSasToken: IStorageDetail = {
+    name: 'azureBlobStorage',
+    share: true,
+    volumeName: 'azBlobVol',
+    type: 'azureBlob',
+    data: {
+        containerName: 'containerName',
+        accountName: 'accountName',
+        accountSASToken: 'queryString'
+    }
+};

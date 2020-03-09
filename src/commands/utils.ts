@@ -15,25 +15,30 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import { IMountInfo, IStorageConfig, IStorageServer } from '../models/storage';
+import * as fs from 'fs-extra';
+import { dirname } from 'path';
 
-import { StorageClient } from './storageClient';
-import { StorageNode } from './storageNode';
+import { Util } from '../commom/util';
 
 /**
- * StorageOperation class
+ * utils functions
  */
-export class StorageOperation {
-    private client: StorageClient;
-
-    constructor(client: StorageClient) {
-        this.client = client;
+export async function readJson<T extends object>(pth: string, val?: T): Promise<T> {
+    try {
+        const data: T = await fs.readJson(pth);
+        Util.debug(`data loaded from ${pth}`, data);
+        return data;
+    } catch (e) {
+        console.warn((e as Error).message);
+        if (val == null) {
+            throw new Error(e);
+        }
+        return val;
     }
+}
 
-    public async getStorageNode(name: string, index: number = 0): Promise<StorageNode> {
-        const storageConfig: IStorageConfig = await this.client.getConfigByName(name);
-        const mountInfo: IMountInfo = storageConfig.mountInfos[index];
-        const server: IStorageServer = await this.client.getServerByName(mountInfo.server);
-        return new StorageNode(mountInfo, server);
-    }
+export async function writeJson<T extends object>(pth: string, val: T): Promise<void> {
+    await fs.ensureDir(dirname(pth));
+    await fs.writeJSON(pth, val);
+    Util.debug(`saved to ${pth}`);
 }

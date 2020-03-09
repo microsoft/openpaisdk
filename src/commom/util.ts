@@ -31,7 +31,7 @@ class UtilClass {
 
     public expandUser(url: string): string {
         if (/~/.test(url)) {
-            let home = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
+            const home: string | undefined = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE;
             if (home) {
                 url = url.replace('~', home);
             } else {

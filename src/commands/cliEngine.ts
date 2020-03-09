@@ -16,8 +16,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import * as argparse from 'argparse';
+import * as path from 'path';
+
+import { IPAICluster, OpenPAIClient } from '..';
+import { ICacheRecord } from '../client/cacheClient';
+import { Identifiable } from '../commom/identifiable';
 import { Util } from '../commom/util';
-import { restore } from 'nock';
+
+import { readJson, writeJson } from './utils';
+
+export interface IClusterWithCache {
+    cluster: IPAICluster;
+    cache?: ICacheRecord[];
+}
 
 interface ISubParserOptions extends argparse.SubArgumentParserOptions {
     name: string;
@@ -41,17 +52,59 @@ interface IArgument extends argparse.Namespace {
 
 type CommandCallback = (a: IArgument) => any;
 
-export class CliEngine {
-    [index: string]: any;
-    public clusterConfigFile?: string;
-    private parser: argparse.ArgumentParser;
-    private subparsers: argparse.SubParser;
-    private formatters: { [index: string]: (result: object) => void; } = {};
+export interface IResult {
+    command: string;
+    args?: IArgument;
+    result: any | undefined;
+}
 
-    constructor(clusterFile?: string) {
-        if (clusterFile) {
-            this.clusterConfigFile = clusterFile;
+/**
+ * LocalClustersManager handles the prestored array of clusters and caches
+ * by providing filtering, and client construction
+ */
+class LocalClustersManager extends Identifiable<IClusterWithCache, string> {
+    public getClusterConfig(alias: string): IPAICluster {
+        const idx: number = this.indexOf(alias);
+        if (idx > -1) {
+            return this.data[idx].cluster;
         }
+        throw new Error(`AliasNotFound: ${alias}`);
+    }
+    public getClusterClient(alias: string): OpenPAIClient {
+        const idx: number = this.indexOf(alias);
+        if (idx > -1) {
+            if (!this.data[idx].cache) {
+                this.data[idx].cache = []; // ! link cache space with the client
+            }
+            return new OpenPAIClient(this.data[idx].cluster, this.data[idx].cache);
+        }
+        throw new Error(`AliasNotFound: ${alias}`);
+    } protected uidOf = (a: IClusterWithCache) => a.cluster.alias!;
+}
+
+/**
+ * CliEngine is the executor of CLI commands processing
+ */
+export class CliEngine {
+    public manager: LocalClustersManager;
+    protected clustersFileName?: string;
+    protected parser: argparse.ArgumentParser;
+    protected subparsers: argparse.SubParser;
+    protected executors: { [index: string]: CommandCallback; } = {};
+    protected formatters: { [index: string]: (result: object) => void; } = {};
+
+    constructor(input?: string | IClusterWithCache[]) {
+        this.manager = new LocalClustersManager();
+        if (input) {
+            if (typeof input === 'string') {
+                this.clustersFileName = Util.expandUser(input);
+            } else {
+                this.manager.copyData(input);
+            }
+        } else {
+            this.clustersFileName = Util.expandUser(path.join('~', '.openpai', 'clusters.json'));
+        }
+
         this.parser = new argparse.ArgumentParser({
             version: '0.1',
             addHelp: true,
@@ -60,59 +113,87 @@ export class CliEngine {
         this.subparsers = this.parser.addSubparsers({ title: 'commands', dest: 'subcommand' });
     }
 
-    public registerCommand(subCommand: ISubParserOptions, args: IArgumentOptions[], cb: CommandCallback, exclusiveArgs?: IExclusiveArgGroup[]): void {
+    public async load(): Promise<void> {
+        if (this.clustersFileName) {
+            const data: IClusterWithCache[] = await readJson<IClusterWithCache[]>(this.clustersFileName, []);
+            this.manager.assignData(data);
+        }
+    }
+
+    public async store(): Promise<void> {
+        if (this.clustersFileName) {
+            await writeJson(this.clustersFileName, this.manager.getData());
+        }
+    }
+
+    /**
+     * register a sub command to the CLI engine
+     */
+    public registerCommand(
+        subCommand: ISubParserOptions,
+        args: IArgumentOptions[],
+        cb: CommandCallback, exclusiveArgs?: IExclusiveArgGroup[]
+    ): void {
         const addArgument = (ps: argparse.ArgumentParser | argparse.ArgumentGroup, a: IArgumentOptions) => {
-            let name = a.name;
+            const name: string | string[] = a.name;
             delete a.name;
             ps.addArgument(name, a as argparse.ArgumentOptions);
         };
-        let cmd = subCommand.name;
+        const cmd: string = subCommand.name;
         delete subCommand.name;
         if (subCommand.addHelp == null) { // null or undefined
             subCommand.addHelp = true;
         }
-        let parser = this.subparsers.addParser(cmd, subCommand);
+        const parser: argparse.ArgumentParser = this.subparsers.addParser(cmd, subCommand);
         for (const arg of args) {
             addArgument(parser, arg);
         }
         if (exclusiveArgs) {
             for (const g of exclusiveArgs) {
-                let group = parser.addMutuallyExclusiveGroup({ required: g.required || false });
+                const group: argparse.ArgumentGroup = parser.addMutuallyExclusiveGroup({ required: g.required || false });
                 for (const arg of g.args) {
                     addArgument(group, arg);
                 }
             }
         }
-        CliEngine.prototype[cmd] = cb;
+        this.executors[cmd] = cb;
     }
 
+    /**
+     * provide a formatter callback to process the result for screen printing
+     */
     public registerFormatter(name: string, cb: (result: object) => void): void {
         this.formatters[name] = (result) => {
             cb(result);
         };
     }
 
-
-    public async evaluate(params?: string[], toScreen: boolean = false) {
-        let args = this.parser.parseArgs(params);
-        let cmd = args.subcommand;
+    /**
+     * to evaluate a command (e.g. ['listj`, 'your-cluster1]) and return the result
+     */
+    public async evaluate(params?: string[]): Promise<IResult> {
+        const args: any = this.parser.parseArgs(params);
+        const cmd: string = args.subcommand;
         delete args.subcommand;
         Util.debug(cmd, args);
 
-        let result = await Promise.resolve(this[cmd](args));
-        if (toScreen) {
-            Util.debug('results received', result);
-            if (cmd in this.formatters) {
-                this.formatters[cmd](result);
-            } else {
-                if (result != null) {
-                    console.dir(result);
-                } else {
-                    console.log();
-                }
-            }
-        }
-        return result;
+        const result: any = await Promise.resolve(this.executors[cmd](args));
+        return { command: cmd, args: args, result: result };
     }
 
+    /**
+     * print the result with formatter to screen
+     */
+    public toScreen(result: IResult): void {
+        Util.debug('results received', result);
+        if (result.command in this.formatters) {
+            this.formatters[result.command](result);
+        } else {
+            if (result.result != null) {
+                console.dir(result.result);
+            } else {
+                console.log();
+            }
+        }
+    }
 }

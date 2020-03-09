@@ -1,2 +1,5 @@
-import { CliEngine } from "./cliEngine";
-export declare const registerJobCommands: (cli: CliEngine) => void;
+import { CliEngine } from './cliEngine';
+/**
+ * register job realted commands
+ */
+export declare function registerJobCommands(cli: CliEngine): void;

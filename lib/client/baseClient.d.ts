@@ -1,10 +1,14 @@
 import { ILoginInfo } from '../models/authn';
-import { IPAICluster, IPAIClusterInfo } from '../models/cluster';
+import { IPAICluster } from '../models/cluster';
 /**
  * OpenPAI basic client.
  */
 export declare class OpenPAIBaseClient {
     protected static readonly TIMEOUT: number;
+    /**
+     * get cluster configuration / info
+     */
+    config: any;
     protected cluster: IPAICluster;
     private cacheToken?;
     constructor(cluster: IPAICluster);
@@ -21,17 +25,4 @@ export declare class OpenPAIBaseClient {
      * Basic login.
      */
     login(): Promise<ILoginInfo>;
-    /**
-     * get cluster configuration / info
-     */
-    config: {
-        /**
-         * username from cluster config
-         */
-        username: () => string | undefined;
-        /**
-         * Get OpenPAI cluster info, will call /api/v1.
-         */
-        clusterInfo: () => Promise<IPAIClusterInfo>;
-    };
 }

@@ -39,7 +39,7 @@ export class JobClient extends OpenPAIBaseClient {
     public async list(query?: string): Promise<IJobInfo[]> {
         const url: string = query === undefined ?
             Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/jobs`) :
-            Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/jobs?${query}`) ;
+            Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/jobs?${query}`);
         return await request.get(url);
     }
 
@@ -133,13 +133,13 @@ export class JobClient extends OpenPAIBaseClient {
             token = await super.token();
         }
         await request.post(url, {
-                body: text,
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'text/yaml'
-                },
-                timeout: OpenPAIBaseClient.TIMEOUT
-            }
+            body: text,
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'text/yaml'
+            },
+            timeout: OpenPAIBaseClient.TIMEOUT
+        }
         );
     }
 
@@ -153,19 +153,19 @@ export class JobClient extends OpenPAIBaseClient {
             token = await super.token();
         }
         return await request.post(url, {
-                form: jobConfig,
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                json: true,
-                timeout: OpenPAIBaseClient.TIMEOUT
-            }
+            form: jobConfig,
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            json: true,
+            timeout: OpenPAIBaseClient.TIMEOUT
+        }
         );
     }
 
     /**
-     * Get job SSH infomation, will call /api/v1/user/${userName}/jobs/${jobName}/ssh.
+     * Get job SSH information, will call /api/v1/user/${userName}/jobs/${jobName}/ssh.
      * @param userName The user name.
      * @param jobName The job name.
      */
@@ -173,7 +173,7 @@ export class JobClient extends OpenPAIBaseClient {
     public async getSshInfo(userName: string, jobName: string): Promise<IJobSshInfo>;
 
     /**
-     * Get job SSH infomation, will call /api/v1/jobs/${jobName}/ssh.
+     * Get job SSH information, will call /api/v1/jobs/${jobName}/ssh.
      * @param jobName The job name.
      */
     public async getSshInfo(jobName: string): Promise<IJobSshInfo>;

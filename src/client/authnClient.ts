@@ -18,7 +18,7 @@
 import * as request from 'request-promise-native';
 
 import { Util } from '../commom/util';
-import { IAuthnInfo, ILoginInfo } from '../models/authn';
+import { IAuthnInfo } from '../models/authn';
 import { IPAICluster } from '../models/cluster';
 
 import { OpenPAIBaseClient } from './baseClient';

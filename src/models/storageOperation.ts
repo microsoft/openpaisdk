@@ -16,10 +16,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 /**
- * An abstractful File System based on file operation
+ * An abstract File System based on file operation
  */
 
-import { IMountInfo, IStorageServer } from './storage';
+import { IStorageDetail } from './storage';
 
 export interface IFileInfo {
     mode: string;
@@ -34,8 +34,8 @@ export interface IFileInfo {
 
 export interface IStorageNode {
     // info
-    config: IMountInfo;
-    server: IStorageServer;
+    config: IStorageDetail;
+    client?: IStorageNodeClient;
     // Essential methods
     getinfo(path: string): Promise<IFileInfo>;
     listdir(path: string): Promise<string[]>;
@@ -53,7 +53,7 @@ export interface IStorageNode {
 
 export interface IStorageNodeClient {
     /* should contain a constructor as below
-     * new(config: IStorageConfig, server: IStorageServer): IStorageNodeClient
+     * new(config: IStorageDetail): IStorageNodeClient
      */
     mkdirAllowRecursive: boolean; // whether makedir() could create parent directory recursively
     getinfo(path: string): Promise<IFileInfo>;

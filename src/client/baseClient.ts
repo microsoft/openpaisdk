@@ -22,13 +22,33 @@ import { Util } from '../commom/util';
 import { ILoginInfo } from '../models/authn';
 import { IPAICluster, IPAIClusterInfo } from '../models/cluster';
 import { ITokenItem } from '../models/token';
-import { utils } from 'mocha';
 
 /**
  * OpenPAI basic client.
  */
 export class OpenPAIBaseClient {
     protected static readonly TIMEOUT: number = 60 * 1000;
+
+    /**
+     * get cluster configuration / info
+     */
+    public config: any = {
+        /**
+         * username from cluster config
+         */
+        username: () => {
+            return this.cluster.username;
+        },
+
+        /**
+         * Get OpenPAI cluster info, will call /api/v1.
+         */
+        clusterInfo: async (): Promise<IPAIClusterInfo> => {
+            const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/`);
+            const res: any = await request.get(url);
+            return JSON.parse(res);
+        }
+    };
     protected cluster: IPAICluster;
 
     private cacheToken?: ITokenItem;
@@ -44,9 +64,9 @@ export class OpenPAIBaseClient {
 
     public static parsePaiUri(cluster: IPAICluster): IPAICluster {
         if (cluster.pai_uri) {
-            let paiUri = new URL(Util.fixUrl(cluster.pai_uri!));
+            const paiUri: URL = new URL(Util.fixUrl(cluster.pai_uri!));
             if (!cluster.https) {
-                cluster.https = paiUri.protocol == 'https:';
+                cluster.https = paiUri.protocol === 'https:';
             }
             if (!cluster.rest_server_uri) {
                 cluster.rest_server_uri = paiUri.host + '/rest-server';
@@ -91,25 +111,4 @@ export class OpenPAIBaseClient {
 
         return res;
     }
-
-    /**
-     * get cluster configuration / info
-     */
-    public config = {
-        /**
-         * username from cluster config
-         */
-        username: () => {
-            return this.cluster.username;
-        },
-
-        /**
-         * Get OpenPAI cluster info, will call /api/v1.
-         */
-        clusterInfo: async (): Promise<IPAIClusterInfo> => {
-            const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/`);
-            const res: any = await request.get(url);
-            return JSON.parse(res);
-        }
-    };
 }

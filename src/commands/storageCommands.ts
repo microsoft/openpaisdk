@@ -20,29 +20,31 @@ import { OpenPAIClient } from '..';
 import { CliEngine } from './cliEngine';
 
 /**
- * register job realted commands
+ * register storage related commands
  */
-export function registerJobCommands(cli: CliEngine): void {
+export function registerStorageCommands(cli: CliEngine): void {
     cli.registerCommand(
-        { name: 'listj', help: 'list jobs', aliases: ['list-jobs'] },
+        { name: 'lists', help: 'list storages', aliases: ['list-storages'] },
         [
-            { name: 'alias', help: 'cluster alias' }
+            { name: 'alias', help: 'cluster alias' },
+            { name: ['--skip-cache', '-k'], help: 'skip cached record, fetch latest value', action: 'storeTrue' }
         ],
         async (a) => {
             const client: OpenPAIClient = cli.manager.getClusterClient(a.alias);
-            if (a.all) {
-                return client.job.list();
-            }
-            return client.job.list(`username=${a.user || client.config.username()}`);
-        },
-        [
-            {
-                args: [
-                    { name: ['--user', '-u'], help: 'username (default is user in cluster config)' },
-                    { name: ['--all', '-a'], help: 'list jobs from all users', action: 'storeTrue' }
-                ]
-            }
-        ]
+            return await client.cache.functions.getStorages(a.skip_cache);
+        }
     );
 
+    cli.registerCommand(
+        { name: 'getinfo', help: 'get info of destination path in storage' },
+        [
+            { name: 'alias', help: 'cluster alias' },
+            { name: 'storage', help: 'storage name' },
+            { name: ['--skip-cache', '-k'], help: 'skip cached record, fetch latest value', action: 'storeTrue' }
+        ],
+        async (a) => {
+            const client: OpenPAIClient = cli.manager.getClusterClient(a.alias);
+            return await client.cache.functions.getStorageByName(a.skip_cache, a.storage);
+        }
+    );
 }

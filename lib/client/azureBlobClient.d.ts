@@ -1,6 +1,6 @@
 import { PagedAsyncIterableIterator } from '@azure/core-paging';
 import { BlobItem, BlobPrefix, ContainerListBlobHierarchySegmentResponse } from '@azure/storage-blob';
-import { IMountInfo, IStorageServer } from '..';
+import { IStorageDetail } from '../models/storage';
 import { IFileInfo, IStorageNodeClient } from '../models/storageOperation';
 export declare type BlobIter = PagedAsyncIterableIterator<({
     kind: 'prefix';
@@ -25,10 +25,9 @@ export declare type BlobValue = ({
  */
 export declare class AzureBlobClient implements IStorageNodeClient {
     mkdirAllowRecursive: boolean;
-    config: IMountInfo;
-    server: IStorageServer;
+    config: IStorageDetail;
     private client;
-    constructor(config: IMountInfo, server: IStorageServer);
+    constructor(config: IStorageDetail);
     /**
      * Get status of a path.
      * @param path The path.
