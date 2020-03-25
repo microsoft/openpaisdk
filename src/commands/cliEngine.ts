@@ -50,12 +50,17 @@ interface IArgument extends argparse.Namespace {
     [index: string]: any;
 }
 
-type CommandCallback = (a: IArgument) => any;
-
 export interface IResult {
     command: string;
     args?: IArgument;
     result: any | undefined;
+}
+
+type CommandCallback = (a: IArgument) => any;
+type FormmaterCallback = (r: IResult) => void;
+
+function defaultFommater(result: IResult): void {
+    console.log(JSON.stringify(result.result || "", undefined, 4));
 }
 
 /**
@@ -91,7 +96,7 @@ export class CliEngine {
     protected parser: argparse.ArgumentParser;
     protected subparsers: argparse.SubParser;
     protected executors: { [index: string]: CommandCallback; } = {};
-    protected formatters: { [index: string]: (result: object) => void; } = {};
+    protected formatters: { [index: string]: FormmaterCallback; } = {};
 
     constructor(input?: string | IClusterWithCache[]) {
         this.manager = new LocalClustersManager();
@@ -132,7 +137,9 @@ export class CliEngine {
     public registerCommand(
         subCommand: ISubParserOptions,
         args: IArgumentOptions[],
-        cb: CommandCallback, exclusiveArgs?: IExclusiveArgGroup[]
+        cb: CommandCallback,
+        exclusiveArgs?: IExclusiveArgGroup[],
+        formatter?: FormmaterCallback
     ): void {
         const addArgument = (ps: argparse.ArgumentParser | argparse.ArgumentGroup, a: IArgumentOptions) => {
             const name: string | string[] = a.name;
@@ -157,15 +164,7 @@ export class CliEngine {
             }
         }
         this.executors[cmd] = cb;
-    }
-
-    /**
-     * provide a formatter callback to process the result for screen printing
-     */
-    public registerFormatter(name: string, cb: (result: object) => void): void {
-        this.formatters[name] = (result) => {
-            cb(result);
-        };
+        this.formatters[cmd] = formatter || defaultFommater;
     }
 
     /**
@@ -186,14 +185,6 @@ export class CliEngine {
      */
     public toScreen(result: IResult): void {
         Util.debug('results received', result);
-        if (result.command in this.formatters) {
-            this.formatters[result.command](result);
-        } else {
-            if (result.result != null) {
-                console.dir(result.result);
-            } else {
-                console.log();
-            }
-        }
+        this.formatters[result.command](result);
     }
 }

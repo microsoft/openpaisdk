@@ -22,12 +22,13 @@ interface IExclusiveArgGroup {
 interface IArgument extends argparse.Namespace {
     [index: string]: any;
 }
-declare type CommandCallback = (a: IArgument) => any;
 export interface IResult {
     command: string;
     args?: IArgument;
     result: any | undefined;
 }
+declare type CommandCallback = (a: IArgument) => any;
+declare type FormmaterCallback = (r: IResult) => void;
 /**
  * LocalClustersManager handles the prestored array of clusters and caches
  * by providing filtering, and client construction
@@ -49,7 +50,7 @@ export declare class CliEngine {
         [index: string]: CommandCallback;
     };
     protected formatters: {
-        [index: string]: (result: object) => void;
+        [index: string]: FormmaterCallback;
     };
     constructor(input?: string | IClusterWithCache[]);
     load(): Promise<void>;
@@ -57,11 +58,7 @@ export declare class CliEngine {
     /**
      * register a sub command to the CLI engine
      */
-    registerCommand(subCommand: ISubParserOptions, args: IArgumentOptions[], cb: CommandCallback, exclusiveArgs?: IExclusiveArgGroup[]): void;
-    /**
-     * provide a formatter callback to process the result for screen printing
-     */
-    registerFormatter(name: string, cb: (result: object) => void): void;
+    registerCommand(subCommand: ISubParserOptions, args: IArgumentOptions[], cb: CommandCallback, exclusiveArgs?: IExclusiveArgGroup[], formatter?: FormmaterCallback): void;
     /**
      * to evaluate a command (e.g. ['listj`, 'your-cluster1]) and return the result
      */

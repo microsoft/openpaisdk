@@ -19,6 +19,7 @@ import * as fs from 'fs-extra';
 import { dirname } from 'path';
 
 import { Util } from '../commom/util';
+import { table, getBorderCharacters } from 'table';
 
 /**
  * utils functions
@@ -41,4 +42,12 @@ export async function writeJson<T extends object>(pth: string, val: T): Promise<
     await fs.ensureDir(dirname(pth));
     await fs.writeJSON(pth, val);
     Util.debug(`saved to ${pth}`);
+}
+
+export function table2Console(rows: any[][]) {
+    const config = {
+        border: getBorderCharacters(`ramac`)
+    };
+    const output = table(rows, config);
+    console.log(output);
 }

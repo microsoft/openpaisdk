@@ -63,10 +63,9 @@ export class AzureBlobClient implements IStorageNodeClient {
 
     constructor(config: IStorageDetail) {
         this.config = config;
-        const data: IAzureBlobCfg = <IAzureBlobCfg> config.data;
+        const data: IAzureBlobCfg = <IAzureBlobCfg>config.data;
         if (config.type !== 'azureBlob' ||
             !data ||
-            !data.accountKey ||
             !data.containerName ||
             !(data.accountKey || data.accountSASToken)
         ) {

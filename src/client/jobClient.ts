@@ -40,7 +40,7 @@ export class JobClient extends OpenPAIBaseClient {
         const url: string = query === undefined ?
             Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/jobs`) :
             Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/jobs?${query}`);
-        return await request.get(url);
+        return JSON.parse(await request.get(url));
     }
 
     /**
