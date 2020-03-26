@@ -1,0 +1,22 @@
+language: node_js
+
+env:
+  - workerCount=3 timeout=600000
+
+matrix:
+  fast_finish: true
+
+install:
+  - npm install -g typescript
+  - tsc
+  - npm install 
+
+script:
+  - npm run test
+
+cache:
+  directories:
+    - node_modules
+
+git:
+  depth: 1
