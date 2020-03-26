@@ -1,4 +1,5 @@
 # OpenPAI JS SDK
+[![Build Status](https://www.travis-ci.org/microsoft/openpaisdk.svg?branch=master)](https://travis-ci.org/microsoft/openpaisdk)
 
 The `JavaScript` SDK is designed to facilitate the developers of [OpenPAI](https://github.com/microsoft/pai) to offer user friendly experience. 
 
