@@ -17,7 +17,8 @@
 
 import { IPAICluster, OpenPAIClient } from '..';
 
-import { CliEngine, IClusterWithCache } from './cliEngine';
+import { CliEngine, IClusterWithCache, IResult } from './cliEngine';
+import { table2Console } from './utils';
 
 /**
  *  register commands related to cluster management
@@ -29,6 +30,17 @@ export const registerClusterCommands = (cli: CliEngine) => {
         (a) => {
             const result: IClusterWithCache[] = cli.manager.getData();
             return result.map((x) => x.cluster);
+        },
+        undefined,
+        (r: IResult) => {
+            const clusters = r.result as IPAICluster[];
+            const rows: any[][] = [
+                ['alias', 'uri', 'user', 'https']
+            ];
+            clusters.forEach(cluster => rows.push([
+                cluster.alias, cluster.pai_uri, cluster.username, cluster.https
+            ]));
+            table2Console(rows);
         }
     );
 
