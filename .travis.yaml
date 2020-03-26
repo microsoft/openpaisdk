@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+  - "13"
+
+install:
+  - npm install -g typescript
+  - npm install --save-dev
+  - tsc
+  - npm install 
+
+script:
+  - npm run test
+
+cache:
+  directories:
+    - node_modules
