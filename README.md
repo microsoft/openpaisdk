@@ -34,7 +34,7 @@ The SDK offers a command line interface (CLI) prefixed by `pai`. For end users t
 ```bash
 pip install nodeenv
 nodeenv myenv
-myenv/Scripts/activate
+source myenv/bin/activate # use `myenv/Scripts/activate` instead on Windows
 npm i -g microsoft/openpaisdk
 ```
 
