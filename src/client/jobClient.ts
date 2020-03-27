@@ -6,8 +6,8 @@ import * as request from 'request-promise-native';
 
 import { Util } from '../commom/util';
 import { IPAICluster } from '../models/cluster';
-import { IJobConfig, IJobConfigV1, IJobFrameworkInfo, IJobInfo, IJobSshInfo, IJobStatus } from '../models/job';
-
+import { IJobConfig, IJobConfigV1 } from '../models/jobConfig';
+import { IJobFrameworkInfo, IJobInfo, IJobSshInfo, IJobStatus } from '../models/jobStatus';
 import { OpenPAIBaseClient } from './baseClient';
 
 /**
@@ -66,7 +66,7 @@ export class JobClient extends OpenPAIBaseClient {
      * @param userName The user name.
      * @param jobName The job name.
      */
-    public async getFrameworkInfo(userName: string, jobName: string): Promise<IJobFrameworkInfo> {
+    public async getFrameworkInfo(userName: string, jobName: string): Promise<IJobStatus> {
         const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/jobs/${userName}~${jobName}`);
         const res: string = await request.get(url);
         return JSON.parse(res);

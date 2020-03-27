@@ -16,7 +16,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // tslint:disable-next-line:missing-jsdoc
-import { IJobStatus } from '../../../src/models/job';
+import { IJobStatus } from '../../../src/models/jobStatus';
 
 export const testJobStatus: IJobStatus = {
     name: 'tensorflow_serving_mnist_2019_6585ba19',

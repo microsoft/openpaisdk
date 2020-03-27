@@ -1,52 +1,3 @@
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
-
-/**
- * OpenPAI Job Info.
- */
-export interface IJobInfo {
-    name: string;
-    username: string;
-    state: 'WAITING' | 'RUNNING' | 'SUCCEEDED' | 'STOPPED' | 'FAILED' | 'UNKNOWN';
-    /** raw frameworkState from frameworklauncher */
-    subState: 'FRAMEWORK_COMPLETED' | 'FRAMEWORK_WAITING';
-    executionType: 'START' | 'STOP';
-    retries: number;
-    retryDetails: {
-        /** Job failed due to user or unknown error. */
-        user: number,
-        /** Job failed due to platform error. */
-        platform: number,
-        /** Job cannot get required resource to run within timeout. */
-        resource: number;
-    };
-    createdTime: number;
-    completedTime: number;
-    virtualCluster: string;
-    appExitCode: number;
-    totalGpuNumber: number;
-    totalTaskNumber: number;
-    totalTaskRoleNumber: number;
-}
-
-/**
- * OpenPAI Job status.
- */
-export interface IJobStatus {
-    name?: string;
-    jobStatus?: any | null;
-    taskRoles?: any | null;
-}
-
-/**
- * OpenPAI Job Framework Infomation.
- */
-export interface IJobFrameworkInfo {
-    summarizedFrameworkInfo?: any | null;
-    aggregatedFrameworkRequest?: any | null;
-    aggregatedFrameworkStatus?: any | null;
-}
-
 /**
  * OpenPAI v1 job config.
  */
@@ -67,9 +18,9 @@ export interface IJobConfigV1 {
     }];
     [key: string]: any;
 }
-
 /**
  * OpenPAI Job Config Protocol.
+ * https://github.com/microsoft/openpai-protocol/blob/master/schemas/v2/schema.yaml
  */
 export interface IJobConfig {
     /** Protocol version, current version is 2. */
@@ -81,7 +32,6 @@ export interface IJobConfig {
     version?: string | number;
     contributor?: string;
     description?: string;
-
     /** Each item is the protocol for data, script, dockerimage, or output type. */
     prerequisites?: {
         /** If omitted, follow the protocolVersion in root. */
@@ -103,20 +53,11 @@ export interface IJobConfig {
         /** Only when the type is data can the uri be a list. */
         uri: string | string[];
     }[];
-
     /**
      * If specified, the whole parameters object can be referenced as `$parameters`.
      * Scope of reference `$parameters`: the reference is shared among all task roles.
      */
-    parameters?: {
-        /**
-         * <param1>: value1
-         * <param2>: value2
-         * Specify name and value of all the referencable parameters that will be used in the whole job template.
-         * Can be referenced by `<% $parameters.param1 %>`, `<% $parameters.param2 %>`.
-         */
-    };
-
+    parameters?: {};
     /**
      * If sensitive information including password or API key is needed in the protocol,
      * it should be specified here in secrets section and referenced as `$secrets`.
@@ -125,18 +66,9 @@ export interface IJobConfig {
      * unauthorized users (how to define unauthorized user is out of the scope of this protocol).
      * For example, the yaml file used for job cloning, the stdout/stderr should protect all information marked as secrets.
      */
-    secrets?: {
-        /**
-         * <secret1>: password
-         * <secret2>: key
-         * Specify name and value of all secrets that will be used in the whole job template.
-         * Can be referenced by `<% $secrets.secret1 %>`, `<% $secrets.secret2 %>`.
-         */
-    };
-
+    secrets?: {};
     /** Default is 0. */
     jobRetryCount?: number;
-
     /**
      * Task roles are different types of task in the protocol.
      * One job may have one or more task roles, each task role has one or more instances, and each instance runs inside one container.
@@ -180,12 +112,10 @@ export interface IJobConfig {
             output?: string;
             /** Select script defined in prerequisites, target can be referenced as `$script` in this task role. */
             script?: string;
-
             extraContainerOptions?: {
                 /** Config the /dev/shm in a docker container, https://docs.docker.com/compose/compose-file/#shm_size. */
                 shmMB?: number;
             };
-
             resourcePerInstance: {
                 /** CPU number, unit is CPU vcore. */
                 cpu: number;
@@ -197,11 +127,9 @@ export interface IJobConfig {
                     [portLabel: string]: number;
                 };
             };
-
             commands: string[];
         };
     };
-
     /**
      * To handle that a component may interact with different component differently,
      * user is encouraged to place the codes handling such difference in the "deployments" field,
@@ -223,24 +151,14 @@ export interface IJobConfig {
             };
         };
     }[];
-
     /** Optional, default cluster specific settings. */
     defaults?: {
         virtualCluster?: string;
         /** Should reference to deployment defined in deployments */
         deployment?: string;
     };
-
     /** Optional, extra field, object, save any information that plugin may use. */
     extras?: {
         submitFrom?: string;
     };
-}
-
-/**
- * OpenPAI Job SSH Information.
- */
-export interface IJobSshInfo {
-    containers?: any | null;
-    keyPair?: any | null;
 }

@@ -16,7 +16,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // tslint:disable-next-line:missing-jsdoc
-import { IJobConfig, IJobConfigV1 } from '../../../src/models/job';
+import { IJobConfig, IJobConfigV1 } from '../../../src/models/jobConfig';
 
 export const testJobConfig: IJobConfig = {
     contributor: 'OpenPAI',

@@ -1,5 +1,6 @@
 import { IPAICluster } from '../models/cluster';
-import { IJobConfig, IJobConfigV1, IJobFrameworkInfo, IJobInfo, IJobSshInfo, IJobStatus } from '../models/job';
+import { IJobConfig, IJobConfigV1 } from '../models/jobConfig';
+import { IJobInfo, IJobSshInfo, IJobStatus } from '../models/jobStatus';
 import { OpenPAIBaseClient } from './baseClient';
 /**
  * OpenPAI Job client.
@@ -29,7 +30,7 @@ export declare class JobClient extends OpenPAIBaseClient {
      * @param userName The user name.
      * @param jobName The job name.
      */
-    getFrameworkInfo(userName: string, jobName: string): Promise<IJobFrameworkInfo>;
+    getFrameworkInfo(userName: string, jobName: string): Promise<IJobStatus>;
     /**
      * Get job config, will call /api/v2/jobs/{userName}~{jobName}/config.
      * @param userName The user name.
