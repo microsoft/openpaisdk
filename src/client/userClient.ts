@@ -1,19 +1,5 @@
-// Copyright (c) Microsoft Corporation
-// All rights reserved.
-//
-// MIT License
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and
-// to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-// BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 
 import * as request from 'request-promise-native';
 
@@ -90,7 +76,7 @@ export class UserClient extends OpenPAIBaseClient {
             token = await super.token();
         }
         const res: any = await request.post(url, {
-            body: JSON.stringify({username, email, password, admin, virtualCluster, extension}),
+            body: JSON.stringify({ username, email, password, admin, virtualCluster, extension }),
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
@@ -116,7 +102,7 @@ export class UserClient extends OpenPAIBaseClient {
         if (token === undefined) {
             token = await super.token();
         }
-        const res: any = await this.sendPutRequestWithToken(url, {extension}, token);
+        const res: any = await this.sendPutRequestWithToken(url, { extension }, token);
 
         return JSON.parse(res);
     }
@@ -154,7 +140,7 @@ export class UserClient extends OpenPAIBaseClient {
         if (token === undefined) {
             token = await super.token();
         }
-        const res: any = await this.sendPutRequestWithToken(url, {virtualCluster}, token);
+        const res: any = await this.sendPutRequestWithToken(url, { virtualCluster }, token);
         return JSON.parse(res);
     }
 
@@ -170,7 +156,7 @@ export class UserClient extends OpenPAIBaseClient {
         if (token === undefined) {
             token = await super.token();
         }
-        const res: any = await this.sendPutRequestWithToken(url, {oldPassword, newPassword}, token);
+        const res: any = await this.sendPutRequestWithToken(url, { oldPassword, newPassword }, token);
         return JSON.parse(res);
     }
 
@@ -185,7 +171,7 @@ export class UserClient extends OpenPAIBaseClient {
         if (token === undefined) {
             token = await super.token();
         }
-        const res: any = await this.sendPutRequestWithToken(url, {email}, token);
+        const res: any = await this.sendPutRequestWithToken(url, { email }, token);
         return JSON.parse(res);
     }
 
@@ -200,7 +186,7 @@ export class UserClient extends OpenPAIBaseClient {
         if (token === undefined) {
             token = await super.token();
         }
-        const res: any = await this.sendPutRequestWithToken(url, {admin}, token);
+        const res: any = await this.sendPutRequestWithToken(url, { admin }, token);
         return JSON.parse(res);
     }
 
@@ -215,7 +201,7 @@ export class UserClient extends OpenPAIBaseClient {
         if (token === undefined) {
             token = await super.token();
         }
-        const res: any = await this.sendPutRequestWithToken(url, {grouplist}, token);
+        const res: any = await this.sendPutRequestWithToken(url, { grouplist }, token);
         return JSON.parse(res);
     }
 
@@ -230,7 +216,7 @@ export class UserClient extends OpenPAIBaseClient {
         if (token === undefined) {
             token = await super.token();
         }
-        const res: any = await this.sendPutRequestWithToken(url, {groupname}, token);
+        const res: any = await this.sendPutRequestWithToken(url, { groupname }, token);
         return JSON.parse(res);
     }
 
@@ -246,7 +232,7 @@ export class UserClient extends OpenPAIBaseClient {
             token = await super.token();
         }
         const res: any = await request.delete(url, {
-            body: JSON.stringify({groupname}),
+            body: JSON.stringify({ groupname }),
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json'
