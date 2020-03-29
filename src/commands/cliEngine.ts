@@ -46,7 +46,14 @@ type CommandCallback = (a: IArgument) => any;
 type FormmaterCallback = (r: IResult) => void;
 
 function defaultFommater(result: IResult): void {
-    console.log(JSON.stringify(result.result || "", undefined, 4));
+    const cout = (msg: string | object) => {
+        if (typeof result.result === 'string') {
+            console.log(result.result);
+        } else {
+            console.log(JSON.stringify(result.result || "", undefined, 4));
+        }
+    };
+    cout(result.result || "");
 }
 
 /**

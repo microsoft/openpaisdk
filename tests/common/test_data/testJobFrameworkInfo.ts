@@ -16,7 +16,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // tslint:disable-next-line:missing-jsdoc
-import { IJobFrameworkInfo } from '../../../src/models/job';
+import { IJobFrameworkInfo } from '../../../src/models/jobStatus';
 
 export const testJobFrameworkInfo: IJobFrameworkInfo = {
     summarizedFrameworkInfo: {

@@ -16,7 +16,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // tslint:disable-next-line:missing-jsdoc
-import { IJobSshInfo } from '../../../src/models/job';
+import { IJobSshInfo } from '../../../src/models/jobStatus';
 
 export const testJobSshInfo: IJobSshInfo = {
     containers: [

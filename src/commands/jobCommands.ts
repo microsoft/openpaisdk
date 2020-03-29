@@ -1,12 +1,15 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { OpenPAIClient, IJobConfig, IJobInfo } from '..';
+import { OpenPAIClient, IJobConfig, IJobInfo, IJobStatus } from '..';
 import { CliEngine, IResult } from './cliEngine';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs-extra';
 import { Util } from '../commom/util';
 import { table2Console } from './utils';
+import * as child from 'child_process';
+import * as readline from 'readline';
+import * as assert from 'assert';
 /**
  * register job realted commands
  */
@@ -71,4 +74,34 @@ export function registerJobCommands(cli: CliEngine): void {
         }
     );
 
+    cli.registerCommand(
+        { name: 'ssh', help: 'ssh to the job container' },
+        [
+            { name: ['--user'], help: 'username on the openpai cluster' },
+            { name: ['--login-name', '-l'], help: 'the username to login as on the remote machine', defaultValue: 'root' },
+            { name: ['--identity-file', '-i'], help: 'the file to load identity (private key)' },
+            { name: 'alias', help: 'cluster alias' },
+            { name: 'job', help: 'config file' },
+            { name: 'taskrole', help: 'task role', nargs: '?' },
+            { name: 'taskindex', help: 'task index', nargs: '?' }
+        ],
+        async (a) => {
+            const client: OpenPAIClient = cli.manager.getClusterClient(a.alias);
+            const jobinfo: IJobStatus = await client.job.getFrameworkInfo(a.user || client.config.username(), a.job);
+            a.taskrole = a.taskrole || Object.keys(jobinfo.taskRoles)[0];
+            a.taskindex = a.taskindex || 0;
+            const container = jobinfo.taskRoles[a.taskrole].taskStatuses[a.taskindex];
+            assert('ssh' in container.containerPorts, `ssh port is not declared when submitting`);
+            const cmd: (string | number)[] = ['ssh', '-oStrictHostKeyChecking=no'];
+            if (a.identity_file) {
+                cmd.push('-i', a.identity_file);
+            }
+            if (a.login_name) {
+                cmd.push('-l', a.login_name);
+            }
+            cmd.push('-p', container.containerPorts['ssh'] as number);
+            cmd.push(container.containerIp);
+            return (cmd.join(' '));
+        }
+    );
 }
