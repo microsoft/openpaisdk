@@ -12,10 +12,10 @@
     "lint": "tslint -p tsconfig.json",
     "test": "mocha -r ts-node/register tests/**/*.spec.ts"
   },
-  "homepage": "https://github.com/Microsoft/pai",
+  "homepage": "https://github.com/Microsoft/openpaisdk",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Microsoft/pai.git"
+    "url": "https://github.com/Microsoft/openpaisdk.git"
   },
   "bugs": {
     "url": "https://github.com/Microsoft/pai/issues"
