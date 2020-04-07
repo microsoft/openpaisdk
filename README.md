@@ -3,11 +3,11 @@
 
 The `JavaScript` SDK is designed to facilitate the developers of [OpenPAI](https://github.com/microsoft/pai) to offer user friendly experience. 
 
-The SDK mainly provides client side sharable functions such as RESTful API wrapping, error handling, storage accessing and processing of [job protocol](). 
+The SDK mainly provides client side sharable functions such as RESTful API wrapping, error handling, storage accessing and processing of [job protocol](https://github.com/microsoft/openpai-protocol). *Now the OpenPAI RESTful API is updating, please waiting for our stable release.*
 
-It could be used to support existing or future front-ends (e.g. Web Portal, VS Code extension, Command Line Interface, Jupyter Notebook extension, and 3rd party clients), and also could be used to simplify the design of [kube runtime plugins](), which are executed in init containers.
+It could be used to support existing or future front-ends (e.g. Web Portal, VS Code extension, Command Line Interface, Jupyter Notebook extension, and 3rd party clients), and also could be used to simplify the design of [kube runtime plugins](https://github.com/microsoft/openpai-runtime), which are executed in init containers.
 
-*Now we are porting some of the functions from existing `Python` [SDK](github.com/microsoft/pai/contrib/python-sdk) and command line tool. The whole functionality of this SDK will be ready soon.*
+*Now we are porting some of the functions from existing `Python` [SDK](https://github.com/microsoft/pai/tree/v0.17.0/contrib/python-sdk) and command line tool. The whole functionality of this SDK will be ready soon.*
 
 ## Installation
 
@@ -55,7 +55,7 @@ This installation commands will generate a virtual environment with latest `node
 ## RESTful API
 The SDK provides ease-of-use `JavaScript` and `TypeScript` wrapping of  [OpenPAI RESTful APIs](https://github.com/microsoft/pai/blob/master/docs/rest-server/API.md). 
 
-Details are in [rest-api.md](docs/rest-api.md).
+Details are in [rest-api.md](https://github.com/microsoft/openpaisdk/blob/master/docs/rest-api.md).
 
 ## Storage Operations
 
@@ -69,7 +69,7 @@ let storageNode: IStorageNode = new StorageNode(storageDetail)
 ```
 It would provide storage accessing methods (`getinfo, listdir, makedir, upload, download, delete`) and CLI storage operations.
 
-Details are in [storage.md](docs/storage.md).
+Details are in [storage.md](https://github.com/microsoft/openpaisdk/blob/master/docs/storage.md).
 
 ## Local Cluster Management
 
@@ -81,7 +81,7 @@ The SDK will center the error handling, thus all front ends depending on it coul
 
 ## Common job config processing
 
-The interoperation of `OpenPAI` components depends on the [job protocol](github.com/microsoft/openpaiprotocol), and there have been some common operations of it, such as validation, preprocessing before submission (e.g. embedding essential user information). The SDK will provide essential common operations for all the front ends.
+The interoperation of `OpenPAI` components depends on the [job protocol](https://github.com/microsoft/openpai-protocol), and there have been some common operations of it, such as validation, preprocessing before submission (e.g. embedding essential user information). The SDK will provide essential common operations for all the front ends.
 
 # Contributing
 
