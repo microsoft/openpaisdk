@@ -5,7 +5,7 @@ import * as argparse from 'argparse';
 import * as path from 'path';
 
 import { IPAICluster, OpenPAIClient } from '..';
-import { ICacheRecord } from '../client/cacheClient';
+import { ICacheRecord } from '../client/v2/cacheClient';
 import { Identifiable } from '../commom/identifiable';
 import { Util } from '../commom/util';
 

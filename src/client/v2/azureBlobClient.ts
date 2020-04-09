@@ -14,8 +14,8 @@ import {
 } from '@azure/storage-blob';
 import * as Path from 'path';
 
-import { IAzureBlobCfg, IStorageDetail } from '../models/storage';
-import { IFileInfo, IStorageNodeClient } from '../models/storageOperation';
+import { IAzureBlobCfg, IStorageDetail } from '../../models/storage';
+import { IFileInfo, IStorageNodeClient } from '../../models/storageOperation';
 
 export type BlobIter = PagedAsyncIterableIterator<({
     kind: 'prefix';

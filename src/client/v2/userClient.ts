@@ -3,9 +3,9 @@
 
 import * as request from 'request-promise-native';
 
-import { Util } from '../commom/util';
-import { IPAICluster } from '../models/cluster';
-import { IUserInfo } from '../models/user';
+import { Util } from '../../commom/util';
+import { IPAICluster } from '../../models/cluster';
+import { IUserInfo } from '../../models/user';
 
 import { OpenPAIBaseClient } from './baseClient';
 

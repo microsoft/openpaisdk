@@ -1,9 +1,9 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { AuthnClient } from '..';
-import { IPAICluster } from '../models/cluster';
+import { IPAICluster } from '../../models/cluster';
 
+import { AuthnClient } from './authnClient';
 import { OpenPAIBaseClient } from './baseClient';
 import { CacheClient, ICacheRecord } from './cacheClient';
 import { JobClient } from './jobClient';

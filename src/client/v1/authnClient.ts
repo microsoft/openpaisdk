@@ -3,9 +3,9 @@
 
 import * as request from 'request-promise-native';
 
-import { Util } from '../commom/util';
-import { IAuthnInfo } from '../models/authn';
-import { IPAICluster } from '../models/cluster';
+import { Util } from '../../commom/util';
+import { IAuthnInfo } from '../../models/authn';
+import { IPAICluster } from '../../models/cluster';
 
 import { OpenPAIBaseClient } from './baseClient';
 
@@ -38,6 +38,7 @@ export class AuthnClient extends OpenPAIBaseClient {
         const url: string = queryString ?
             Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/authn/oidc/login?${queryString}`) :
             Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/authn/oidc/login`);
+        // tslint:disable-next-line:no-unnecessary-local-variable
         const res: string = await request.get(url);
 
         return res;
@@ -50,6 +51,7 @@ export class AuthnClient extends OpenPAIBaseClient {
         const url: string = queryString ?
             Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/authn/oidc/logout?${queryString}`) :
             Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/authn/oidc/logout`);
+        // tslint:disable-next-line:no-unnecessary-local-variable
         const res: string = await request.get(url);
 
         return res;

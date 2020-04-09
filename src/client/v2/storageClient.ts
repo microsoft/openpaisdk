@@ -4,9 +4,9 @@
 // tslint:disable-next-line:match-default-export-name
 import axios, { AxiosResponse } from 'axios';
 
-import { Util } from '../commom/util';
-import { IPAICluster } from '../models/cluster';
-import { IStorageConfig, IStorageDetail, IStorageServer, IStorageSummary } from '../models/storage';
+import { Util } from '../../commom/util';
+import { IPAICluster } from '../../models/cluster';
+import { IStorageConfig, IStorageDetail, IStorageServer, IStorageSummary } from '../../models/storage';
 
 import { OpenPAIBaseClient } from './baseClient';
 

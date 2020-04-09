@@ -3,9 +3,9 @@
 
 import * as request from 'request-promise-native';
 
-import { Util } from '../commom/util';
-import { IPAICluster } from '../models/cluster';
-import { INodeResource, IVirtualCluster } from '../models/virtualCluster';
+import { Util } from '../../commom/util';
+import { IPAICluster } from '../../models/cluster';
+import { INodeResource, IVirtualCluster } from '../../models/virtualCluster';
 
 import { OpenPAIBaseClient } from './baseClient';
 

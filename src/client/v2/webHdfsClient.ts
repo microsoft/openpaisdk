@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IMountInfo, IStorageServer } from '../models/storage';
-import { IFileInfo, IStorageNodeClient } from '../models/storageOperation';
+import { IMountInfo, IStorageServer } from '../../models/storage';
+import { IFileInfo, IStorageNodeClient } from '../../models/storageOperation';
 
 /**
  * Web HDFS Client.

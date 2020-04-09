@@ -4,10 +4,10 @@
 import * as request from 'request-promise-native';
 import { URL } from 'url';
 
-import { Util } from '../commom/util';
-import { ILoginInfo } from '../models/authn';
-import { IPAICluster, IPAIClusterInfo } from '../models/cluster';
-import { ITokenItem } from '../models/token';
+import { Util } from '../../commom/util';
+import { ILoginInfo } from '../../models/authn';
+import { IPAICluster, IPAIClusterInfo } from '../../models/cluster';
+import { ITokenItem } from '../../models/token';
 
 /**
  * OpenPAI basic client.
@@ -85,6 +85,7 @@ export class OpenPAIBaseClient {
      */
     public async login(): Promise<ILoginInfo> {
         const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/authn/basic/login`);
+        // tslint:disable-next-line:no-unnecessary-local-variable
         const res: ILoginInfo = await request.post(url, {
             form: {
                 expiration: 4000,

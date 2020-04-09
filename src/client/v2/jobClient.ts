@@ -4,10 +4,11 @@
 import * as yaml from 'js-yaml';
 import * as request from 'request-promise-native';
 
-import { Util } from '../commom/util';
-import { IPAICluster } from '../models/cluster';
-import { IJobConfig, IJobConfigV1 } from '../models/jobConfig';
-import { IJobFrameworkInfo, IJobInfo, IJobSshInfo, IJobStatus } from '../models/jobStatus';
+import { Util } from '../../commom/util';
+import { IPAICluster } from '../../models/cluster';
+import { IJobConfig } from '../../models/jobConfig';
+import { IJobInfo, IJobSshInfo, IJobStatus } from '../../models/jobStatus';
+
 import { OpenPAIBaseClient } from './baseClient';
 
 /**
@@ -124,27 +125,6 @@ export class JobClient extends OpenPAIBaseClient {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'text/yaml'
             },
-            timeout: OpenPAIBaseClient.TIMEOUT
-        }
-        );
-    }
-
-    /**
-     * Submit a v1 job, will call /api/v1/user/{username}/jobs.
-     * @param jobConfig The job config.
-     */
-    public async submitV1(userName: string, jobConfig: IJobConfigV1, token?: string): Promise<void> {
-        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/user/${userName}/jobs`);
-        if (token === undefined) {
-            token = await super.token();
-        }
-        return await request.post(url, {
-            form: jobConfig,
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            json: true,
             timeout: OpenPAIBaseClient.TIMEOUT
         }
         );

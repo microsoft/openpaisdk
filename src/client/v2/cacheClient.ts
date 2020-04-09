@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { Identifiable } from '../commom/identifiable';
-import { Util } from '../commom/util';
+import { Identifiable } from '../../commom/identifiable';
+import { Util } from '../../commom/util';
 
 /**
  * for some stable API calling (the results may not change for a long while)

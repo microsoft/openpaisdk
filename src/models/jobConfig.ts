@@ -23,7 +23,7 @@ export interface IJobConfigV1 {
 }
 
 /**
- * OpenPAI Job Config Protocol. 
+ * OpenPAI Job Config Protocol.
  * https://github.com/microsoft/openpai-protocol/blob/master/schemas/v2/schema.yaml
  */
 export interface IJobConfig {
@@ -191,4 +191,3 @@ export interface IJobConfig {
         submitFrom?: string;
     };
 }
-
