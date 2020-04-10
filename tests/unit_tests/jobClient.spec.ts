@@ -1,35 +1,24 @@
-// Copyright (c) Microsoft Corporation
-// All rights reserved.
-//
-// MIT License
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and
-// to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-// BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 
-// tslint:disable-next-line:missing-jsdoc
+import { IJobConfig as IJobConfigV1, JobClient as JobClientV1 } from '@pai/v1';
+import {
+    IJobConfig, IJobFrameworkInfo, IJobInfo, IJobSshInfo, IJobStatus, IPAICluster, JobClient
+} from '@pai/v2';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as dirtyChai from 'dirty-chai';
 import * as nock from 'nock';
 
-import { IJobConfig, IJobFrameworkInfo } from '../../lib';
-import { IJobConfigV1, IJobSshInfo } from '../../lib/models/job';
-import { IJobInfo, IJobStatus, IPAICluster, JobClient } from '../../src';
 import { testJobConfig, testJobConfigV1 } from '../common/test_data/testJobConfig';
 import { testJobFrameworkInfo } from '../common/test_data/testJobFrameworkInfo';
 import { testJobList } from '../common/test_data/testJobList';
 import { testJobSshInfo } from '../common/test_data/testJobSshInfo';
 import { testJobStatus } from '../common/test_data/testJobStatus';
 
+/**
+ * Unit tests for jobClient.
+ */
 const testUri: string = 'openpai-js-sdk.test/rest-server';
 
 const cluster: IPAICluster = {
@@ -39,7 +28,7 @@ const cluster: IPAICluster = {
 };
 
 chai.use(dirtyChai);
-beforeEach(() => nock(`http://${testUri}`).post('/api/v1/authn/basic/login').reply(200, { token: 'token' }));
+beforeEach(() => nock(`http://${testUri}`).post('/api/v2/authn/basic/login').reply(200, { token: 'token' }));
 
 describe('List jobs', () => {
     const response: IJobInfo[] = testJobList;
@@ -133,8 +122,8 @@ describe('Submit a v1 job', () => {
     });
 
     it('should submit the job without exception', async() => {
-        const jobClient: JobClient = new JobClient(cluster);
-        await jobClient.submitV1(userName, jobConfigV1);
+        const jobClient: JobClientV1 = new JobClientV1(cluster);
+        await jobClient.submit(userName, jobConfigV1);
     });
 });
 

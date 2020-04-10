@@ -36,7 +36,7 @@ export abstract class Identifiable<T, U> {
     public add(element: T, denyIfExists: boolean = false): void {
         const uid: U = this.uidOf(element);
         if (uid == null) {
-            throw new Error(`UnIdentifiable`);
+            throw new Error('UnIdentifiable');
         }
         const idx: number = this.indexOf(uid);
         if (denyIfExists && idx > -1) {

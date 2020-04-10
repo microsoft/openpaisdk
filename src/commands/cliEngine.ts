@@ -4,10 +4,10 @@
 import * as argparse from 'argparse';
 import * as path from 'path';
 
-import { IPAICluster, OpenPAIClient } from '..';
-import { ICacheRecord } from '../client/v2/cacheClient';
 import { Identifiable } from '../commom/identifiable';
 import { Util } from '../commom/util';
+import { IPAICluster, OpenPAIClient } from '../v2';
+import { ICacheRecord } from '../v2/clients/cacheClient';
 
 import { readJson, writeJson } from './utils';
 
@@ -50,10 +50,10 @@ function defaultFommater(result: IResult): void {
         if (typeof result.result === 'string') {
             console.log(result.result);
         } else {
-            console.log(JSON.stringify(result.result || "", undefined, 4));
+            console.log(JSON.stringify(result.result || '', undefined, 4));
         }
     };
-    cout(result.result || "");
+    cout(result.result || '');
 }
 
 /**

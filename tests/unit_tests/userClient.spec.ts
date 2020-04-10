@@ -1,30 +1,18 @@
-// Copyright (c) Microsoft Corporation
-// All rights reserved.
-//
-// MIT License
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and
-// to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-// BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 
-// tslint:disable-next-line:missing-jsdoc
+import { IPAICluster, IUserInfo, UserClient } from '@pai/v2';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as dirtyChai from 'dirty-chai';
 import * as nock from 'nock';
 
-import { IPAICluster, IUserInfo, UserClient } from '../../src';
 import { testAllUsers } from '../common/test_data/testAllUsers';
 import { testUserInfo } from '../common/test_data/testUserInfo';
 
+/**
+ * Unit tests for userClient.
+ */
 const testUri: string = 'openpai-js-sdk.test/rest-server';
 
 const cluster: IPAICluster = {
@@ -34,14 +22,14 @@ const cluster: IPAICluster = {
 };
 
 chai.use(dirtyChai);
-beforeEach(() => nock(`http://${testUri}`).post('/api/v1/authn/basic/login').reply(200, { token: 'token' }));
+beforeEach(() => nock(`http://${testUri}`).post('/api/v2/authn/basic/login').reply(200, { token: 'token' }));
 
 describe('Get user infomation', () => {
     const response: IUserInfo = testUserInfo;
     const userName: string = 'core';
     before(() => {
         nock(`http://${testUri}`).get(`/api/v2/user/${userName}`).reply(200, response);
-        nock(`http://${testUri}`).post('/api/v1/authn/basic/login').reply(200, { token: 'token' });
+        nock(`http://${testUri}`).post('/api/v2/authn/basic/login').reply(200, { token: 'token' });
     });
 
     it('should return the user info', async () => {

@@ -1,22 +1,11 @@
 {
-    "compilerOptions": {
-        "target": "es2019",
-        "module": "commonjs",
-        "declaration": true,
-        "outDir": "./lib",
-        "strict": true,
-        "lib": [
-            "es2019",
-            "DOM"
-        ]
-    },
+    "extends": "./tsconfig.base.json",
     "include": [
         "src",
-        "tests/unit_tests/global.d.ts"
+        "tests"
     ],
     "exclude": [
         "node_modules",
-        "tests",
         "out"
     ]
 }

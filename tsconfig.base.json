@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "target": "es2019",
+        "module": "commonjs",
+        "declaration": true,
+        "outDir": "./lib",
+        "strict": true,
+        "lib": [
+            "es2019",
+            "DOM"
+        ],
+        "baseUrl": "src",
+        "paths": {
+            "@pai/*": ["*"],
+            "@protocol/*": ["protocol/*"],
+            "@commands/*": ["commands/*"]
+        }
+    }
+}

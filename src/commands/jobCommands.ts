@@ -1,15 +1,16 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { OpenPAIClient, IJobConfig, IJobInfo, IJobStatus } from '..';
-import { CliEngine, IResult } from './cliEngine';
-import * as yaml from 'js-yaml';
-import * as fs from 'fs-extra';
-import { Util } from '../commom/util';
-import { table2Console } from './utils';
-import * as child from 'child_process';
-import * as readline from 'readline';
+import { IJobConfig, IJobInfo, IJobStatus, OpenPAIClient } from '@pai/v2';
+import { ITaskStatus } from '@pai/v2/models/jobStatus';
 import * as assert from 'assert';
+import * as fs from 'fs-extra';
+import * as yaml from 'js-yaml';
+
+import { Util } from '../commom/util';
+
+import { CliEngine, IResult } from './cliEngine';
+import { table2Console } from './utils';
 /**
  * register job realted commands
  */
@@ -35,7 +36,7 @@ export function registerJobCommands(cli: CliEngine): void {
             }
         ],
         (r: IResult) => {
-            const jobs = r.result as IJobInfo[];
+            const jobs: IJobInfo[] = r.result as IJobInfo[];
             const rows: any[][] = [
                 ['name', 'user', 'state', 'VC', '#GPU', '#Task', 'createdTime', 'completedTime']
             ];
@@ -49,7 +50,7 @@ export function registerJobCommands(cli: CliEngine): void {
     );
 
     cli.registerCommand(
-        { name: 'subj', help: "submit job" },
+        { name: 'subj', help: 'submit job' },
         [
             { name: 'alias', help: 'cluster alias' },
             { name: 'cfgfile', help: 'config file' }
@@ -62,11 +63,11 @@ export function registerJobCommands(cli: CliEngine): void {
     );
 
     cli.registerCommand(
-        { name: 'getj', help: "get job details", aliases: ['job-info'] },
+        { name: 'getj', help: 'get job details', aliases: ['job-info'] },
         [
             { name: ['--user'], help: 'username' },
             { name: 'alias', help: 'cluster alias' },
-            { name: 'job', help: 'config file' },
+            { name: 'job', help: 'config file' }
         ],
         async (a) => {
             const client: OpenPAIClient = cli.manager.getClusterClient(a.alias);
@@ -90,8 +91,8 @@ export function registerJobCommands(cli: CliEngine): void {
             const jobinfo: IJobStatus = await client.job.getFrameworkInfo(a.user || client.config.username(), a.job);
             a.taskrole = a.taskrole || Object.keys(jobinfo.taskRoles)[0];
             a.taskindex = a.taskindex || 0;
-            const container = jobinfo.taskRoles[a.taskrole].taskStatuses[a.taskindex];
-            assert('ssh' in container.containerPorts, `ssh port is not declared when submitting`);
+            const container: ITaskStatus = jobinfo.taskRoles[a.taskrole].taskStatuses[a.taskindex];
+            assert('ssh' in container.containerPorts, 'ssh port is not declared when submitting');
             const cmd: (string | number)[] = ['ssh', '-oStrictHostKeyChecking=no'];
             if (a.identity_file) {
                 cmd.push('-i', a.identity_file);
@@ -99,7 +100,7 @@ export function registerJobCommands(cli: CliEngine): void {
             if (a.login_name) {
                 cmd.push('-l', a.login_name);
             }
-            cmd.push('-p', container.containerPorts['ssh'] as number);
+            cmd.push('-p', container.containerPorts.ssh as number);
             cmd.push(container.containerIp);
             return (cmd.join(' '));
         }

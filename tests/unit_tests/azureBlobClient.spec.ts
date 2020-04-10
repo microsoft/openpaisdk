@@ -1,21 +1,7 @@
-// Copyright (c) Microsoft Corporation
-// All rights reserved.
-//
-// MIT License
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
-// documentation files (the "Software"), to deal in the Software without restriction, including without limitation
-// the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and
-// to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-// The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING
-// BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
-// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License.
 
-// tslint:disable-next-line:missing-jsdoc
+import { AzureBlobClient, IFileInfo } from '@pai/v2';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as dirtyChai from 'dirty-chai';
@@ -25,12 +11,13 @@ import * as nock from 'nock';
 import * as os from 'os';
 import * as path from 'path';
 
-import { AzureBlobClient, IFileInfo } from '../../src';
 import {
-    testAzureBlobInfoSasToken,
     testAzureBlobInfoShareKey
 } from '../common/test_data/testStorages';
 
+/**
+ * Unit tests for azureBlobClient.
+ */
 const testUri: string = 'openpai-js-sdk.test/rest-server';
 let client: AzureBlobClient;
 
@@ -48,7 +35,7 @@ describe('Get status of a path', () => {
         '</EnumerationResults>';
 
     before(() => {
-        nock(`http://${testUri}`).get('/api/v1/authn/info').reply(200);
+        nock(`http://${testUri}`).get('/api/v2/authn/info').reply(200);
         nock('https://accountname.blob.core.windows.net')
             .head('/containerName/.tests%2Ffolder%2Ftest_blob.txt')
             .reply(200)
