@@ -1,6 +1,6 @@
-import { OpenPAIBaseClient } from '@pai/v1';
 import { IJobInfo, IJobSshInfo, IJobStatus, IPAICluster } from '@pai/v2';
 import { IJobConfig } from '@protocol/v1';
+import { OpenPAIBaseClient } from './baseClient';
 /**
  * OpenPAI Job client.
  */

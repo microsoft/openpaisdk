@@ -1,4 +1,5 @@
-import { IPAICluster, IUserInfo, OpenPAIBaseClient } from '@pai/v2';
+import { IPAICluster, IUserInfo } from '@pai/v2';
+import { OpenPAIBaseClient } from './baseClient';
 /**
  * OpenPAI User client.
  */

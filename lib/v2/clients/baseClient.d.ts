@@ -1,4 +1,5 @@
-import { ILoginInfo, IPAICluster } from '@pai/v2';
+import { PAIHttpClient } from '@pai/commom/paiHttpClient';
+import { IPAICluster } from '@pai/v2';
 /**
  * OpenPAI basic client.
  */
@@ -8,8 +9,8 @@ export declare class OpenPAIBaseClient {
      * get cluster configuration / info
      */
     config: any;
+    protected readonly httpClient: PAIHttpClient;
     protected cluster: IPAICluster;
-    private cacheToken?;
     constructor(cluster: IPAICluster);
     /**
      * parse information from pai_uri
@@ -20,8 +21,4 @@ export declare class OpenPAIBaseClient {
      * Get OpenPAI access token, will call /api/v1/token.
      */
     token(): Promise<string>;
-    /**
-     * Basic login.
-     */
-    login(): Promise<ILoginInfo>;
 }

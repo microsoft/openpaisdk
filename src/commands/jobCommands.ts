@@ -71,7 +71,7 @@ export function registerJobCommands(cli: CliEngine): void {
         ],
         async (a) => {
             const client: OpenPAIClient = cli.manager.getClusterClient(a.alias);
-            return client.job.getFrameworkInfo(a.user || client.config.username(), a.job);
+            return client.job.get(a.user || client.config.username(), a.job);
         }
     );
 
@@ -88,7 +88,7 @@ export function registerJobCommands(cli: CliEngine): void {
         ],
         async (a) => {
             const client: OpenPAIClient = cli.manager.getClusterClient(a.alias);
-            const jobinfo: IJobStatus = await client.job.getFrameworkInfo(a.user || client.config.username(), a.job);
+            const jobinfo: IJobStatus = await client.job.get(a.user || client.config.username(), a.job);
             a.taskrole = a.taskrole || Object.keys(jobinfo.taskRoles)[0];
             a.taskindex = a.taskindex || 0;
             const container: ITaskStatus = jobinfo.taskRoles[a.taskrole].taskStatuses[a.taskindex];

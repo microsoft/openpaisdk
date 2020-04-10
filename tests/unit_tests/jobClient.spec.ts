@@ -3,15 +3,15 @@
 
 import { IJobConfig as IJobConfigV1, JobClient as JobClientV1 } from '@pai/v1';
 import {
-    IJobConfig, IJobFrameworkInfo, IJobInfo, IJobSshInfo, IJobStatus, IPAICluster, JobClient
+    IJobConfig, IJobInfo, IJobSshInfo, IJobStatus, IPAICluster, JobClient
 } from '@pai/v2';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as dirtyChai from 'dirty-chai';
+import * as yaml from 'js-yaml';
 import * as nock from 'nock';
 
 import { testJobConfig, testJobConfigV1 } from '../common/test_data/testJobConfig';
-import { testJobFrameworkInfo } from '../common/test_data/testJobFrameworkInfo';
 import { testJobList } from '../common/test_data/testJobList';
 import { testJobSshInfo } from '../common/test_data/testJobSshInfo';
 import { testJobStatus } from '../common/test_data/testJobStatus';
@@ -32,7 +32,7 @@ beforeEach(() => nock(`http://${testUri}`).post('/api/v2/authn/basic/login').rep
 
 describe('List jobs', () => {
     const response: IJobInfo[] = testJobList;
-    before(() => nock(`http://${testUri}`).get('/api/v1/jobs').reply(200, response));
+    before(() => nock(`http://${testUri}`).get('/api/v2/jobs').reply(200, response));
 
     // tslint:disable-next-line:mocha-no-side-effect-code
     it('should return a list of jobs', async () => {
@@ -45,7 +45,7 @@ describe('List jobs', () => {
 describe('List jobs with query', () => {
     const response: IJobInfo[] = testJobList;
     const queryString: string = 'username=core';
-    before(() => nock(`http://${testUri}`).get(`/api/v1/jobs?${queryString}`).reply(200, response));
+    before(() => nock(`http://${testUri}`).get(`/api/v2/jobs?${queryString}`).reply(200, response));
 
     // tslint:disable-next-line:mocha-no-side-effect-code
     it('should return a list of jobs', async () => {
@@ -59,7 +59,7 @@ describe('Get job status', () => {
     const response: IJobStatus = testJobStatus;
     const userName: string = 'core';
     const jobName: string = 'tensorflow_serving_mnist_2019_6585ba19';
-    before(() => nock(`http://${testUri}`).get(`/api/v2/user/${userName}/jobs/${jobName}`).reply(200, response));
+    before(() => nock(`http://${testUri}`).get(`/api/v2/jobs/${userName}~${jobName}`).reply(200, response));
 
     it('should return the job status', async () => {
         const jobClient: JobClient = new JobClient(cluster);
@@ -68,24 +68,14 @@ describe('Get job status', () => {
     });
 });
 
-describe('Get job framework information', () => {
-    const response: IJobFrameworkInfo = testJobFrameworkInfo;
-    const userName: string = 'core';
-    const jobName: string = 'tensorflow_serving_mnist_2019_6585ba19';
-    before(() => nock(`http://${testUri}`).get(`/api/v2/jobs/${userName}~${jobName}`).reply(200, response));
-
-    it('should return the job framework info', async () => {
-        const jobClient: JobClient = new JobClient(cluster);
-        const result: any = await jobClient.getFrameworkInfo(userName, jobName);
-        expect(result).to.be.eql(response);
-    });
-});
-
 describe('Get job config', () => {
     const response: IJobConfig = testJobConfig;
     const userName: string = 'core';
     const jobName: string = 'tensorflow_serving_mnist_2019_6585ba19';
-    before(() => nock(`http://${testUri}`).get(`/api/v2/jobs/${userName}~${jobName}/config`).reply(200, response));
+    before(() => nock(`http://${testUri}`)
+        .get(`/api/v2/jobs/${userName}~${jobName}/config`)
+        .reply(200, yaml.dump(testJobConfig))
+    );
 
     it('should return a job config', async() => {
         const jobClient: JobClient = new JobClient(cluster);
@@ -178,21 +168,6 @@ describe('Stop a job', () => {
     it('should stop the job', async() => {
         const jobClient: JobClient = new JobClient(cluster);
         const result: any = await jobClient.execute(userName, jobName, 'STOP');
-        expect(result).to.be.eql(response);
-    });
-});
-
-describe('Delete a job', () => {
-    const response: any = {
-        message: 'deleted job tensorflow_serving_mnist_2019_6585ba19_test successfully'
-    };
-    const userName: string = 'core';
-    const jobName: string = 'tensorflow_serving_mnist_2019_6585ba19_test';
-    before(() => nock(`http://${testUri}`).delete(`/api/v2/user/${userName}/jobs/${jobName}`).reply(201, response));
-
-    it('should delete the job', async() => {
-        const jobClient: JobClient = new JobClient(cluster);
-        const result: any = await jobClient.delete(userName, jobName);
         expect(result).to.be.eql(response);
     });
 });

@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import { Util } from '@pai/commom/util';
-import { IAuthnInfo, IPAICluster } from '@pai/v2';
+import { IAuthnInfo, ILoginInfo, IPAICluster } from '@pai/v2';
 import * as request from 'request-promise-native';
 
 import { OpenPAIBaseClient } from './baseClient';
@@ -15,6 +15,10 @@ export class AuthnClient extends OpenPAIBaseClient {
 
     constructor(cluster: IPAICluster) {
         super(cluster);
+    }
+
+    public async login(): Promise<ILoginInfo> {
+        return await this.httpClient.login();
     }
 
     /**

@@ -21,9 +21,9 @@ class RestServer {
 
     public alias: string = this.cluster.alias || this.cluster.pai_uri || 'unknown';
 
-    public listJobs = () => nock(`http://${this.testUri}`).get('/api/v1/jobs').reply(200, testJobList);
+    public listJobs = () => nock(`http://${this.testUri}`).get('/api/v2/jobs').reply(200, testJobList);
 
-    public listJobsQuery = () => nock(`http://${this.testUri}`).get('/api/v1/jobs?username=core').reply(200, testJobList);
+    public listJobsQuery = () => nock(`http://${this.testUri}`).get('/api/v2/jobs?username=core').reply(200, testJobList);
 
     public queryJobStatus = () => nock(`http://${this.testUri}`).get(
         `/api/v2/jobs/${testJobStatus.jobStatus.username}~${testJobStatus.name}`

@@ -4,5 +4,9 @@
 /**
  * Base PAI error class.
  */
-export class PAIError extends Error {
+export class PAIBaseError extends Error {
+}
+
+export function paiError(error: any): void {
+
 }

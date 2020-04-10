@@ -1,4 +1,5 @@
-import { INodeResource, IPAICluster, IVirtualCluster, OpenPAIBaseClient } from '@pai/v2';
+import { INodeResource, IPAICluster, IVirtualCluster } from '@pai/v2';
+import { OpenPAIBaseClient } from './baseClient';
 /**
  * OpenPAI Virtual Cluster client.
  */
