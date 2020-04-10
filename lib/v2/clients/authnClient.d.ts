@@ -1,4 +1,4 @@
-import { IAuthnInfo, IPAICluster } from '@pai/v2';
+import { IAuthnInfo, ILoginInfo, IPAICluster } from '@pai/v2';
 import { OpenPAIBaseClient } from './baseClient';
 /**
  * OpenPAI Authn client.
@@ -6,6 +6,7 @@ import { OpenPAIBaseClient } from './baseClient';
 export declare class AuthnClient extends OpenPAIBaseClient {
     private authnInfo?;
     constructor(cluster: IPAICluster);
+    login(): Promise<ILoginInfo>;
     /**
      * Get authn information.
      */

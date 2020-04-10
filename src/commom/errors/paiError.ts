@@ -1,12 +1,20 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-/**
- * Base PAI error class.
- */
-export class PAIBaseError extends Error {
-}
+import { AxiosError } from 'axios';
 
-export function paiError(error: any): void {
+import { PAIBaseError } from './paiBaseError';
+import { NoJobConfigError, NoJobError } from './paiJobErrors';
 
+export function paiError(error: AxiosError): void {
+    if (error.response) {
+        switch (error.response.data.code) {
+            case 'NoJobError':
+                throw new NoJobError(error);
+            case 'NoJobConfigError':
+                throw new NoJobConfigError(error);
+            default:
+                throw new PAIBaseError(error);
+        }
+    }
 }

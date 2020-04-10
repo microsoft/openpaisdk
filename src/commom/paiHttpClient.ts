@@ -5,6 +5,7 @@ import { Util } from '@pai/commom/util';
 import { ILoginInfo, IPAICluster } from '@pai/v2';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
+import { paiError } from './errors/paiError';
 import { processResponse, IPAIResponseProcessor } from './paiResponseProcessor';
 
 /**
@@ -59,6 +60,7 @@ export class PAIHttpClient {
                 return res.data;
             }
         } catch (error) {
+            paiError(error);
             throw error;
         }
     }
