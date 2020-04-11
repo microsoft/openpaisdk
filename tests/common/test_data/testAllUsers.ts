@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IUserInfo } from '@pai/v2';
+import { IUserInfo } from '@api/v2';
 
 /**
  * All users test data.

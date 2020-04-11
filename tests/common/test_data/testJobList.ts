@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IJobInfo } from '@pai/v2';
+import { IJobInfo } from '@api/v2';
 
 /**
  * Job list test data.

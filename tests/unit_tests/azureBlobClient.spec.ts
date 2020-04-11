@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { AzureBlobClient, IFileInfo } from '@pai/v2';
+import { AzureBlobClient, IAzureBlobCfg, IFileInfo } from '@pai/storage';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as dirtyChai from 'dirty-chai';
@@ -23,7 +23,7 @@ let client: AzureBlobClient;
 
 chai.use(dirtyChai);
 beforeEach(() => {
-    client = new AzureBlobClient(testAzureBlobInfoShareKey);
+    client = new AzureBlobClient(testAzureBlobInfoShareKey.data as IAzureBlobCfg);
 });
 
 describe('Get status of a path', () => {

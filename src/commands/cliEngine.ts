@@ -1,13 +1,13 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+import { IPAICluster, OpenPAIClient } from '@api/v2';
+import { ICacheRecord } from '@api/v2/clients/cacheClient';
 import * as argparse from 'argparse';
 import * as path from 'path';
 
 import { Identifiable } from '../commom/identifiable';
 import { Util } from '../commom/util';
-import { IPAICluster, OpenPAIClient } from '../v2';
-import { ICacheRecord } from '../v2/clients/cacheClient';
 
 import { readJson, writeJson } from './utils';
 

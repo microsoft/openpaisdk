@@ -1,12 +1,12 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { INodeResource } from '@pai/v2';
+import { INodeResource } from '@api/v2';
 
 /**
  * Node resources test data.
  */
-export const testNodeResources: { [id: string]: INodeResource } = {
+export const testNodeResources: { [id: string]: INodeResource; } = {
     '0.0.0.35': {
         gpuTotal: 1,
         gpuUsed: 1,

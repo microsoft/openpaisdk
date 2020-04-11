@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IVirtualCluster } from '@pai/v2';
+import { IVirtualCluster } from '@api/v2';
 
 /**
  * Virtual clusters test data.

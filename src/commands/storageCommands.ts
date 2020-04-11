@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { OpenPAIClient } from '@pai/v2';
+import { OpenPAIClient } from '@api/v2';
 
 import { CliEngine } from './cliEngine';
 

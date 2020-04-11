@@ -1,12 +1,12 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IVirtualCluster } from '@pai/v2';
+import { IVirtualCluster } from '@api/v2';
 
 /**
  * All virtual clusters test data.
  */
-export const testAllVirtualClusters: { [id: string]: IVirtualCluster } = {
+export const testAllVirtualClusters: { [id: string]: IVirtualCluster; } = {
     default: {
         capacity: 26.481485,
         maxCapacity: 100,

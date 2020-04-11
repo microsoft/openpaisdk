@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+import { ILoginInfo, IPAICluster } from '@api/v2';
 import { Util } from '@pai/commom/util';
-import { ILoginInfo, IPAICluster } from '@pai/v2';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 import { paiError } from './errors/paiError';

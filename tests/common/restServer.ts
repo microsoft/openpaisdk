@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IPAICluster } from '@pai/v2';
+import { IPAICluster } from '@api/v2';
 import * as nock from 'nock';
 
 import { testJobList } from '../common/test_data/testJobList';

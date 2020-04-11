@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IJobStatus } from '@pai/v2';
+import { IJobStatus } from '@api/v2';
 
 /**
  * Job status test data.

@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IPAICluster, IUserInfo, UserClient } from '@pai/v2';
+import { IPAICluster, IUserInfo, UserClient } from '@api/v2';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as dirtyChai from 'dirty-chai';
@@ -68,7 +68,7 @@ describe('Update user extension data', () => {
 
     it('should update successfully', async () => {
         const userClient: UserClient = new UserClient(cluster);
-        const result: any = await userClient.updateExtension(userName, {ex1: 'ex2'});
+        const result: any = await userClient.updateExtension(userName, { ex1: 'ex2' });
         expect(result).to.be.eql(response);
     });
 });
