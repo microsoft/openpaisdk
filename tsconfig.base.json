@@ -13,6 +13,7 @@
         "paths": {
             "@pai/*": ["*"],
             "@protocol/*": ["protocol/*"],
+            "@api/*": ["api/*"],
             "@commands/*": ["commands/*"]
         }
     }

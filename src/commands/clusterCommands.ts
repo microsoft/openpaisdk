@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IPAICluster, OpenPAIClient } from '../v2';
+import { IPAICluster, OpenPAIClient } from '@api/v2';
 
 import { CliEngine, IClusterWithCache, IResult } from './cliEngine';
 import { table2Console } from './utils';

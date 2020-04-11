@@ -1,9 +1,9 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+import { OpenPAIBaseClient } from '@api/v2';
 import { registerBuiltinCommands, CliEngine } from '@pai/commands';
 import { Util } from '@pai/commom/util';
-import { OpenPAIBaseClient } from '@pai/v2';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as dirtyChai from 'dirty-chai';

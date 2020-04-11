@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IJobConfig, IJobInfo, IJobStatus, OpenPAIClient } from '@pai/v2';
-import { ITaskStatus } from '@pai/v2/models/jobStatus';
+import { IJobConfig, IJobInfo, IJobStatus, OpenPAIClient } from '@api/v2';
+import { ITaskStatus } from '@api/v2/models/jobStatus';
 import * as assert from 'assert';
 import * as fs from 'fs-extra';
 import * as yaml from 'js-yaml';

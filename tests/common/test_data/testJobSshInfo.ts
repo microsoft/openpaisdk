@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IJobSshInfo } from '@pai/v2';
+import { IJobSshInfo } from '@api/v2';
 
 /**
  * Job SSH info test data.

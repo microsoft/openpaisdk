@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IPAICluster, VirtualClusterClient } from '@pai/v2';
+import { IPAICluster, VirtualClusterClient } from '@api/v2';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as dirtyChai from 'dirty-chai';

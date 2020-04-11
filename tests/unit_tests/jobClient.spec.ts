@@ -1,10 +1,10 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IJobConfig as IJobConfigV1, JobClient as JobClientV1 } from '@pai/v1';
+import { IJobConfig as IJobConfigV1, JobClient as JobClientV1 } from '@api/v1';
 import {
     IJobConfig, IJobInfo, IJobSshInfo, IJobStatus, IPAICluster, JobClient
-} from '@pai/v2';
+} from '@api/v2';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as dirtyChai from 'dirty-chai';
@@ -77,7 +77,7 @@ describe('Get job config', () => {
         .reply(200, yaml.dump(testJobConfig))
     );
 
-    it('should return a job config', async() => {
+    it('should return a job config', async () => {
         const jobClient: JobClient = new JobClient(cluster);
         const result: any = await jobClient.getConfig(userName, jobName);
         expect(result).to.be.eql(response);
@@ -94,7 +94,7 @@ describe('Submit a job', () => {
         nock(`http://${testUri}`).post('/api/v2/jobs').reply(202);
     });
 
-    it('should submit a job without exception', async() => {
+    it('should submit a job without exception', async () => {
         const jobClient: JobClient = new JobClient(cluster);
         await jobClient.submit(jobConfig);
     });
@@ -111,7 +111,7 @@ describe('Submit a v1 job', () => {
         nock(`http://${testUri}`).post(`/api/v1/user/${userName}/jobs`).reply(202);
     });
 
-    it('should submit the job without exception', async() => {
+    it('should submit the job without exception', async () => {
         const jobClient: JobClientV1 = new JobClientV1(cluster);
         await jobClient.submit(userName, jobConfigV1);
     });
@@ -123,7 +123,7 @@ describe('Get job ssh information with user name and job name', () => {
     const jobName: string = 'tensorflow_serving_mnist_2019_6585ba19';
     before(() => nock(`http://${testUri}`).get(`/api/v1/user/${userName}/jobs/${jobName}/ssh`).reply(200, response));
 
-    it('should return the job ssh info', async() => {
+    it('should return the job ssh info', async () => {
         const jobClient: JobClient = new JobClient(cluster);
         const result: any = await jobClient.getSshInfo(userName, jobName);
         expect(result).to.be.eql(response);
@@ -135,7 +135,7 @@ describe('Get job ssh information with job name', () => {
     const jobName: string = 'tensorflow_serving_mnist_2019_6585ba19';
     before(() => nock(`http://${testUri}`).get(`/api/v1/jobs/${jobName}/ssh`).reply(200, response));
 
-    it('should return the job ssh info', async() => {
+    it('should return the job ssh info', async () => {
         const jobClient: JobClient = new JobClient(cluster);
         const result: any = await jobClient.getSshInfo(jobName);
         expect(result).to.be.eql(response);
@@ -150,7 +150,7 @@ describe('Start a job', () => {
     const jobName: string = 'tensorflow_serving_mnist_2019_6585ba19';
     before(() => nock(`http://${testUri}`).put(`/api/v2/user/${userName}/jobs/${jobName}/executionType`).reply(200, response));
 
-    it('should start the job', async() => {
+    it('should start the job', async () => {
         const jobClient: JobClient = new JobClient(cluster);
         const result: any = await jobClient.execute(userName, jobName, 'START');
         expect(result).to.be.eql(response);
@@ -165,7 +165,7 @@ describe('Stop a job', () => {
     const jobName: string = 'tensorflow_serving_mnist_2019_6585ba19';
     before(() => nock(`http://${testUri}`).put(`/api/v2/user/${userName}/jobs/${jobName}/executionType`).reply(200, response));
 
-    it('should stop the job', async() => {
+    it('should stop the job', async () => {
         const jobClient: JobClient = new JobClient(cluster);
         const result: any = await jobClient.execute(userName, jobName, 'STOP');
         expect(result).to.be.eql(response);

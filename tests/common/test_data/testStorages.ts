@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IStorageDetail, IStorageSummary } from '@pai/v2';
+import { IStorageDetail, IStorageSummary } from '@api/v2';
 
 /**
  * Storage test data.

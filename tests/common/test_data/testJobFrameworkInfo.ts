@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IJobFrameworkInfo } from '@pai/v2';
+import { IJobFrameworkInfo } from '@api/v2';
 
 /**
  * Job framework info test data.
