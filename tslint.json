@@ -229,7 +229,7 @@
       "spaces",
       4
     ],
-    "linebreak-style": true,
+    "linebreak-style": false,
     "newline-before-return": false,
     "no-consecutive-blank-lines": true,
     "no-empty-line-after-opening-brace": false,
