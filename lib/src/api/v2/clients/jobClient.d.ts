@@ -9,7 +9,7 @@ export declare class JobClient extends OpenPAIBaseClient {
      * List jobs, will call /api/v2/jobs.
      * @param query The query string.
      */
-    list(query?: string): Promise<IJobInfo[]>;
+    list(user?: string): Promise<IJobInfo[]>;
     /**
      * Get job detail, will call /api/v2/jobs/{userName}~{jobName}.
      * @param userName The user name.
