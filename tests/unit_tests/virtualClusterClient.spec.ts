@@ -68,7 +68,7 @@ describe('Create a new virtual cluster', () => {
     let response: any;
     before(() => {
         response = { message: `create vc: ${vcName} to capacity: ${vcCapacity} successfully.` };
-        nock(`http://${testUri}`).put(`/api/v1/virtual-clusters/${vcName}`).reply(201, response);
+        nock(`http://${testUri}`).put(`/api/v2/virtual-clusters/${vcName}`).reply(201, response);
     });
 
     it('should return the virtual cluster info', async () => {
@@ -83,7 +83,7 @@ describe('Remove a virtual cluster', () => {
     let response: any;
     before(() => {
         response = { message: `Remove vc: ${vcName} successfully` };
-        nock(`http://${testUri}`).delete(`/api/v1/virtual-clusters/${vcName}`).reply(201, response);
+        nock(`http://${testUri}`).delete(`/api/v2/virtual-clusters/${vcName}`).reply(201, response);
     });
 
     it('should remove successfully', async () => {
@@ -99,7 +99,7 @@ describe('Change virtual cluster status', () => {
     let response: any;
     before(() => {
         response = { message: `stop vc ${vcName} successfully` };
-        nock(`http://${testUri}`).put(`/api/v1/virtual-clusters/${vcName}/status`).reply(201, response);
+        nock(`http://${testUri}`).put(`/api/v2/virtual-clusters/${vcName}/status`).reply(201, response);
     });
 
     it('should remove successfully', async () => {

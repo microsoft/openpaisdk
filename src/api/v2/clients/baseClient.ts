@@ -4,7 +4,6 @@
 import { ILoginInfo, IPAICluster, IPAIClusterInfo } from '@api/v2';
 import { PAIHttpClient } from '@pai/commom/paiHttpClient';
 import { Util } from '@pai/commom/util';
-import * as request from 'request-promise-native';
 import { URL } from 'url';
 
 /**
@@ -28,9 +27,11 @@ export class OpenPAIBaseClient {
          * Get OpenPAI cluster info, will call /api/v1.
          */
         clusterInfo: async (): Promise<IPAIClusterInfo> => {
-            const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/info`);
-            const res: any = await request.get(url);
-            return JSON.parse(res);
+            const url: string = Util.fixUrl(
+                `${this.cluster.rest_server_uri}/api/v2/info`,
+                this.cluster.https
+            );
+            return await this.httpClient.get(url);
         }
     };
 

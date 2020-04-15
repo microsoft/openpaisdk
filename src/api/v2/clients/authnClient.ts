@@ -3,7 +3,6 @@
 
 import { IAuthnInfo, ILoginInfo, IPAICluster } from '@api/v2';
 import { Util } from '@pai/commom/util';
-import * as request from 'request-promise-native';
 
 import { OpenPAIBaseClient } from './baseClient';
 
@@ -25,9 +24,12 @@ export class AuthnClient extends OpenPAIBaseClient {
      * Get authn information.
      */
     public async info(): Promise<IAuthnInfo> {
-        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/authn/info`);
+        const url: string = Util.fixUrl(
+            `${this.cluster.rest_server_uri}/api/v2/authn/info`,
+            this.cluster.https
+        );
         if (this.authnInfo === undefined) {
-            this.authnInfo = JSON.parse(await request.get(url));
+            this.authnInfo = await this.httpClient.get(url);
         }
 
         return this.authnInfo!;
@@ -36,77 +38,56 @@ export class AuthnClient extends OpenPAIBaseClient {
     /**
      * OpenID Connect login.
      */
-    public async oidcLogin(queryString?: string): Promise<any> {
-        const url: string = queryString ?
-            Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/authn/oidc/login?${queryString}`) :
-            Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/authn/oidc/login`);
-        // tslint:disable-next-line:no-unnecessary-local-variable
-        const res: string = await request.get(url);
-
-        return res;
+    public async oidcLogin(queryString?: string): Promise<string> {
+        return await this.oidcRequest('login', queryString);
     }
 
     /**
      * OpenID Connect logout.
      */
-    public async oidcLogout(queryString?: string): Promise<any> {
-        const url: string = queryString ?
-            Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/authn/oidc/logout?${queryString}`) :
-            Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/authn/oidc/logout`);
-        // tslint:disable-next-line:no-unnecessary-local-variable
-        const res: string = await request.get(url);
-
-        return res;
+    public async oidcLogout(queryString?: string): Promise<string> {
+        return await this.oidcRequest('logout', queryString);
     }
 
     /**
      * Get list of available tokens (portal token + application token).
      */
-    public async getTokens(token?: string): Promise<any> {
-        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/token`);
-        if (token === undefined) {
-            token = await super.token();
-        }
-        const res: string = await request.get(url, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-        return JSON.parse(res);
+    public async getTokens(): Promise<string[]> {
+        const url: string = Util.fixUrl(
+            `${this.cluster.rest_server_uri}/api/v2/tokens`,
+            this.cluster.https
+        );
+        return await this.httpClient.get(url);
     }
 
     /**
      * Create an application access token.
      */
-    public async createApplicationToken(token?: string): Promise<any> {
-        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/token/application`);
-        if (token === undefined) {
-            token = await super.token();
-        }
-        const res: string = await request.post(url, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-        return JSON.parse(res);
+    public async createApplicationToken(): Promise<any> {
+        const url: string = Util.fixUrl(
+            `${this.cluster.rest_server_uri}/api/v2/tokens/application`,
+            this.cluster.https
+        );
+        return await this.httpClient.post(url, {});
     }
 
     /**
      * Revoke a token.
      */
-    public async deleteToken(deleteToken: string, accessToken?: string): Promise<any> {
-        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v1/token/${deleteToken}`);
-        if (accessToken === undefined) {
-            accessToken = await super.token();
-        }
-        const res: string = await request.delete(url, {
-            headers: {
-                Authorization: `Bearer ${accessToken}`,
-                'Content-Type': 'application/json'
-            }
+    public async deleteToken(deleteToken: string): Promise<any> {
+        const url: string = Util.fixUrl(
+            `${this.cluster.rest_server_uri}/api/v2/tokens/${deleteToken}`,
+            this.cluster.https
+        );
+        return await this.httpClient.delete(url);
+    }
+
+    private async oidcRequest(req: 'login' | 'logout', queryString?: string): Promise<string> {
+        const url: string = queryString ?
+            Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/authn/oidc/${req}?${queryString}`, this.cluster.https) :
+            Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/authn/oidc/${req}`, this.cluster.https);
+        return await this.httpClient.get(url, {
+            200: (data) => data
         });
-        return JSON.parse(res);
     }
 }
