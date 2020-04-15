@@ -44,9 +44,22 @@ export class PAIHttpClient {
     }
 
     public async get<T>(
-        url: string, processor?: IPAIResponseProcessor, options: AxiosRequestConfig = {}
+        url: string, processor?: IPAIResponseProcessor, options: AxiosRequestConfig = {}, query?: object
     ): Promise<T> {
         try {
+            if (query) {
+                const qstrings: string[] = [];
+                Object.entries(query).forEach(
+                    ([k, v]) => {
+                        if (v !== undefined) {
+                            qstrings.push(`${k}=${v}`);
+                        }
+                    }
+                );
+                if (qstrings.length > 0) {
+                    url = `${url}?${qstrings.join('&')}`;
+                }
+            }
             const defaultOptions: AxiosRequestConfig = await this.defaultOptions();
             if (processor) {
                 const res: AxiosResponse = await axios.get(

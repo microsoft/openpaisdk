@@ -21,11 +21,9 @@ export class JobClient extends OpenPAIBaseClient {
      * List jobs, will call /api/v2/jobs.
      * @param query The query string.
      */
-    public async list(query?: string): Promise<IJobInfo[]> {
-        const url: string = query === undefined ?
-            Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/jobs`, this.cluster.https) :
-            Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/jobs?${query}`, this.cluster.https);
-        return await this.httpClient.get(url);
+    public async list(user?: string): Promise<IJobInfo[]> {
+        const url: string = Util.fixUrl(`${this.cluster.rest_server_uri}/api/v2/jobs`, this.cluster.https);
+        return await this.httpClient.get(url, undefined, undefined, { username: user });
     }
 
     /**

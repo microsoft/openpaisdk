@@ -50,7 +50,7 @@ describe('List jobs with query', () => {
     // tslint:disable-next-line:mocha-no-side-effect-code
     it('should return a list of jobs', async () => {
         const jobClient: JobClient = new JobClient(cluster);
-        const result: IJobInfo[] = await jobClient.list(queryString);
+        const result: IJobInfo[] = await jobClient.list('core');
         expect(result).is.not.empty();
     }).timeout(10000);
 });

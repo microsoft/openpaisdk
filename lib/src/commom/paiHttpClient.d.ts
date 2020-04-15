@@ -9,7 +9,7 @@ export declare class PAIHttpClient {
     private readonly cluster;
     constructor(cluster: IPAICluster);
     login(): Promise<ILoginInfo>;
-    get<T>(url: string, processor?: IPAIResponseProcessor, options?: AxiosRequestConfig): Promise<T>;
+    get<T>(url: string, processor?: IPAIResponseProcessor, options?: AxiosRequestConfig, query?: object): Promise<T>;
     post<T>(url: string, data: any, processor?: IPAIResponseProcessor, options?: AxiosRequestConfig): Promise<T>;
     put<T>(url: string, data: any, processor?: IPAIResponseProcessor, options?: AxiosRequestConfig): Promise<T>;
     delete<T>(url: string, processor?: IPAIResponseProcessor, options?: AxiosRequestConfig): Promise<T>;
