@@ -1,4 +1,4 @@
-import { ILoginInfo, IPAICluster } from '@pai/v2';
+import { ILoginInfo, IPAICluster } from '@api/v2';
 import { AxiosRequestConfig } from 'axios';
 import { IPAIResponseProcessor } from './paiResponseProcessor';
 /**
