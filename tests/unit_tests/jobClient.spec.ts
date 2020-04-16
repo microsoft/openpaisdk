@@ -37,7 +37,7 @@ describe('List jobs', () => {
     // tslint:disable-next-line:mocha-no-side-effect-code
     it('should return a list of jobs', async () => {
         const jobClient: JobClient = new JobClient(cluster);
-        const result: IJobInfo[] = await jobClient.list();
+        const result: IJobInfo[] = await jobClient.listJobs();
         expect(result).is.not.empty();
     }).timeout(10000);
 });
@@ -50,7 +50,7 @@ describe('List jobs with query', () => {
     // tslint:disable-next-line:mocha-no-side-effect-code
     it('should return a list of jobs', async () => {
         const jobClient: JobClient = new JobClient(cluster);
-        const result: IJobInfo[] = await jobClient.list('core');
+        const result: IJobInfo[] = await jobClient.listJobs('core');
         expect(result).is.not.empty();
     }).timeout(10000);
 });
@@ -63,7 +63,7 @@ describe('Get job status', () => {
 
     it('should return the job status', async () => {
         const jobClient: JobClient = new JobClient(cluster);
-        const result: any = await jobClient.get(userName, jobName);
+        const result: any = await jobClient.getJob(userName, jobName);
         expect(result).to.be.eql(response);
     });
 });
@@ -79,24 +79,20 @@ describe('Get job config', () => {
 
     it('should return a job config', async () => {
         const jobClient: JobClient = new JobClient(cluster);
-        const result: any = await jobClient.getConfig(userName, jobName);
+        const result: any = await jobClient.getJobConfig(userName, jobName);
         expect(result).to.be.eql(response);
     });
 });
 
 describe('Submit a job', () => {
     const jobConfig: IJobConfig = testJobConfig;
-    const response: any = {
-        token: 'eyJhb...'
-    };
     before(() => {
-        nock(`http://${testUri}`).post('/api/v1/token').reply(200, response);
         nock(`http://${testUri}`).post('/api/v2/jobs').reply(202);
     });
 
     it('should submit a job without exception', async () => {
         const jobClient: JobClient = new JobClient(cluster);
-        await jobClient.submit(jobConfig);
+        await jobClient.createJob(jobConfig);
     });
 });
 
@@ -117,42 +113,17 @@ describe('Submit a v1 job', () => {
     });
 });
 
-describe('Get job ssh information with user name and job name', () => {
-    const response: IJobSshInfo = testJobSshInfo;
-    const userName: string = 'core';
-    const jobName: string = 'tensorflow_serving_mnist_2019_6585ba19';
-    before(() => nock(`http://${testUri}`).get(`/api/v1/user/${userName}/jobs/${jobName}/ssh`).reply(200, response));
-
-    it('should return the job ssh info', async () => {
-        const jobClient: JobClient = new JobClient(cluster);
-        const result: any = await jobClient.getSshInfo(userName, jobName);
-        expect(result).to.be.eql(response);
-    });
-});
-
-describe('Get job ssh information with job name', () => {
-    const response: IJobSshInfo = testJobSshInfo;
-    const jobName: string = 'tensorflow_serving_mnist_2019_6585ba19';
-    before(() => nock(`http://${testUri}`).get(`/api/v1/jobs/${jobName}/ssh`).reply(200, response));
-
-    it('should return the job ssh info', async () => {
-        const jobClient: JobClient = new JobClient(cluster);
-        const result: any = await jobClient.getSshInfo(jobName);
-        expect(result).to.be.eql(response);
-    });
-});
-
 describe('Start a job', () => {
     const response: any = {
         message: 'execute job tensorflow_serving_mnist_2019_6585ba19 successfully'
     };
     const userName: string = 'core';
     const jobName: string = 'tensorflow_serving_mnist_2019_6585ba19';
-    before(() => nock(`http://${testUri}`).put(`/api/v2/user/${userName}/jobs/${jobName}/executionType`).reply(200, response));
+    before(() => nock(`http://${testUri}`).put(`/api/v2/jobs/${userName}~${jobName}/executionType`).reply(200, response));
 
     it('should start the job', async () => {
         const jobClient: JobClient = new JobClient(cluster);
-        const result: any = await jobClient.execute(userName, jobName, 'START');
+        const result: any = await jobClient.updateJobExecutionType(userName, jobName, 'START');
         expect(result).to.be.eql(response);
     });
 });
@@ -163,11 +134,11 @@ describe('Stop a job', () => {
     };
     const userName: string = 'core';
     const jobName: string = 'tensorflow_serving_mnist_2019_6585ba19';
-    before(() => nock(`http://${testUri}`).put(`/api/v2/user/${userName}/jobs/${jobName}/executionType`).reply(200, response));
+    before(() => nock(`http://${testUri}`).put(`/api/v2/jobs/${userName}~${jobName}/executionType`).reply(200, response));
 
     it('should stop the job', async () => {
         const jobClient: JobClient = new JobClient(cluster);
-        const result: any = await jobClient.execute(userName, jobName, 'STOP');
+        const result: any = await jobClient.updateJobExecutionType(userName, jobName, 'STOP');
         expect(result).to.be.eql(response);
     });
 });

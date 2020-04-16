@@ -23,9 +23,9 @@ export function registerJobCommands(cli: CliEngine): void {
         async (a) => {
             const client: OpenPAIClient = cli.manager.getClusterClient(a.alias);
             if (a.all) {
-                return client.job.list();
+                return client.job.listJobs();
             }
-            return client.job.list(a.user || client.config.username());
+            return client.job.listJobs(a.user || client.config.username());
         },
         [
             {
@@ -58,7 +58,7 @@ export function registerJobCommands(cli: CliEngine): void {
         async (a) => {
             const client: OpenPAIClient = cli.manager.getClusterClient(a.alias);
             const config: IJobConfig = yaml.safeLoad(fs.readFileSync(Util.expandUser(a.cfgfile), 'utf8'));
-            return client.job.submit(config);
+            return client.job.createJob(config);
         }
     );
 
@@ -71,7 +71,7 @@ export function registerJobCommands(cli: CliEngine): void {
         ],
         async (a) => {
             const client: OpenPAIClient = cli.manager.getClusterClient(a.alias);
-            return client.job.get(a.user || client.config.username(), a.job);
+            return client.job.getJob(a.user || client.config.username(), a.job);
         }
     );
 
@@ -88,7 +88,7 @@ export function registerJobCommands(cli: CliEngine): void {
         ],
         async (a) => {
             const client: OpenPAIClient = cli.manager.getClusterClient(a.alias);
-            const jobinfo: IJobStatus = await client.job.get(a.user || client.config.username(), a.job);
+            const jobinfo: IJobStatus = await client.job.getJob(a.user || client.config.username(), a.job);
             a.taskrole = a.taskrole || Object.keys(jobinfo.taskRoles)[0];
             a.taskindex = a.taskindex || 0;
             const container: ITaskStatus = jobinfo.taskRoles[a.taskrole].taskStatuses[a.taskindex];

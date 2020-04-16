@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { AuthnClient, IAuthnInfo, IPAICluster } from '@api/v2';
+import { AuthnClient, IPAICluster } from '@api/v2';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as dirtyChai from 'dirty-chai';
@@ -24,23 +24,6 @@ beforeEach(() => {
     nock(`http://${testUri}`).post('/api/v2/authn/basic/login').reply(200, { token: 'token' });
 });
 
-describe('Get authn infomation', () => {
-    const response: IAuthnInfo = {
-        authn_type: 'basic',
-        loginURI: '/api/v2/authn/basic/login',
-        loginURIMethod: 'post'
-    };
-    before(() =>
-        nock(`http://${testUri}`).get('/api/v2/authn/info').reply(200, response)
-    );
-
-    it('should return the user info', async () => {
-        const authnClient: AuthnClient = new AuthnClient(cluster);
-        const result: IAuthnInfo = await authnClient.info();
-        expect(result).to.be.eql(response);
-    });
-});
-
 describe('Basic login', () => {
     const response: any = {
         token: 'token'
@@ -48,7 +31,7 @@ describe('Basic login', () => {
 
     it('should return the login info', async () => {
         const authnClient: AuthnClient = new AuthnClient(cluster);
-        const result: any = await authnClient.login();
+        const result: any = await authnClient.basicLogin();
         expect(result).to.be.eql(response);
     });
 });
