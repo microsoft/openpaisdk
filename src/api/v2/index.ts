@@ -4,8 +4,10 @@
 import { IJobConfig } from '@protocol/v2';
 
 import {
+    ApiClient,
     AuthnClient,
     JobClient,
+    JobHistoryClient,
     OpenPAIBaseClient,
     OpenPAIClient,
     StorageClient,
@@ -17,10 +19,11 @@ import { StorageNodeV2 as StorageNode } from './clients/storageClient';
 import { IAuthnInfo, ILoginInfo } from './models/authn';
 import { IPAICluster, IPAIClusterInfo } from './models/cluster';
 import { IGroup } from './models/group';
-import { IJobFrameworkInfo, IJobInfo, IJobSshInfo, IJobStatus } from './models/jobStatus';
+import { IJobAttempt, IJobFrameworkInfo, IJobInfo, IJobSshInfo, IJobStatus } from './models/job';
+import { IPAIResponse } from './models/paiResponse';
 import { IMountInfo, IStorageConfig, IStorageDetail, IStorageServer, IStorageSummary } from './models/storage';
-import { ITokenItem } from './models/token';
-import { IUserInfo } from './models/user';
+import { IToken, ITokenList } from './models/token';
+import { IUser } from './models/user';
 import { INodeResource, IVirtualCluster } from './models/virtualCluster';
 
 /**
@@ -40,8 +43,10 @@ export {
     IJobInfo,
     IJobFrameworkInfo,
     IJobSshInfo,
-    IUserInfo,
-    ITokenItem,
+    IJobAttempt,
+    IUser,
+    IToken,
+    ITokenList,
     IVirtualCluster,
     INodeResource,
     IAuthnInfo,
@@ -54,5 +59,8 @@ export {
     IJobStatus,
     StorageNode,
     IGroup,
-    GroupClient
+    GroupClient,
+    ApiClient,
+    JobHistoryClient,
+    IPAIResponse
 };

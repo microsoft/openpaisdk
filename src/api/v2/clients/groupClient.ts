@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IGroup, IPAICluster, IUserInfo } from '@api/v2';
+import { IGroup, IPAICluster, IPAIResponse, IUser } from '@api/v2';
 import { Util } from '@pai/commom/util';
 
 import { OpenPAIBaseClient } from './baseClient';
@@ -29,7 +29,7 @@ export class GroupClient extends OpenPAIBaseClient {
      * Create a group in the system.
      * @param group The group object { groupname, description, externalName, extension }.
      */
-    public async createGroup(group: IGroup): Promise<string> {
+    public async createGroup(group: IGroup): Promise<IPAIResponse> {
         const url: string = Util.fixUrl(
             `${this.cluster.rest_server_uri}/api/v2/groups`,
             this.cluster.https
@@ -41,7 +41,7 @@ export class GroupClient extends OpenPAIBaseClient {
      * Update a group in the system.
      * @param group The group object { groupname, description, externalName, extension }.
      */
-    public async updateGroup(group: IGroup): Promise<string> {
+    public async updateGroup(group: IGroup): Promise<IPAIResponse> {
         const url: string = Util.fixUrl(
             `${this.cluster.rest_server_uri}/api/v2/groups`,
             this.cluster.https
@@ -65,7 +65,7 @@ export class GroupClient extends OpenPAIBaseClient {
      * Delete a group in the system.
      * @param groupName The group name.
      */
-    public async deleteGroup(groupName: string): Promise<string> {
+    public async deleteGroup(groupName: string): Promise<IPAIResponse> {
         const url: string = Util.fixUrl(
             `${this.cluster.rest_server_uri}/api/v2/groups/${groupName}`,
             this.cluster.https
@@ -77,7 +77,7 @@ export class GroupClient extends OpenPAIBaseClient {
      * Get the user array of a group in the system.
      * @param groupName The group name.
      */
-    public async getGroupMembers(groupName: string): Promise<IUserInfo[]> {
+    public async getGroupMembers(groupName: string): Promise<IUser[]> {
         const url: string = Util.fixUrl(
             `${this.cluster.rest_server_uri}/api/v2/groups/${groupName}/userlist`,
             this.cluster.https

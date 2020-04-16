@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { ILoginInfo, IPAICluster, IPAIClusterInfo, ITokenItem } from '@api/v2';
+import { ILoginInfo, IPAICluster, IPAIClusterInfo, IToken } from '@api/v2';
 import { Util } from '@pai/commom/util';
 import * as request from 'request-promise-native';
 import { URL } from 'url';
@@ -34,7 +34,7 @@ export class OpenPAIBaseClient {
     };
     protected cluster: IPAICluster;
 
-    private cacheToken?: ITokenItem;
+    private cacheToken?: IToken;
 
     constructor(cluster: IPAICluster) {
         this.cluster = OpenPAIBaseClient.parsePaiUri(cluster);

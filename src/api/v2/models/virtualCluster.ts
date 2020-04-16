@@ -47,3 +47,12 @@ export interface INodeResource {
     gpuUsed: number;
     gpuAvaiable: number;
 }
+
+/**
+ * OpenPAI SKU type.
+ */
+export interface ISkuType {
+    cpu?: number;
+    memory?: number;
+    gpu?: number;
+}
