@@ -123,3 +123,83 @@ export interface IJobSshInfo {
     containers?: any | null;
     keyPair?: any | null;
 }
+
+export interface IJobAttempt {
+    jobName?: string;
+    frameworkName?: string;
+    uid?: string;
+    userName?: string;
+    state?: string;
+    originState?: string;
+    maxAttemptCount?: number;
+    attemptIndex?: number;
+    jobStartedTime?: number;
+    attemptStartedTime?: number;
+    attemptCompletedTime?: number;
+    exitCode?: number;
+    exitPhrase?: string;
+    exitType?: string;
+    exitDiagnostics?: {
+        diagnosticsSummary?: string;
+        runtime?: {
+            exitCode?: number;
+            originUserExitCode?: number;
+            errorLogs?: {
+                user?: string;
+                platform?: string;
+            };
+            name?: string;
+        };
+        launcher?: string;
+    };
+    appExitTriggerMessage?: string;
+    appExitTriggerTaskRoleName?: string;
+    appExitTriggerTaskIndex?: number;
+    appExitSpec: {
+        code?: number;
+        phrase?: string;
+        issuer?: string;
+        causer?: string;
+        type?: string;
+        stage?: string;
+        behavior?: string;
+        reaction?: string;
+        reason?: string;
+        repro?: string[];
+        solution?: string[];
+    };
+    appExitDiagnostics?: string;
+    appExitMessages?: {
+        container?: string;
+        runtime?: {
+            exitCode?: number;
+            originUserExitCode?: number;
+            errorLogs?: {
+                user?: string;
+                platform?: string;
+            };
+            name?: string;
+        };
+        launcher?: string;
+    };
+    totalGpuNumber?: number;
+    totalTasknumber?: number;
+    totalTaskRoleNumber?: number;
+    taskRoles?: {
+        taskrole?: {
+            taskRoleStatus: {
+                name?: string;
+            };
+            taskStatuses?: {
+                taskIndex?: number;
+                taskState?: string;
+                containerId?: string;
+                containerIp?: string;
+                containerGpus?: string;
+                containerLog?: string;
+                containerExitCode?: number;
+            }[];
+        };
+    };
+    isLatest?: boolean;
+}

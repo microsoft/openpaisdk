@@ -1,12 +1,12 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IUserInfo } from '@api/v2';
+import { IUser } from '@api/v2';
 
 /**
  * All users test data.
  */
-export const testAllUsers: IUserInfo[] = [{
+export const testAllUsers: IUser[] = [{
     username: 'core',
     grouplist: [
         'adminGroup',

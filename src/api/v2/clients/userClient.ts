@@ -1,9 +1,8 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IPAICluster, IUserInfo } from '@api/v2';
+import { IPAICluster, IPAIResponse, IUser } from '@api/v2';
 import { Util } from '@pai/commom/util';
-import * as request from 'request-promise-native';
 
 import { OpenPAIBaseClient } from './baseClient';
 
@@ -16,21 +15,21 @@ export class UserClient extends OpenPAIBaseClient {
     }
 
     /**
-     * Get user information.
-     * @param userName The user name.
+     * Create a user in the system.
+     * @param user The user info: { username, email, password, admin, virtualCluster, extension }.
      */
-    public async get(userName: string): Promise<IUserInfo> {
+    public async createUser(user: IUser): Promise<IPAIResponse> {
         const url: string = Util.fixUrl(
-            `${this.cluster.rest_server_uri}/api/v2/users/${userName}`,
+            `${this.cluster.rest_server_uri}/api/v2/users/`,
             this.cluster.https
         );
-        return this.httpClient.get(url);
+        return await this.httpClient.post(url, user);
     }
 
     /**
-     * Get all users.
+     * Get all users in the system by admin.
      */
-    public async list(): Promise<IUserInfo[]> {
+    public async getAllUser(): Promise<IUser[]> {
         const url: string = Util.fixUrl(
             `${this.cluster.rest_server_uri}/api/v2/users/`,
             this.cluster.https
@@ -39,154 +38,15 @@ export class UserClient extends OpenPAIBaseClient {
     }
 
     /**
-     * Create a new user.
-     * @param username username in [\w.-]+ format.
-     * @param password password at least 6 characters.
-     * @param admin true | false.
-     * @param email email address or empty string.
-     * @param virtualCluster ["vcname1 in [A-Za-z0-9_]+ format", "vcname2 in [A-Za-z0-9_]+ format"].
-     * @param extension { "extension-key1": "extension-value1" }.
+     * Update a user in the system. Admin only.
+     * @param user The user info: { username, email, password, admin, virtualCluster, extension }.
      */
-    public async create(
-        username: string,
-        password: string,
-        admin: boolean,
-        email: string,
-        virtualCluster: string[],
-        extension?: {}
-    ): Promise<any> {
+    public async updateUser(user: IUser): Promise<IPAIResponse> {
         const url: string = Util.fixUrl(
-            `${this.cluster.rest_server_uri}/api/v2/users/`,
+            `${this.cluster.rest_server_uri}/api/v2/users`,
             this.cluster.https
         );
-        const body: any = { username, email, password, admin, virtualCluster, extension };
-        return await this.httpClient.post(url, body);
-    }
-
-    /**
-     * Update user extension data.
-     * @param userName The user name.
-     * @param extension The new extension.
-     * {
-     *   "extension": {
-     *      "key-you-wannat-add-or-update-1": "value1",
-     *      "key-you-wannat-add-or-update-2": {...},
-     *      "key-you-wannat-add-or-update-3": [...]
-     * }
-     */
-    public async updateExtension(userName: string, extension: {}): Promise<any> {
-        const url: string = Util.fixUrl(
-            `${this.cluster.rest_server_uri}/api/v2/users/${userName}/extension`,
-            this.cluster.https
-        );
-        return await this.httpClient.put(url, { extension });
-    }
-
-    /**
-     * Delete a user.
-     * @param userName The user name.
-     */
-    public async delete(userName: string): Promise<any> {
-        const url: string = Util.fixUrl(
-            `${this.cluster.rest_server_uri}/api/v2/users/${userName}`,
-            this.cluster.https
-        );
-        return await this.httpClient.delete(url);
-    }
-
-    /**
-     * Update user's virtual cluster.
-     * @param userName The user name.
-     * @param virtualCluster The new virtualCluster.
-     * {
-     *    "virtualCluster": ["vcname1 in [A-Za-z0-9_]+ format", "vcname2 in [A-Za-z0-9_]+ format"]
-     * }
-     */
-    public async updateVirtualcluster(userName: string, virtualCluster: string[]): Promise<any> {
-        const url: string = Util.fixUrl(
-            `${this.cluster.rest_server_uri}/api/v2/users/${userName}/virtualcluster`,
-            this.cluster.https
-        );
-        return await this.httpClient.put(url, { virtualCluster });
-    }
-
-    /**
-     * Update user's password.
-     * @param userName The user name.
-     * @param oldPassword password at least 6 characters, admin could ignore this params.
-     * @param newPassword password at least 6 characters.
-     */
-    public async updatePassword(userName: string, oldPassword?: string, newPassword?: string): Promise<any> {
-        const url: string = Util.fixUrl(
-            `${this.cluster.rest_server_uri}/api/v2/users/${userName}/password`,
-            this.cluster.https
-        );
-        return await this.httpClient.put(url, { oldPassword, newPassword });
-    }
-
-    /**
-     * Update user's email.
-     * @param userName The user name.
-     * @param email The new email.
-     */
-    public async updateEmail(userName: string, email: string): Promise<any> {
-        const url: string = Util.fixUrl(
-            `${this.cluster.rest_server_uri}/api/v2/users/${userName}/email`,
-            this.cluster.https
-        );
-        return await this.httpClient.put(url, { email });
-    }
-
-    /**
-     * Update user's admin permission.
-     * @param userName The user name.
-     * @param admin true | false.
-     */
-    public async updateAdminPermission(userName: string, admin: boolean): Promise<any> {
-        const url: string = Util.fixUrl(
-            `${this.cluster.rest_server_uri}/api/v2/users/${userName}/admin`,
-            this.cluster.https
-        );
-        return await this.httpClient.put(url, { admin });
-    }
-
-    /**
-     * Update user's group list.
-     * @param userName The user name.
-     * @param grouplist The new group list.
-     */
-    public async updateGroupList(userName: string, grouplist: string[]): Promise<any> {
-        const url: string = Util.fixUrl(
-            `${this.cluster.rest_server_uri}/api/v2/users/${userName}/grouplist`,
-            this.cluster.https
-        );
-        return await this.httpClient.put(url, { grouplist });
-    }
-
-    /**
-     * Add group into user's group list.
-     * @param userName The user name.
-     * @param groupname The new groupname in [A-Za-z0-9_]+ format.
-     */
-    public async addGroup(userName: string, groupname: string): Promise<any> {
-        const url: string = Util.fixUrl(
-            `${this.cluster.rest_server_uri}/api/v2/users/${userName}/group`,
-            this.cluster.https
-        );
-        return await this.httpClient.put(url, { groupname });
-    }
-
-    /**
-     * Remove group from user's group list.
-     * @param userName The user name.
-     * @param groupname The groupname in [A-Za-z0-9_]+ format.
-     */
-    public async removeGroup(userName: string, groupname: string): Promise<any> {
-        const url: string = Util.fixUrl(
-            `${this.cluster.rest_server_uri}/api/v2/users/${userName}/group`,
-            this.cluster.https
-        );
-        return await this.httpClient.delete(url, undefined, { data: { groupname } });
+        return this.httpClient.put(url, user);
     }
 
     /**
@@ -198,11 +58,82 @@ export class UserClient extends OpenPAIBaseClient {
      */
     public async updateUserSelf(
         username: string, email?: string, newPassword?: string, oldPassword?: string
-    ): Promise<any> {
+    ): Promise<IPAIResponse> {
         const url: string = Util.fixUrl(
             `${this.cluster.rest_server_uri}/api/v2/users/me`,
             this.cluster.https
         );
         return await this.httpClient.put(url, { username, email, newPassword, oldPassword });
+    }
+
+    /**
+     * Get a user's data.
+     * @param userName The user's name.
+     */
+    public async getUser(userName: string): Promise<IUser> {
+        const url: string = Util.fixUrl(
+            `${this.cluster.rest_server_uri}/api/v2/users/${userName}`,
+            this.cluster.https
+        );
+        return this.httpClient.get(url);
+    }
+
+    /**
+     * Remove a user in the system.
+     * Basic mode only.
+     * Admin only.
+     * @param userName The user's name.
+     */
+    public async deleteUser(userName: string): Promise<IPAIResponse> {
+        const url: string = Util.fixUrl(
+            `${this.cluster.rest_server_uri}/api/v2/users/${userName}`,
+            this.cluster.https
+        );
+        return await this.httpClient.delete(url);
+    }
+
+    /**
+     * Add a group to a user's grouplist.
+     * Basic mode only.
+     * Admin only.
+     * @param userName The user name.
+     * @param groupname The new groupname in [A-Za-z0-9_]+ format.
+     */
+    public async updateUserGroup(userName: string, groupname: string): Promise<IPAIResponse> {
+        const url: string = Util.fixUrl(
+            `${this.cluster.rest_server_uri}/api/v2/users/${userName}/group`,
+            this.cluster.https
+        );
+        return await this.httpClient.put(url, { groupname });
+    }
+
+    /**
+     * Remove a group from user's grouplist.
+     * Basic mode only.
+     * Admin only.
+     * @param userName The user name.
+     * @param groupname The groupname in [A-Za-z0-9_]+ format.
+     */
+    public async deleteUserGroup(userName: string, groupname: string): Promise<IPAIResponse> {
+        const url: string = Util.fixUrl(
+            `${this.cluster.rest_server_uri}/api/v2/users/${userName}/group`,
+            this.cluster.https
+        );
+        return await this.httpClient.delete(url, undefined, { data: { groupname } });
+    }
+
+    /**
+     * Update a user's grouplist.
+     * Basic mode only.
+     * Admin only.
+     * @param userName The user name.
+     * @param grouplist The new group list.
+     */
+    public async updateUserGrouplist(userName: string, grouplist: string[]): Promise<IPAIResponse> {
+        const url: string = Util.fixUrl(
+            `${this.cluster.rest_server_uri}/api/v2/users/${userName}/grouplist`,
+            this.cluster.https
+        );
+        return await this.httpClient.put(url, { grouplist });
     }
 }

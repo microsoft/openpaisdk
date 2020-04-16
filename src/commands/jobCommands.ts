@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import { IJobConfig, IJobInfo, IJobStatus, OpenPAIClient } from '@api/v2';
-import { ITaskStatus } from '@api/v2/models/jobStatus';
+import { ITaskStatus } from '@pai/api/v2/models/job';
 import * as assert from 'assert';
 import * as fs from 'fs-extra';
 import * as yaml from 'js-yaml';

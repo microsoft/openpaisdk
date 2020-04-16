@@ -3,11 +3,14 @@
 
 import { IPAICluster } from '@api/v2';
 import {
+    ApiClient,
     AuthnClient,
     CacheClient,
     GroupClient,
     ICacheRecord,
     JobClient,
+    JobHistoryClient,
+    KubernetesClient,
     OpenPAIBaseClient,
     StorageClient,
     UserClient,
@@ -53,6 +56,21 @@ export class OpenPAIClient extends OpenPAIBaseClient {
      */
     public group: GroupClient;
 
+    /**
+     * OpenPAI API info Client.
+     */
+    public api: ApiClient;
+
+    /**
+     * OpenPAI job history Client.
+     */
+    public jobHistory: JobHistoryClient;
+
+    /**
+     * OpenPAI kubernetes Client.
+     */
+    public kubernetes: KubernetesClient;
+
     constructor(cluster: IPAICluster, cache?: ICacheRecord[]) {
         super(cluster);
         this.job = new JobClient(cluster);
@@ -61,9 +79,12 @@ export class OpenPAIClient extends OpenPAIBaseClient {
         this.authn = new AuthnClient(cluster);
         this.storage = new StorageClient(cluster);
         this.group = new GroupClient(cluster);
+        this.api = new ApiClient(cluster);
+        this.jobHistory = new JobHistoryClient(cluster);
+        this.kubernetes = new KubernetesClient(cluster);
 
         this.cache = new CacheClient(cache);
         this.cache.delegate(this.storage, this.storage.getStorages);
-        this.cache.delegate(this.storage, this.storage.getStorageByName);
+        this.cache.delegate(this.storage, this.storage.getStorage);
     }
 }

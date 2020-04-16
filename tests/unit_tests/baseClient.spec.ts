@@ -33,22 +33,6 @@ describe('Get token', () => {
     });
 });
 
-describe('Get cluster info', () => {
-    const response: any = {
-        authnMethod: 'basic',
-        launcherType: 'yarn',
-        name: 'PAI RESTful API',
-        version: 'v0.14.0'
-    };
-    before(() => nock(`http://${testUri}`).get('/api/v2/info').reply(200, response));
-
-    it('should return the cluster info', async () => {
-        const baseClient: OpenPAIBaseClient = new OpenPAIBaseClient(cluster);
-        const result: any = await baseClient.config.clusterInfo();
-        expect(result).to.be.eql(response);
-    });
-});
-
 describe('parse uri', () => {
     it('should parse pai uri', () => {
         const check: any = (input: IPAICluster, expected: IPAICluster) => {

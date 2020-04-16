@@ -21,17 +21,6 @@ export class OpenPAIBaseClient {
          */
         username: () => {
             return this.cluster.username;
-        },
-
-        /**
-         * Get OpenPAI cluster info, will call /api/v1.
-         */
-        clusterInfo: async (): Promise<IPAIClusterInfo> => {
-            const url: string = Util.fixUrl(
-                `${this.cluster.rest_server_uri}/api/v2/info`,
-                this.cluster.https
-            );
-            return await this.httpClient.get(url);
         }
     };
 
@@ -64,7 +53,7 @@ export class OpenPAIBaseClient {
     }
 
     /**
-     * Get OpenPAI access token, will call /api/v1/token.
+     * Get OpenPAI access token.
      */
     public async token(): Promise<string> {
         if (!this.cluster.token) {

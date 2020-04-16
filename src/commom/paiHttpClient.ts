@@ -19,17 +19,18 @@ export class PAIHttpClient {
         this.cluster = cluster;
     }
 
-    public async login(): Promise<ILoginInfo> {
+    public async login(username?: string, password?: string): Promise<ILoginInfo> {
         const url: string = Util.fixUrl(
-            `${this.cluster.rest_server_uri}/api/v2/authn/basic/login`
+            `${this.cluster.rest_server_uri}/api/v2/authn/basic/login`,
+            this.cluster.https
         );
         try {
             const res: AxiosResponse<ILoginInfo> = await axios.post(
                 url,
                 {
                     expiration: 4000,
-                    password: this.cluster.password,
-                    username: this.cluster.username
+                    password: password ? password : this.cluster.password,
+                    username: username ? username : this.cluster.username
                 },
                 {
                     headers: {

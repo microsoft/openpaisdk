@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IPAICluster, IUserInfo, UserClient } from '@api/v2';
+import { IPAICluster, IUser, UserClient } from '@api/v2';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import * as dirtyChai from 'dirty-chai';
@@ -25,7 +25,7 @@ chai.use(dirtyChai);
 beforeEach(() => nock(`http://${testUri}`).post('/api/v2/authn/basic/login').reply(200, { token: 'token' }));
 
 describe('Get user infomation', () => {
-    const response: IUserInfo = testUserInfo;
+    const response: IUser = testUserInfo;
     const userName: string = 'core';
     before(() => {
         nock(`http://${testUri}`).get(`/api/v2/users/${userName}`).reply(200, response);
@@ -40,7 +40,7 @@ describe('Get user infomation', () => {
 });
 
 describe('List all users', () => {
-    const response: IUserInfo[] = testAllUsers;
+    const response: IUser[] = testAllUsers;
     before(() => nock(`http://${testUri}`).get('/api/v2/users/').reply(200, response));
 
     it('should return all users', async () => {

@@ -4,7 +4,15 @@
 /**
  * OpenPAI access token.
  */
-export interface ITokenItem {
+export interface IToken {
     token: string;
-    expireTime: number;
+    expireTime?: number;
+    application?: boolean;
+}
+
+/**
+ * OpenPAI token list.
+ */
+export interface ITokenList {
+    tokens?: string[];
 }
