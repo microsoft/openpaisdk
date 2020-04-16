@@ -5,6 +5,7 @@
 import { AuthnClient } from './authnClient';
 import { OpenPAIBaseClient } from './baseClient';
 import { CacheClient, ICacheRecord } from './cacheClient';
+import { GroupClient } from './groupClient';
 import { JobClient } from './jobClient';
 import { OpenPAIClient } from './openPAIClient';
 import { StorageClient } from './storageClient';
@@ -20,5 +21,6 @@ export {
     AuthnClient,
     StorageClient,
     ICacheRecord,
-    CacheClient
+    CacheClient,
+    GroupClient
 };
