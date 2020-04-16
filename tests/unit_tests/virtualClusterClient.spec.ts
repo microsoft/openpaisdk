@@ -8,7 +8,6 @@ import * as dirtyChai from 'dirty-chai';
 import * as nock from 'nock';
 
 import { testAllVirtualClusters } from '../common/test_data/testAllVirtualClusters';
-import { testNodeResources } from '../common/test_data/testNodeResources';
 import { testVirtualClusters } from '../common/test_data/testVirtualCluster';
 
 /**
@@ -34,7 +33,7 @@ describe('List all virtual clusters', () => {
 
     it('should return all virtual clusters', async () => {
         const virtualClusterClient: VirtualClusterClient = new VirtualClusterClient(cluster);
-        const result: any = await virtualClusterClient.list();
+        const result: any = await virtualClusterClient.listVirtualClusters();
         expect(result).to.be.eql(response);
     });
 });
@@ -46,65 +45,7 @@ describe('Get a virtual cluster', () => {
 
     it('should return the virtual cluster info', async () => {
         const virtualClusterClient: VirtualClusterClient = new VirtualClusterClient(cluster);
-        const result: any = await virtualClusterClient.get(vcName);
-        expect(result).to.be.eql(response);
-    });
-});
-
-describe('Get virtual cluster node resources', () => {
-    const response: any = testNodeResources;
-    before(() => nock(`http://${testUri}`).get('/api/v2/virtual-clusters/nodeResource').reply(200, response));
-
-    it('should return the virtual cluster info', async () => {
-        const virtualClusterClient: VirtualClusterClient = new VirtualClusterClient(cluster);
-        const result: any = await virtualClusterClient.getNodeResource();
-        expect(result).to.be.eql(response);
-    });
-});
-
-describe('Create a new virtual cluster', () => {
-    const vcName: string = 'testNewVc1';
-    const vcCapacity: number = 1;
-    let response: any;
-    before(() => {
-        response = { message: `create vc: ${vcName} to capacity: ${vcCapacity} successfully.` };
-        nock(`http://${testUri}`).put(`/api/v2/virtual-clusters/${vcName}`).reply(201, response);
-    });
-
-    it('should return the virtual cluster info', async () => {
-        const virtualClusterClient: VirtualClusterClient = new VirtualClusterClient(cluster);
-        const result: any = await virtualClusterClient.createOrUpdate(vcName, vcCapacity, vcCapacity);
-        expect(result).to.be.eql(response);
-    });
-});
-
-describe('Remove a virtual cluster', () => {
-    const vcName: string = 'testNewVc1';
-    let response: any;
-    before(() => {
-        response = { message: `Remove vc: ${vcName} successfully` };
-        nock(`http://${testUri}`).delete(`/api/v2/virtual-clusters/${vcName}`).reply(201, response);
-    });
-
-    it('should remove successfully', async () => {
-        const virtualClusterClient: VirtualClusterClient = new VirtualClusterClient(cluster);
-        const result: any = await virtualClusterClient.delete(vcName);
-        expect(result).to.be.eql(response);
-    });
-});
-
-describe('Change virtual cluster status', () => {
-    const vcName: string = 'testNewVc1';
-    const vcStatus: 'stopped' | 'running' = 'stopped';
-    let response: any;
-    before(() => {
-        response = { message: `stop vc ${vcName} successfully` };
-        nock(`http://${testUri}`).put(`/api/v2/virtual-clusters/${vcName}/status`).reply(201, response);
-    });
-
-    it('should remove successfully', async () => {
-        const virtualClusterClient: VirtualClusterClient = new VirtualClusterClient(cluster);
-        const result: any = await virtualClusterClient.changeStatus(vcName, vcStatus);
+        const result: any = await virtualClusterClient.getVirtualCluster(vcName);
         expect(result).to.be.eql(response);
     });
 });

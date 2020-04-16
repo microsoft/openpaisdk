@@ -34,7 +34,7 @@ describe('Get user infomation', () => {
 
     it('should return the user info', async () => {
         const userClient: UserClient = new UserClient(cluster);
-        const result: any = await userClient.get(userName);
+        const result: any = await userClient.getUser(userName);
         expect(result).to.be.eql(response);
     });
 });
@@ -45,7 +45,7 @@ describe('List all users', () => {
 
     it('should return all users', async () => {
         const userClient: UserClient = new UserClient(cluster);
-        const result: any = await userClient.list();
+        const result: any = await userClient.getAllUser();
         expect(result).is.not.empty();
     });
 });
@@ -56,19 +56,12 @@ describe('Create a new user', () => {
 
     it('should create a new user', async () => {
         const userClient: UserClient = new UserClient(cluster);
-        const result: any = await userClient.create('core11', '11111111', false, '', ['default']);
-        expect(result).to.be.eql(response);
-    });
-});
-
-describe('Update user extension data', () => {
-    const response: any = { message: 'Update user extension data successfully.' };
-    const userName: string = 'core11';
-    before(() => nock(`http://${testUri}`).put(`/api/v2/users/${userName}/extension`).reply(201, response));
-
-    it('should update successfully', async () => {
-        const userClient: UserClient = new UserClient(cluster);
-        const result: any = await userClient.updateExtension(userName, { ex1: 'ex2' });
+        const result: any = await userClient.createUser({
+            username: 'core11',
+            password: '11111111',
+            admin: false,
+            virtualCluster: ['default']
+        });
         expect(result).to.be.eql(response);
     });
 });
@@ -80,57 +73,7 @@ describe('Delete a user', () => {
 
     it('should delete successfully', async () => {
         const userClient: UserClient = new UserClient(cluster);
-        const result: any = await userClient.delete(userName);
-        expect(result).to.be.eql(response);
-    });
-});
-
-describe('Update user virtualCluster data', () => {
-    const response: any = { message: 'Update user virtualCluster data successfully.' };
-    const userName: string = 'core11';
-    before(() => nock(`http://${testUri}`).put(`/api/v2/users/${userName}/virtualcluster`).reply(201, response));
-
-    it('should update successfully', async () => {
-        const userClient: UserClient = new UserClient(cluster);
-        const result: any = await userClient.updateVirtualcluster(userName, ['default']);
-        expect(result).to.be.eql(response);
-    });
-});
-
-describe('Update user password', () => {
-    const response: any = { message: 'update user password successfully.' };
-    const userName: string = 'core11';
-    const newPassword: string = 'newPassword';
-    before(() => nock(`http://${testUri}`).put(`/api/v2/users/${userName}/password`).reply(201, response));
-
-    it('should update successfully', async () => {
-        const userClient: UserClient = new UserClient(cluster);
-        const result: any = await userClient.updatePassword(userName, undefined, newPassword);
-        expect(result).to.be.eql(response);
-    });
-});
-describe('Update user email', () => {
-    const response: any = { message: 'Update user email data successfully.' };
-    const userName: string = 'core11';
-    const newEmail: string = 'new@email.test';
-    before(() => nock(`http://${testUri}`).put(`/api/v2/users/${userName}/email`).reply(201, response));
-
-    it('should update successfully', async () => {
-        const userClient: UserClient = new UserClient(cluster);
-        const result: any = await userClient.updateEmail(userName, newEmail);
-        expect(result).to.be.eql(response);
-    });
-});
-
-describe('Update user admin permission', () => {
-    const response: any = { message: 'Update user admin permission successfully.' };
-    const userName: string = 'core11';
-    const newAdminPermission: boolean = false;
-    before(() => nock(`http://${testUri}`).put(`/api/v2/users/${userName}/admin`).reply(201, response));
-
-    it('should update successfully', async () => {
-        const userClient: UserClient = new UserClient(cluster);
-        const result: any = await userClient.updateAdminPermission(userName, newAdminPermission);
+        const result: any = await userClient.deleteUser(userName);
         expect(result).to.be.eql(response);
     });
 });
@@ -143,7 +86,7 @@ describe('Update user group list', () => {
 
     it('should update successfully', async () => {
         const userClient: UserClient = new UserClient(cluster);
-        const result: any = await userClient.updateGroupList(userName, newGroupList);
+        const result: any = await userClient.updateUserGrouplist(userName, newGroupList);
         expect(result).to.be.eql(response);
     });
 });
@@ -159,7 +102,7 @@ describe('Add new group into user group list', () => {
 
     it('should add successfully', async () => {
         const userClient: UserClient = new UserClient(cluster);
-        const result: any = await userClient.addGroup(userName, groupName);
+        const result: any = await userClient.updateUserGroup(userName, groupName);
         expect(result).to.be.eql(response);
     });
 });
@@ -175,7 +118,7 @@ describe('Remove group from user group list', () => {
 
     it('should remove successfully', async () => {
         const userClient: UserClient = new UserClient(cluster);
-        const result: any = await userClient.removeGroup(userName, groupName);
+        const result: any = await userClient.deleteUserGroup(userName, groupName);
         expect(result).to.be.eql(response);
     });
 });

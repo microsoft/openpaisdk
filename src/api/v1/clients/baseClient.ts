@@ -67,7 +67,7 @@ export class OpenPAIBaseClient {
     public async token(): Promise<string> {
         if (this.cluster.token) {
             return this.cluster.token;
-        } else if (!this.cacheToken || this.cacheToken.expireTime < Date.now()) {
+        } else if (!this.cacheToken || this.cacheToken.expireTime! < Date.now()) {
             const res: ILoginInfo = await this.login();
             this.cacheToken = {
                 expireTime: Date.now() + 3600 * 1000,
