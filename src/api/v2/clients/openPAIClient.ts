@@ -5,6 +5,7 @@ import { IPAICluster } from '@api/v2';
 import {
     AuthnClient,
     CacheClient,
+    GroupClient,
     ICacheRecord,
     JobClient,
     OpenPAIBaseClient,
@@ -47,6 +48,11 @@ export class OpenPAIClient extends OpenPAIBaseClient {
      */
     public cache: CacheClient;
 
+    /**
+     * OpenPAI Group Client.
+     */
+    public group: GroupClient;
+
     constructor(cluster: IPAICluster, cache?: ICacheRecord[]) {
         super(cluster);
         this.job = new JobClient(cluster);
@@ -54,6 +60,7 @@ export class OpenPAIClient extends OpenPAIBaseClient {
         this.virtualCluster = new VirtualClusterClient(cluster);
         this.authn = new AuthnClient(cluster);
         this.storage = new StorageClient(cluster);
+        this.group = new GroupClient(cluster);
 
         this.cache = new CacheClient(cache);
         this.cache.delegate(this.storage, this.storage.getStorages);
