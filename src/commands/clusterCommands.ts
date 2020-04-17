@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IPAICluster, OpenPAIClient } from '..';
+import { IPAICluster, OpenPAIClient } from '@api/v2';
 
 import { CliEngine, IClusterWithCache, IResult } from './cliEngine';
 import { table2Console } from './utils';
@@ -19,7 +19,7 @@ export const registerClusterCommands = (cli: CliEngine) => {
         },
         undefined,
         (r: IResult) => {
-            const clusters = r.result as IPAICluster[];
+            const clusters: IPAICluster[] = r.result as IPAICluster[];
             const rows: any[][] = [
                 ['alias', 'uri', 'user', 'https']
             ];

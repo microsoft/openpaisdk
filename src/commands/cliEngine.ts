@@ -1,11 +1,11 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+import { IPAICluster, OpenPAIClient } from '@api/v2';
+import { ICacheRecord } from '@api/v2/clients/cacheClient';
 import * as argparse from 'argparse';
 import * as path from 'path';
 
-import { IPAICluster, OpenPAIClient } from '..';
-import { ICacheRecord } from '../client/cacheClient';
 import { Identifiable } from '../commom/identifiable';
 import { Util } from '../commom/util';
 
@@ -50,10 +50,10 @@ function defaultFommater(result: IResult): void {
         if (typeof result.result === 'string') {
             console.log(result.result);
         } else {
-            console.log(JSON.stringify(result.result || "", undefined, 4));
+            console.log(JSON.stringify(result.result || '', undefined, 4));
         }
     };
-    cout(result.result || "");
+    cout(result.result || '');
 }
 
 /**

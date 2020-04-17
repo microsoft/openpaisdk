@@ -3,9 +3,9 @@
 
 import * as fs from 'fs-extra';
 import { dirname } from 'path';
+import { getBorderCharacters, table } from 'table';
 
 import { Util } from '../commom/util';
-import { table, getBorderCharacters } from 'table';
 
 /**
  * utils functions
@@ -30,10 +30,10 @@ export async function writeJson<T extends object>(pth: string, val: T): Promise<
     Util.debug(`saved to ${pth}`);
 }
 
-export function table2Console(rows: any[][]) {
-    const config = {
-        border: getBorderCharacters(`ramac`)
+export function table2Console(rows: any[][]): void {
+    const config: any = {
+        border: getBorderCharacters('ramac')
     };
-    const output = table(rows, config);
+    const output: any = table(rows, config);
     console.log(output);
 }

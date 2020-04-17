@@ -1,0 +1,12 @@
+{
+    "extends": "./tsconfig.base.json",
+    "include": [
+        "src",
+        "tests/unit_tests/global.d.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "tests",
+        "out"
+    ]
+}
