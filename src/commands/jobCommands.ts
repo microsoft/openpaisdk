@@ -3,7 +3,7 @@
 
 import { IJobConfig, IJobInfo, IJobStatus, OpenPAIClient } from '@api/v2';
 import { ITaskStatus } from '@pai/api/v2/models/job';
-import * as assert from 'assert';
+import assert from 'assert';
 import * as fs from 'fs-extra';
 import * as yaml from 'js-yaml';
 

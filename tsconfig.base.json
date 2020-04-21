@@ -9,6 +9,9 @@
             "es2019",
             "DOM"
         ],
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
         "baseUrl": "src",
         "paths": {
             "@pai/*": ["*"],

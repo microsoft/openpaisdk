@@ -37,6 +37,7 @@
     "@types/nock": "^10.0.3",
     "@types/request-promise-native": "^1.0.16",
     "@types/table": "^4.0.7",
+    "ajv": "^6.12.2",
     "chai": "^4.2.0",
     "dirty-chai": "^2.0.1",
     "minimist": ">=1.2.2",
@@ -52,6 +53,7 @@
     "typescript": "^3.5.3"
   },
   "dependencies": {
+    "@apidevtools/swagger-parser": "^9.0.1",
     "@azure/storage-blob": "^12.1.0",
     "argparse": "^1.0.10",
     "axios": "^0.19.2",

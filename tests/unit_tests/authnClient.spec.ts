@@ -4,8 +4,8 @@
 import { AuthnClient, IPAICluster } from '@api/v2';
 import * as chai from 'chai';
 import { expect } from 'chai';
-import * as dirtyChai from 'dirty-chai';
-import * as nock from 'nock';
+import dirtyChai from 'dirty-chai';
+import nock from 'nock';
 
 /**
  * Unit tests for authnClient.

@@ -8,6 +8,7 @@ import {
     AuthnClient,
     JobClient,
     JobHistoryClient,
+    KubernetesClient,
     OpenPAIBaseClient,
     OpenPAIClient,
     StorageClient,
@@ -62,5 +63,6 @@ export {
     GroupClient,
     ApiClient,
     JobHistoryClient,
-    IPAIResponse
+    IPAIResponse,
+    KubernetesClient
 };
