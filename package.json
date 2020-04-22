@@ -11,7 +11,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "pretest": "tslint --config tslint.json --project tsconfig.json",
-    "test": "mocha -r ts-node/register -r tsconfig-paths/register tests/**/*.spec.ts",
+    "test": "mocha -r ts-node/register -r tsconfig-paths/register tests/unit_tests/**/*.spec.ts",
     "api-test": "mocha -r ts-node/register -r tsconfig-paths/register tests/api_tests/**/*.spec.ts -t 10000",
     "prebuild": "tslint --config tslint.json --project tsconfig.json",
     "build": "tsc -p tsconfig.build.json"
