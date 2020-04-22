@@ -4,6 +4,7 @@
 import { ILoginInfo, IPAICluster } from '@api/v2';
 import { Util } from '@pai/commom/util';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import querystring from 'querystring';
 
 import { paiError } from './errors/paiError';
 import { processResponse, IPAIResponseProcessor } from './paiResponseProcessor';
@@ -27,14 +28,14 @@ export class PAIHttpClient {
         try {
             const res: AxiosResponse<ILoginInfo> = await axios.post(
                 url,
-                {
+                querystring.stringify({
                     expiration: 4000,
                     password: password ? password : this.cluster.password,
                     username: username ? username : this.cluster.username
-                },
+                }),
                 {
                     headers: {
-                        'content-type': 'application/json'
+                        'content-type': 'application/x-www-form-urlencoded'
                     }
                 }
             );
