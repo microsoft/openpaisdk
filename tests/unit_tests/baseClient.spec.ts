@@ -28,7 +28,7 @@ describe('Get token', () => {
 
     it('should return a token', async () => {
         const baseClient: OpenPAIBaseClient = new OpenPAIBaseClient(cluster);
-        const result: any = await baseClient.token();
+        const result: any = await baseClient.getToken();
         expect(result).to.be.a('string');
     });
 });

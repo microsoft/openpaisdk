@@ -12,6 +12,7 @@ import { JobHistoryClient } from './jobHistoryClient';
 import { KubernetesClient } from './kubernetesClient';
 import { OpenPAIClient } from './openPAIClient';
 import { StorageClient } from './storageClient';
+import { TokenClient } from './tokenClient';
 import { UserClient } from './userClient';
 import { VirtualClusterClient } from './virtualClusterClient';
 
@@ -28,5 +29,6 @@ export {
     GroupClient,
     ApiClient,
     JobHistoryClient,
-    KubernetesClient
+    KubernetesClient,
+    TokenClient
 };

@@ -12,7 +12,7 @@ import { processResponse, IPAIResponseProcessor } from './paiResponseProcessor';
  * Http client for PAI rest-server.
  */
 export class PAIHttpClient {
-    protected static readonly TIMEOUT: number = 60 * 1000;
+    protected static readonly TIMEOUT: number = 10 * 1000;
     private readonly cluster: IPAICluster;
 
     constructor(cluster: IPAICluster) {

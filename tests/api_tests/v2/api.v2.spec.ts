@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { OpenPAIClient } from '@api/v2';
+import { IPAIClusterInfo, OpenPAIClient } from '@api/v2';
 import swaggerParser from '@apidevtools/swagger-parser';
 import ajv, { Ajv } from 'ajv';
 import * as chai from 'chai';
@@ -15,7 +15,8 @@ import { TestCluster } from '../../common/testCluster';
  */
 let api: any;
 let ajvInstance: Ajv;
-let openPaiClient: any;
+let openPAIClient: any;
+let clusterInfo: IPAIClusterInfo;
 const operations: any[] = [];
 
 const testApis: any = {
@@ -63,8 +64,9 @@ for (const path of Object.keys(testApis)) {
 chai.use(dirtyChai);
 before(async () => {
     ajvInstance = new ajv();
-    api = await swaggerParser.parse('src/api/v2/swagger.yaml');
-    openPaiClient = new OpenPAIClient(TestCluster.cluster);
+    api = await swaggerParser.dereference('src/api/v2/swagger.yaml');
+    openPAIClient = new OpenPAIClient(TestCluster.cluster);
+    clusterInfo = await openPAIClient.api.getClusterInfo();
 
     for (const path of Object.keys(api.paths)) {
         const ops: any = api.paths[path];
@@ -84,20 +86,72 @@ describe('Check api number', () => {
 
 describe('Test api client', () => {
     for (const op of testOps) {
+        if (op.operationType === 'parameters') {
+            continue;
+        }
+
         it(op.operationType + ' ' + op.path, async () => {
             const operation: any = operations.find(
                 item => item.operationType === op.operationType && item.path === op.path
             );
-            const schema: any = operation.responses['200'].content['application/json'].schema;
-            const schemaValidate: boolean = ajvInstance.validateSchema(schema);
-            expect(schemaValidate, 'schema should be valid.').to.be.true();
+            const okResponse: any = operation.responses['200'];
+            let schema: any;
+            if (okResponse) {
+                const jsonResponse: any = okResponse.content ?
+                    okResponse.content['application/json'] : undefined;
+                if (jsonResponse) {
+                    schema = jsonResponse.schema;
+                }
+            }
 
-            const client: any = openPaiClient[operation.tags[0]];
+            if (skipTest(operation)) {
+                return;
+            }
+
+            if (schema) {
+                const schemaValidate: boolean = ajvInstance.validateSchema(schema);
+                expect(schemaValidate, 'schema should be valid.').to.be.true();
+            }
+
+            const client: any = openPAIClient[getClientName(operation.tags[0])];
             expect(client, 'client should match tag name.').not.to.be.undefined();
 
-            const res: any = await client[operation.operationId]();
-            const valid: boolean = ajvInstance.validate(schema, res) as boolean;
-            expect(valid, 'response should be valid.').to.be.true();
+            let res: any;
+            res = await client[operation.operationId]();
+
+            if (schema) {
+                const valid: boolean = ajvInstance.validate(schema, res) as boolean;
+                if (!valid) {
+                    console.log(ajvInstance.errors);
+                }
+                expect(valid, 'response should be valid.').to.be.true();
+            }
         });
     }
 });
+
+function skipTest(operation: any): boolean {
+    if (clusterInfo.authnMethod === 'OIDC') {
+        if (
+            ['basicLogin', 'basicLogout', 'createUser', 'delete', 'updateUserSelf']
+                .includes(operation.operationId)
+        ) {
+            return true;
+        }
+    } else {
+        if (['oidcLogin', 'oidcLogout'].includes(operation.operationId)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function getClientName(tag: string): string {
+    const words: string[] = tag.split(' ');
+    if (words.length === 1) {
+        return tag;
+    }
+
+    return words[0] + words[1].charAt(0).toUpperCase() + words[1].slice(1);
+}
