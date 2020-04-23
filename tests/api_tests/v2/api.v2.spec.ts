@@ -27,7 +27,7 @@ export interface IOperationResults {
 
 chai.use(dirtyChai);
 before(async () => {
-    ajvInstance = new ajv();
+    ajvInstance = new ajv({ nullable: true });
     openPAIClient = new OpenPAIClient(TestCluster.cluster);
     clusterInfo = await openPAIClient.api.getClusterInfo();
 });
