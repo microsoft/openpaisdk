@@ -126,7 +126,6 @@ async function runOperation(
         }
     }
     const res: any = await client[operation.operationId!](...parameters);
-    console.log(res);
     if (operation.response) {
         if (operation.response.schema) {
             const valid: boolean = ajvInstance.validate(operation.response.schema, res) as boolean;

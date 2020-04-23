@@ -1044,8 +1044,11 @@
                         {
                             "type": "raw",
                             "value": {
-                                "groupname": "sdktestgroup",
-                                "description": "test update group"
+                                "data": {
+                                    "groupname": "sdktestgroup",
+                                    "description": "test update group"
+                                },
+                                "patch": true
                             }
                         }
                     ],

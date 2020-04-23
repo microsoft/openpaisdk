@@ -82,8 +82,11 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
                 parameters: [{
                     type: 'raw',
                     value: {
-                        groupname: 'sdktestgroup',
-                        description: 'test update group'
+                        data: {
+                            groupname: 'sdktestgroup',
+                            description: 'test update group'
+                        },
+                        patch: true
                     }
                 }]
             }
