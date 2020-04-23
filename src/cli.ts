@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
-require('module-alias/register'); // tslint:disable-next-line:no-require-imports no-var-requires
+
+// tslint:disable-next-line:no-require-imports no-var-requires
+require('module-alias/register');
 
 import { registerBuiltinCommands, CliEngine } from './commands';
 import { IResult } from './commands/cliEngine';
