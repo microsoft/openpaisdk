@@ -32,16 +32,14 @@ before(async () => {
     clusterInfo = await openPAIClient.api.getClusterInfo();
 });
 
-describe('Test api client', () => {
-    for (const test of apiTestCaseJson as IApiTestCase[]) {
-        let beforeEachResults: any[];
-        let beforeResults: any[];
-        const testResults: any[] = [];
+for (const test of apiTestCaseJson as IApiTestCase[]) {
+    let beforeEachResults: any[];
+    let beforeResults: any[];
+    const testResults: any[] = [];
 
-        beforeEach(async () =>
-            beforeEachResults = await runOperations(test.beforeEach));
-        before(async () =>
-            beforeResults = await runOperations(test.before));
+    describe(test.description!, () => {
+        beforeEach(async () => beforeEachResults = await runOperations(test.beforeEach));
+        before(async () => beforeResults = await runOperations(test.before));
 
         for (const testItem of test.tests) {
             it (testItem.description || test.description || 'unknown test', async () => {
@@ -63,16 +61,36 @@ describe('Test api client', () => {
             });
         }
 
-        after(async () => await runOperations(test.after));
-        afterEach(async () => await runOperations(test.afterEach));
-    }
-});
+        after(async () => await runOperations(
+            test.after,
+            {
+                beforeEachResults,
+                beforeResults,
+                testResults
+            }));
+        afterEach(async () => await runOperations(
+            test.afterEach,
+            {
+                beforeEachResults,
+                beforeResults,
+                testResults
+            }));
+    });
+}
 
 function skipTest(operation: IApiOperation): boolean {
     if (clusterInfo.authnMethod === 'OIDC') {
-        if (
-            ['basicLogin', 'basicLogout', 'createUser', 'delete', 'updateUserSelf']
-                .includes(operation.operationId!)
+        if ([
+                'basicLogin',
+                'basicLogout',
+                'createUser',
+                'deleteUser',
+                'updateUserSelf',
+                'updateUser',
+                'updateUserGroup',
+                'deleteUserGroup',
+                'updateUserGrouplist'
+            ].includes(operation.operationId!)
         ) {
             return true;
         }
@@ -99,17 +117,16 @@ async function runOperation(
 ): Promise<any> {
     const client: any = openPAIClient[getClientName(operation.tag!)];
     const parameters: any[] = [];
-    if (operationResults) {
-        for (const para of operation.parameters!) {
-            if (para.type === 'raw') {
-                parameters.push(para.value);
-            } else {
-                const parameter: any = operationResults[para.resultType!][para.resultIndex!];
-                parameters.push(para.resultPath ? parameter[para.resultPath] : parameter);
-            }
+    for (const para of operation.parameters!) {
+        if (para.type === 'raw') {
+            parameters.push(para.value);
+        } else  if (operationResults) {
+            const parameter: any = operationResults[para.resultType!][para.resultIndex!];
+            parameters.push(para.resultPath ? parameter[para.resultPath] : parameter);
         }
     }
     const res: any = await client[operation.operationId!](...parameters);
+    console.log(res);
     if (operation.response) {
         if (operation.response.schema) {
             const valid: boolean = ajvInstance.validate(operation.response.schema, res) as boolean;

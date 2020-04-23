@@ -149,7 +149,6 @@
         "description": "delete /api/v2/tokens/{token}"
     },
     {
-        "description": "post /api/v2/tokens/application",
         "tests": [
             {
                 "operation": {
@@ -175,7 +174,22 @@
                     }
                 }
             }
-        ]
+        ],
+        "after": [
+            {
+                "tag": "token",
+                "operationId": "deleteToken",
+                "parameters": [
+                    {
+                        "type": "fromResult",
+                        "resultType": "testResults",
+                        "resultPath": "token",
+                        "resultIndex": 0
+                    }
+                ]
+            }
+        ],
+        "description": "post /api/v2/tokens/application"
     },
     {
         "description": "get /api/v2/authn/oidc/login",
@@ -524,13 +538,17 @@
         ]
     },
     {
-        "description": "get /api/v2/users/{user}",
         "tests": [
             {
                 "operation": {
+                    "parameters": [
+                        {
+                            "type": "raw",
+                            "value": "yiyi"
+                        }
+                    ],
                     "tag": "user",
                     "operationId": "getUser",
-                    "parameters": [],
                     "response": {
                         "statusCode": "200",
                         "schema": {
@@ -581,7 +599,8 @@
                     }
                 }
             }
-        ]
+        ],
+        "description": "get /api/v2/users/{user}"
     },
     {
         "description": "delete /api/v2/users/{user}",
@@ -844,13 +863,19 @@
         ]
     },
     {
-        "description": "post /api/v2/groups",
         "tests": [
             {
                 "operation": {
                     "tag": "group",
                     "operationId": "createGroup",
-                    "parameters": [],
+                    "parameters": [
+                        {
+                            "type": "raw",
+                            "value": {
+                                "groupname": "sdktestgroup"
+                            }
+                        }
+                    ],
                     "response": {
                         "statusCode": "201",
                         "schema": {
@@ -896,16 +921,136 @@
                     }
                 }
             }
-        ]
+        ],
+        "after": [
+            {
+                "tag": "group",
+                "operationId": "deleteGroup",
+                "parameters": [
+                    {
+                        "type": "raw",
+                        "value": "sdktestgroup"
+                    }
+                ],
+                "response": {
+                    "statusCode": "201",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "code": {
+                                "type": "string",
+                                "enum": [
+                                    "BadConfigurationError",
+                                    "ConflictJobError",
+                                    "ConflictUserError",
+                                    "ConflictVcError",
+                                    "ForbiddenUserError",
+                                    "ForbiddenKeyError",
+                                    "IncorrectPasswordError",
+                                    "InvalidParametersError",
+                                    "NoApiError",
+                                    "NoJobError",
+                                    "NoJobConfigError",
+                                    "NoJobSshInfoError",
+                                    "NoUserError",
+                                    "NoGroupError",
+                                    "NoVirtualClusterError",
+                                    "ReadOnlyJobError",
+                                    "RemoveAdminError",
+                                    "ReadOnlyVcError",
+                                    "RemoveRunningVcError",
+                                    "UnauthorizedUserError",
+                                    "NoEnoughQuotaError",
+                                    "NotImplementedError",
+                                    "UnknownError"
+                                ]
+                            },
+                            "message": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "message"
+                        ]
+                    },
+                    "contentType": "application/json"
+                }
+            }
+        ],
+        "description": "post /api/v2/groups"
     },
     {
-        "description": "put /api/v2/groups",
+        "before": [
+            {
+                "tag": "group",
+                "operationId": "createGroup",
+                "parameters": [
+                    {
+                        "type": "raw",
+                        "value": {
+                            "groupname": "sdktestgroup"
+                        }
+                    }
+                ],
+                "response": {
+                    "statusCode": "201",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "code": {
+                                "type": "string",
+                                "enum": [
+                                    "BadConfigurationError",
+                                    "ConflictJobError",
+                                    "ConflictUserError",
+                                    "ConflictVcError",
+                                    "ForbiddenUserError",
+                                    "ForbiddenKeyError",
+                                    "IncorrectPasswordError",
+                                    "InvalidParametersError",
+                                    "NoApiError",
+                                    "NoJobError",
+                                    "NoJobConfigError",
+                                    "NoJobSshInfoError",
+                                    "NoUserError",
+                                    "NoGroupError",
+                                    "NoVirtualClusterError",
+                                    "ReadOnlyJobError",
+                                    "RemoveAdminError",
+                                    "ReadOnlyVcError",
+                                    "RemoveRunningVcError",
+                                    "UnauthorizedUserError",
+                                    "NoEnoughQuotaError",
+                                    "NotImplementedError",
+                                    "UnknownError"
+                                ]
+                            },
+                            "message": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "message"
+                        ]
+                    },
+                    "contentType": "application/json"
+                }
+            }
+        ],
         "tests": [
             {
                 "operation": {
+                    "parameters": [
+                        {
+                            "type": "raw",
+                            "value": {
+                                "groupname": "sdktestgroup",
+                                "description": "test update group"
+                            }
+                        }
+                    ],
                     "tag": "group",
                     "operationId": "updateGroup",
-                    "parameters": [],
                     "response": {
                         "statusCode": "201",
                         "schema": {
@@ -951,16 +1096,133 @@
                     }
                 }
             }
-        ]
+        ],
+        "after": [
+            {
+                "tag": "group",
+                "operationId": "deleteGroup",
+                "parameters": [
+                    {
+                        "type": "raw",
+                        "value": "sdktestgroup"
+                    }
+                ],
+                "response": {
+                    "statusCode": "201",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "code": {
+                                "type": "string",
+                                "enum": [
+                                    "BadConfigurationError",
+                                    "ConflictJobError",
+                                    "ConflictUserError",
+                                    "ConflictVcError",
+                                    "ForbiddenUserError",
+                                    "ForbiddenKeyError",
+                                    "IncorrectPasswordError",
+                                    "InvalidParametersError",
+                                    "NoApiError",
+                                    "NoJobError",
+                                    "NoJobConfigError",
+                                    "NoJobSshInfoError",
+                                    "NoUserError",
+                                    "NoGroupError",
+                                    "NoVirtualClusterError",
+                                    "ReadOnlyJobError",
+                                    "RemoveAdminError",
+                                    "ReadOnlyVcError",
+                                    "RemoveRunningVcError",
+                                    "UnauthorizedUserError",
+                                    "NoEnoughQuotaError",
+                                    "NotImplementedError",
+                                    "UnknownError"
+                                ]
+                            },
+                            "message": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "message"
+                        ]
+                    },
+                    "contentType": "application/json"
+                }
+            }
+        ],
+        "description": "put /api/v2/groups"
     },
     {
-        "description": "get /api/v2/groups/{group}",
+        "before": [
+            {
+                "tag": "group",
+                "operationId": "createGroup",
+                "parameters": [
+                    {
+                        "type": "raw",
+                        "value": {
+                            "groupname": "sdktestgroup"
+                        }
+                    }
+                ],
+                "response": {
+                    "statusCode": "201",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "code": {
+                                "type": "string",
+                                "enum": [
+                                    "BadConfigurationError",
+                                    "ConflictJobError",
+                                    "ConflictUserError",
+                                    "ConflictVcError",
+                                    "ForbiddenUserError",
+                                    "ForbiddenKeyError",
+                                    "IncorrectPasswordError",
+                                    "InvalidParametersError",
+                                    "NoApiError",
+                                    "NoJobError",
+                                    "NoJobConfigError",
+                                    "NoJobSshInfoError",
+                                    "NoUserError",
+                                    "NoGroupError",
+                                    "NoVirtualClusterError",
+                                    "ReadOnlyJobError",
+                                    "RemoveAdminError",
+                                    "ReadOnlyVcError",
+                                    "RemoveRunningVcError",
+                                    "UnauthorizedUserError",
+                                    "NoEnoughQuotaError",
+                                    "NotImplementedError",
+                                    "UnknownError"
+                                ]
+                            },
+                            "message": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "message"
+                        ]
+                    },
+                    "contentType": "application/json"
+                }
+            }
+        ],
         "tests": [
             {
                 "operation": {
+                    "parameters": [
+                        {
+                            "type": "raw",
+                            "value": "sdktestgroup"
+                        }
+                    ],
                     "tag": "group",
                     "operationId": "getGroup",
-                    "parameters": [],
                     "response": {
                         "statusCode": "200",
                         "schema": {
@@ -993,16 +1255,133 @@
                     }
                 }
             }
-        ]
+        ],
+        "after": [
+            {
+                "tag": "group",
+                "operationId": "deleteGroup",
+                "parameters": [
+                    {
+                        "type": "raw",
+                        "value": "sdktestgroup"
+                    }
+                ],
+                "response": {
+                    "statusCode": "201",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "code": {
+                                "type": "string",
+                                "enum": [
+                                    "BadConfigurationError",
+                                    "ConflictJobError",
+                                    "ConflictUserError",
+                                    "ConflictVcError",
+                                    "ForbiddenUserError",
+                                    "ForbiddenKeyError",
+                                    "IncorrectPasswordError",
+                                    "InvalidParametersError",
+                                    "NoApiError",
+                                    "NoJobError",
+                                    "NoJobConfigError",
+                                    "NoJobSshInfoError",
+                                    "NoUserError",
+                                    "NoGroupError",
+                                    "NoVirtualClusterError",
+                                    "ReadOnlyJobError",
+                                    "RemoveAdminError",
+                                    "ReadOnlyVcError",
+                                    "RemoveRunningVcError",
+                                    "UnauthorizedUserError",
+                                    "NoEnoughQuotaError",
+                                    "NotImplementedError",
+                                    "UnknownError"
+                                ]
+                            },
+                            "message": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "message"
+                        ]
+                    },
+                    "contentType": "application/json"
+                }
+            }
+        ],
+        "description": "get /api/v2/groups/{group}"
     },
     {
-        "description": "delete /api/v2/groups/{group}",
+        "before": [
+            {
+                "tag": "group",
+                "operationId": "createGroup",
+                "parameters": [
+                    {
+                        "type": "raw",
+                        "value": {
+                            "groupname": "sdktestgroup"
+                        }
+                    }
+                ],
+                "response": {
+                    "statusCode": "201",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "code": {
+                                "type": "string",
+                                "enum": [
+                                    "BadConfigurationError",
+                                    "ConflictJobError",
+                                    "ConflictUserError",
+                                    "ConflictVcError",
+                                    "ForbiddenUserError",
+                                    "ForbiddenKeyError",
+                                    "IncorrectPasswordError",
+                                    "InvalidParametersError",
+                                    "NoApiError",
+                                    "NoJobError",
+                                    "NoJobConfigError",
+                                    "NoJobSshInfoError",
+                                    "NoUserError",
+                                    "NoGroupError",
+                                    "NoVirtualClusterError",
+                                    "ReadOnlyJobError",
+                                    "RemoveAdminError",
+                                    "ReadOnlyVcError",
+                                    "RemoveRunningVcError",
+                                    "UnauthorizedUserError",
+                                    "NoEnoughQuotaError",
+                                    "NotImplementedError",
+                                    "UnknownError"
+                                ]
+                            },
+                            "message": {
+                                "type": "string"
+                            }
+                        },
+                        "required": [
+                            "message"
+                        ]
+                    },
+                    "contentType": "application/json"
+                }
+            }
+        ],
         "tests": [
             {
                 "operation": {
                     "tag": "group",
                     "operationId": "deleteGroup",
-                    "parameters": [],
+                    "parameters": [
+                        {
+                            "type": "raw",
+                            "value": "sdktestgroup"
+                        }
+                    ],
                     "response": {
                         "statusCode": "201",
                         "schema": {
@@ -1048,7 +1427,8 @@
                     }
                 }
             }
-        ]
+        ],
+        "description": "delete /api/v2/groups/{group}"
     },
     {
         "description": "get /api/v2/groups/{group}/userlist",
@@ -1210,13 +1590,17 @@
         ]
     },
     {
-        "description": "get /api/v2/virtual-clusters/{vc}",
         "tests": [
             {
                 "operation": {
+                    "parameters": [
+                        {
+                            "type": "raw",
+                            "value": "default"
+                        }
+                    ],
                     "tag": "virtual cluster",
                     "operationId": "getVirtualCluster",
-                    "parameters": [],
                     "response": {
                         "statusCode": "200",
                         "schema": {
@@ -1330,16 +1714,21 @@
                     }
                 }
             }
-        ]
+        ],
+        "description": "get /api/v2/virtual-clusters/{vc}"
     },
     {
-        "description": "get /api/v2/virtual-clusters/{vc}/sku-types",
         "tests": [
             {
                 "operation": {
+                    "parameters": [
+                        {
+                            "type": "raw",
+                            "value": "default"
+                        }
+                    ],
                     "tag": "virtual cluster",
                     "operationId": "getVirtualClusterSkuTypes",
-                    "parameters": [],
                     "response": {
                         "statusCode": "200",
                         "schema": {
@@ -1368,7 +1757,8 @@
                     }
                 }
             }
-        ]
+        ],
+        "description": "get /api/v2/virtual-clusters/{vc}/sku-types"
     },
     {
         "description": "get /api/v2/storages",
