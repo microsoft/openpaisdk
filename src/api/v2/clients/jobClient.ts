@@ -30,7 +30,7 @@ export class JobClient extends OpenPAIBaseClient {
 
         return await this.httpClient.post(url, text, undefined, {
             headers: {
-                'Content-Type': 'text/yaml'
+                'content-type': 'text/yaml'
             }
         });
     }

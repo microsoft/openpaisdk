@@ -1,9 +1,34 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+import crypto from 'crypto';
+
 import clustersJson from '../../.tests/clusters.json';
 
 import { IApiOperation, IApiTestCase } from './apiTestCaseGenerator';
+import { testJobConfig } from './test_data/testJobConfig';
+
+/**
+ * Random string class.
+ */
+class RandomString {
+    private data?: string;
+
+    public get(): string {
+        if (this.data) {
+            return this.data;
+        } else {
+            return this.new();
+        }
+    }
+
+    public new(): string {
+        this.data = crypto.randomBytes(4).toString('hex');
+        return this.data;
+    }
+}
+
+const randomString: RandomString = new RandomString();
 
 const createTestGroup: IApiOperation = {
     tag: 'group',
@@ -24,6 +49,18 @@ const deleteTestGroup: IApiOperation = {
         value: 'sdktestgroup'
     }]
 };
+
+function createTestJob(): IApiOperation {
+    return {
+        parameters: [{
+            type: 'raw',
+            value: {
+                ...testJobConfig,
+                ...{ name: 'sdk_test_job' + randomString.new() }
+            }
+        }]
+    };
+}
 
 /**
  * API default test cases will be add to the test case generator.
@@ -128,6 +165,28 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
                     type: 'raw',
                     value: 'default'
                 }]
+            }
+        }]
+    },
+    'post /api/v2/jobs': {
+        tests: [{
+            operation: createTestJob()
+        }]
+    },
+    'get /api/v2/jobs': {
+        before: [ createTestJob() ],
+        tests: [{
+            operation: {
+                parameters: [
+                    {
+                        type: 'raw',
+                        value: clustersJson[0].username
+                    },
+                    {
+                        type: 'raw',
+                        value: 'sdk_test_job' + randomString.get()
+                    }
+                ]
             }
         }]
     }

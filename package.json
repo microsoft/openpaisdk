@@ -12,6 +12,7 @@
     "lint": "tslint -p tsconfig.json",
     "pretest": "tslint --config tslint.json --project tsconfig.json",
     "test": "mocha -r ts-node/register -r tsconfig-paths/register tests/unit_tests/**/*.spec.ts",
+    "preapi-test": "ts-node tests/common/apiTestCaseGenerator.ts -- \"src/api/v2/swagger.yaml\" \"tests/api_tests/v2/apiTestCase.json\"",
     "api-test": "mocha -r ts-node/register -r tsconfig-paths/register tests/api_tests/**/*.spec.ts -t 10000",
     "prebuild": "tslint --config tslint.json --project tsconfig.json",
     "build": "tsc -p tsconfig.build.json"
@@ -33,6 +34,7 @@
     "@types/dirty-chai": "^2.0.1",
     "@types/fs-extra": "^8.1.0",
     "@types/js-yaml": "^3.12.1",
+    "@types/lodash": "^4.14.150",
     "@types/mocha": "^5.2.7",
     "@types/mock-fs": "^4.10.0",
     "@types/nock": "^10.0.3",
@@ -60,6 +62,7 @@
     "axios": "^0.19.2",
     "fs-extra": "^8.1.0",
     "js-yaml": "^3.13.1",
+    "lodash": "^4.17.15",
     "module-alias": "^2.2.2",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",

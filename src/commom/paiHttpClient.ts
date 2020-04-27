@@ -4,6 +4,7 @@
 import { ILoginInfo, IPAICluster } from '@api/v2';
 import { Util } from '@pai/commom/util';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import lodash from 'lodash';
 import querystring from 'querystring';
 
 import { paiError } from './errors/paiError';
@@ -66,16 +67,21 @@ export class PAIHttpClient {
             if (processor) {
                 const res: AxiosResponse = await axios.get(
                     url,
-                    {
-                        ...{ responseType: 'text', transformResponse: [(data) => { return data; }] },
-                        ...defaultOptions,
-                        ...options
-                    }
+                    lodash.merge(
+                        {
+                            ...<AxiosRequestConfig> {
+                                responseType: 'text',
+                                transformResponse: [(data) => { return data; }]
+                            },
+                            ...defaultOptions
+                        },
+                        options
+                    )
                 );
                 return processResponse(res, processor);
             } else {
                 const res: AxiosResponse<T> = await axios.get<T>(
-                    url, { ...defaultOptions, ...options }
+                    url, lodash.merge(defaultOptions, options)
                 );
                 return res.data;
             }
@@ -92,16 +98,28 @@ export class PAIHttpClient {
             const defaultOptions: AxiosRequestConfig = await this.defaultOptions();
             if (processor) {
                 const res: AxiosResponse = await axios.post(
-                    url, data, { ...{ responseType: 'text' }, ...defaultOptions, ...options }
+                    url,
+                    data,
+                    lodash.merge(
+                        {
+                            ...<AxiosRequestConfig> {
+                                responseType: 'text',
+                                transformResponse: [(dat) => { return dat; }]
+                            },
+                            ...defaultOptions
+                        },
+                        options
+                    )
                 );
                 return processResponse(res, processor);
             } else {
                 const res: AxiosResponse<T> = await axios.post(
-                    url, data, { ...defaultOptions, ...options }
+                    url, data, lodash.merge(defaultOptions, options)
                 );
                 return res.data;
             }
         } catch (error) {
+            console.log(error);
             throw error;
         }
     }
@@ -113,12 +131,23 @@ export class PAIHttpClient {
             const defaultOptions: AxiosRequestConfig = await this.defaultOptions();
             if (processor) {
                 const res: AxiosResponse = await axios.put(
-                    url, data, { ...{ responseType: 'text' }, ...defaultOptions, ...options }
+                    url,
+                    data,
+                    lodash.merge(
+                        {
+                            ...<AxiosRequestConfig> {
+                                responseType: 'text',
+                                transformResponse: [(dat) => { return dat; }]
+                            },
+                            ...defaultOptions
+                        },
+                        options
+                    )
                 );
                 return processResponse(res, processor);
             } else {
                 const res: AxiosResponse<T> = await axios.put(
-                    url, data, { ...defaultOptions, ...options }
+                    url, data, lodash.merge(defaultOptions, options)
                 );
                 return res.data;
             }
@@ -134,12 +163,22 @@ export class PAIHttpClient {
             const defaultOptions: AxiosRequestConfig = await this.defaultOptions();
             if (processor) {
                 const res: AxiosResponse = await axios.delete(
-                    url, { ...{ responseType: 'text' }, ...defaultOptions, ...options }
+                    url,
+                    lodash.merge(
+                        {
+                            ...<AxiosRequestConfig> {
+                                responseType: 'text',
+                                transformResponse: [(data) => { return data; }]
+                            },
+                            ...defaultOptions
+                        },
+                        options
+                    )
                 );
                 return processResponse(res, processor);
             } else {
                 const res: AxiosResponse<T> = await axios.delete(
-                    url, { ...defaultOptions, ...options }
+                    url, lodash.merge(defaultOptions, options)
                 );
                 return res.data;
             }
