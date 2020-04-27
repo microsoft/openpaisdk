@@ -2466,7 +2466,7 @@
                             "description": "openpai job protocol",
                             "properties": {
                                 "protocolVersion": {
-                                    "type": "string",
+                                    "type": ["integer", "string"],
                                     "description": "Protocol version, current version is 2."
                                 },
                                 "name": {

@@ -65,7 +65,12 @@ export class PAIHttpClient {
             const defaultOptions: AxiosRequestConfig = await this.defaultOptions();
             if (processor) {
                 const res: AxiosResponse = await axios.get(
-                    url, { ...{ responseType: 'text' }, ...defaultOptions, ...options }
+                    url,
+                    {
+                        ...{ responseType: 'text', transformResponse: [(data) => { return data; }] },
+                        ...defaultOptions,
+                        ...options
+                    }
                 );
                 return processResponse(res, processor);
             } else {
