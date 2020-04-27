@@ -57,16 +57,9 @@
     "axios": "^0.19.2",
     "fs-extra": "^8.1.0",
     "js-yaml": "^3.13.1",
-    "module-alias": "^2.2.2",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
     "table": "^5.4.6"
-  },
-  "_moduleAliases": {
-    "@pai": "lib/src",
-    "@protocol": "lib/src/protocol",
-    "@api": "lib/src/api",
-    "@commands": "lib/src/commands"
   },
   "bin": {
     "pai": "lib/cli.js"
