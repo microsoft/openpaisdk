@@ -4,7 +4,7 @@
 import { AxiosError } from 'axios';
 
 import { PAIBaseError } from './paiBaseError';
-import { NoJobConfigError, NoJobError } from './paiJobErrors';
+import { NoJobConfigError, NoJobError, UnauthorizedUserError } from './paiJobErrors';
 
 export function paiError(error: AxiosError): void {
     if (error.response) {
@@ -13,6 +13,8 @@ export function paiError(error: AxiosError): void {
                 throw new NoJobError(error);
             case 'NoJobConfigError':
                 throw new NoJobConfigError(error);
+            case 'UnauthorizedUserError':
+                throw new UnauthorizedUserError(error);
             default:
                 throw new PAIBaseError(error);
         }

@@ -52,7 +52,7 @@ export const testJobConfig: IJobConfig = {
         }
     },
     type: 'job',
-    version: 1
+    version: '1.0'
 };
 
 export const testJobConfigV1: IJobConfigV1 = {

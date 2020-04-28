@@ -915,41 +915,6 @@ paths:
           $ref: '#/components/responses/NoVirtualClusterError'
         '500':
           $ref: '#/components/responses/UnknownError'
-  '/api/v2/virtual-clusters/{vc}/sku-types':
-    get:
-      tags:
-        - virtual cluster
-      summary: Get sku types in the virtual cluster.
-      description: Get sku types in the virtual cluster.
-      operationId: getVirtualClusterSkuTypes
-      security:
-        - bearerAuth: []
-      parameters:
-        - $ref: '#/components/parameters/vc'
-      responses:
-        '200':
-          description: Succeeded
-          content:
-            application/json:
-              schema:
-                type: object
-                additionalProperties:
-                  type: object
-                  properties:
-                    cpu:
-                      type: integer
-                    memory:
-                      type: integer
-                    gpu:
-                      type: integer
-                  required:
-                    - cpu
-                    - memory
-                    - gpu
-        '404':
-          $ref: '#/components/responses/NoVirtualClusterError'
-        '500':
-          $ref: '#/components/responses/UnknownError'
   /api/v2/storages:
     get:
       tags:
@@ -1377,7 +1342,9 @@ components:
       description: openpai job protocol
       properties:
         protocolVersion:
-          type: string
+          oneOf:
+            - type: number
+            - type: string
           description: Protocol version, current version is 2.
         name:
           type: string
@@ -1387,7 +1354,9 @@ components:
           type: string
           description: Component type, should be "job" here.
         version:
-          type: string
+          oneOf:
+            - type: number
+            - type: string
           description: Component version, default is latest.
         contributor:
           type: string
@@ -1533,7 +1502,7 @@ components:
           properties:
             submitFrom:
               type: string
-            hivedScheduler:
+            hivedscheduler:
               type: object
               properties:
                 jobPriorityClass:
@@ -1543,7 +1512,9 @@ components:
                   additionalProperties:
                     type: object
                     properties:
-                      skuType:
+                      gpuType:
+                        type: string
+                      reservationId:
                         type: string
                       affinityGroupName:
                         type: string
@@ -1625,7 +1596,9 @@ components:
             type: string
             description: virtual cluster to which the job submitted, or "unknown"
           totalGpuNumber:
-            type: integer
+            oneOf:
+              - type: number
+              - type: string
             description: total gpu number used in the job
           totalTaskNumber:
             type: integer
@@ -1884,13 +1857,13 @@ components:
       type: object
       properties:
         capacity:
-          type: integer
+          type: number
           description: capacity percentage this virtual cluster can use of entire cluster
         usedCapacity:
-          type: integer
+          type: number
           description: used capacity percentage this virtual cluster can use of entire cluster
         maxCapacity:
-          type: integer
+          type: number
           description: max capacity percentage this virtual cluster can use of entire cluster
         dedicated:
           type: boolean
@@ -2001,7 +1974,7 @@ components:
             - other
             - unknown
         data:
-          oneOf:
+          anyOf:
             - type: object
               description: nfs type
               properties:
@@ -2088,19 +2061,25 @@ components:
           type: integer
         attemptCompletedTime:
           type: integer
+          nullable: true
         exitCode:
           type: integer
+          nullable: true
         exitPhrase:
           type: string
+          nullable: true
         exitType:
           type: string
+          nullable: true
         exitDiagnostics:
           type: object
+          nullable: true
           properties:
             diagnosticsSummary:
               type: string
             runtime:
               type: object
+              nullable: true
               properties:
                 exitCode:
                   type: integer
@@ -2119,12 +2098,16 @@ components:
               type: string
         appExitTriggerMessage:
           type: string
+          nullable: true
         appExitTriggerTaskRoleName:
           type: string
+          nullable: true
         appExitTriggerTaskIndex:
           type: integer
+          nullable: true
         appExitSpec:
           type: object
+          nullable: true
           properties:
             code:
               type: integer
@@ -2154,13 +2137,17 @@ components:
                 type: string
         appExitDiagnostics:
           type: string
+          nullable: true
         appExitMessages:
           type: object
+          nullable: true
           properties:
             container:
               type: string
+              nullable: true
             runtime:
               type: object
+              nullable: true
               properties:
                 exitCode:
                   type: integer
@@ -2177,8 +2164,11 @@ components:
                   type: string
             launcher:
               type: string
+              nullable: true
         totalGpuNumber:
-          type: integer
+          oneOf:
+            - type: number
+            - type: string
         totalTasknumber:
           type: integer
         totalTaskRoleNumber:
@@ -2194,6 +2184,8 @@ components:
                   properties:
                     name:
                       type: string
+                  required:
+                    - name
                 taskStatuses:
                   type: array
                   items:
@@ -2203,16 +2195,29 @@ components:
                         type: integer
                       taskState:
                         type: string
+                        enum:
+                          - WAITING
+                          - RUNNING
+                          - STOPPING
+                          - STOPPED
+                          - SUCCEEDED
+                          - FAILED
+                          - UNKNOWN
                       containerId:
                         type: string
                       containerIp:
                         type: string
                       containerGpus:
                         type: string
+                        nullable: true
                       containerLog:
                         type: string
                       containerExitCode:
                         type: integer
+                        nullable: true
+              required:
+                - taskRoleStatus
+                - taskStatuses
         isLatest:
           type: boolean
     UserInfo:

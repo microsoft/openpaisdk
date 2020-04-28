@@ -8,6 +8,7 @@ import { expect } from 'chai';
 import dirtyChai from 'dirty-chai';
 
 import { IApiOperation, IApiTestCase } from '../../common/apiTestCaseGenerator';
+import { CustomizedTests } from '../../common/apiTestCases';
 import { TestCluster } from '../../common/testCluster';
 
 import apiTestCaseJson from './apiTestCase.json';
@@ -47,16 +48,27 @@ for (const test of apiTestCaseJson as IApiTestCase[]) {
                     return;
                 }
 
-                const res: any = await runOperation(
-                    testItem.operation!,
-                    {
-                        beforeEachResults,
-                        beforeResults,
-                        testResults
+                if (testItem.customizedTest) {
+                    await (CustomizedTests as any)[testItem.customizedTest](
+                        testItem,
+                        {
+                            beforeEachResults,
+                            beforeResults,
+                            testResults
+                        }
+                    );
+                } else {
+                    const res: any = await runOperation(
+                        testItem.operation!,
+                        {
+                            beforeEachResults,
+                            beforeResults,
+                            testResults
+                        }
+                    );
+                    if (res) {
+                        testResults.push(res);
                     }
-                );
-                if (res) {
-                    testResults.push(res);
                 }
             });
         }
@@ -115,14 +127,23 @@ function getClientName(tag: string): string {
 async function runOperation(
     operation: IApiOperation, operationResults?: IOperationResults
 ): Promise<any> {
-    const client: any = openPAIClient[getClientName(operation.tag!)];
+    const client: any = operation.cluster ?
+        (new OpenPAIClient(operation.cluster) as any)[operation.tag!] :
+        openPAIClient[getClientName(operation.tag!)];
     const parameters: any[] = [];
-    for (const para of operation.parameters!) {
-        if (para.type === 'raw') {
-            parameters.push(para.value);
-        } else  if (operationResults) {
-            const parameter: any = operationResults[para.resultType!][para.resultIndex!];
-            parameters.push(para.resultPath ? parameter[para.resultPath] : parameter);
+    if (operation.parameters) {
+        for (const para of operation.parameters) {
+            if (para.type === 'raw') {
+                parameters.push(para.value);
+            } else  if (operationResults) {
+                let parameter: any = operationResults[para.resultType!][para.resultIndex!];
+                if (para.resultPath) {
+                    for (const item of para.resultPath) {
+                        parameter = parameter[item];
+                    }
+                }
+                parameters.push(parameter);
+            }
         }
     }
     const res: any = await client[operation.operationId!](...parameters);

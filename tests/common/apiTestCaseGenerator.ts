@@ -2,9 +2,10 @@
 // Licensed under the MIT License.
 
 import swaggerParser from '@apidevtools/swagger-parser';
+import { IPAICluster } from '@pai/api/v2';
 import * as fs from 'fs';
 
-import { ApiDefaultTestCases } from './apiDefaultTestCases';
+import { ApiDefaultTestCases } from './apiTestCases';
 
 /**
  * Generate test cases from swagger.
@@ -50,6 +51,16 @@ export class ApiTestCaseGenerator {
                         description: testName,
                         tests: [{}]
                     };
+
+                if (!test.schemas) {
+                    test.schemas = {};
+                }
+                responseCodes.forEach(code => {
+                    if (!test.schemas![code]) {
+                        test.schemas![code] = ops[type].responses[code];
+                    }
+                });
+
                 if (!test.description) {
                     test.description = testName;
                 }
@@ -88,13 +99,14 @@ export interface IApiOperationParameter {
     type: 'raw' | 'fromResult';
     value?: any;
     resultType?: 'beforeEachResults' | 'beforeResults' | 'testResults';
-    resultPath?: string;
+    resultPath?: any[];
     resultIndex?: number;
 }
 
 export interface IApiOperation {
     tag?: string;
     operationId?: string;
+    cluster?: IPAICluster;
     parameters?: IApiOperationParameter[];
     response?: {
         statusCode?: number;
@@ -109,6 +121,12 @@ export interface IApiTestItem {
     before?: IApiOperation[];
     operation?: IApiOperation;
     after?: IApiOperation[];
+
+    /**
+     * Reference to the method name in CustomizedTests class,
+     * will skip other operations (before, operation, after)
+     */
+    customizedTest?: string;
 }
 
 export interface IApiTestCase {
@@ -118,6 +136,7 @@ export interface IApiTestCase {
     tests: IApiTestItem[];
     after?: IApiOperation[];
     afterEach?: IApiOperation[];
+    schemas?: { [key: string]: any };
 }
 
 const generator: ApiTestCaseGenerator = new ApiTestCaseGenerator();
