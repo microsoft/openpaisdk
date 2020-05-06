@@ -2,6 +2,7 @@
 // Licensed under the MIT License.
 
 import { TokenClient } from '@pai/api/v2/clients';
+import { UnauthorizedUserError } from '@pai/commom/errors/paiJobErrors.js';
 import ajv, { Ajv } from 'ajv';
 import { expect } from 'chai';
 import crypto from 'crypto';
@@ -11,7 +12,6 @@ import { IOperationResults } from '../api_tests/v2/api.v2.spec';
 
 import { IApiOperation, IApiTestCase, IApiTestItem } from './apiTestCaseGenerator';
 import { testJobConfig } from './test_data/testJobConfig';
-import { UnauthorizedUserError } from '@pai/commom/errors/paiJobErrors.js';
 
 /**
  * Random string class.
