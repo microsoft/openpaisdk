@@ -654,6 +654,71 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
             deleteTestGroup
         ]
     },
+    'put /api/v2/users/{user}/grouplist/': {
+        before: [
+            {
+                tag: 'token',
+                operationId: 'createApplicationToken'
+            },
+            createTestUser
+        ],
+        tests: [
+            {
+                description: 'Replace a user\'s grouplist',
+                operation: {
+                    parameters: [
+                        {
+                            type: 'raw',
+                            value: 'sdk_test_user'
+                        },
+                        {
+                            type: 'raw',
+                            value: ['default']
+                        }
+                    ]
+                }
+            },
+            {
+                description: 'Replace a non-existent user\'s grouplist',
+                operation: {
+                    parameters: [
+                        {
+                            type: 'raw',
+                            value: 'non_exist_user'
+                        },
+                        {
+                            type: 'raw',
+                            value: ['default']
+                        }
+                    ],
+                    response: {
+                        statusCode: 404
+                    }
+                }
+            },
+            {
+                description: 'Replace a user\'s grouplist by application token',
+                customizedTest: 'updateUserGrouplistByApplicationToken'
+            },
+            {
+                description: 'Replace a user\'s grouplist by non-admin user token',
+                customizedTest: 'updateUserGrouplistByNonadminToken'
+            }
+        ],
+        after: [
+            {
+                tag: 'token',
+                operationId: 'deleteToken',
+                parameters: [{
+                    type: 'fromResult',
+                    resultType: 'beforeResults',
+                    resultPath: ['token'],
+                    resultIndex: 0
+                }]
+            },
+            deleteTestUser
+        ]
+    },
     'post /api/v2/groups': {
         tests: [{
             operation: createTestGroup
@@ -963,6 +1028,24 @@ class CustomizedTestsClass {
     ): Promise<void> {
         await this.userClientOperationByApplicationToken(
             operationResults!.beforeResults![0].token, 'deleteUserGroup', ['sdk_test_user', 'sdktestgroup']
+        );
+    }
+
+    public async updateUserGrouplistByNonadminToken(
+        test: IApiTestItem, operationResults?: IOperationResults
+    ): Promise<void> {
+        await this.userClientOperationByNonadminToken(
+            'updateUserGrouplist', ['sdk_test_user', ['default']]
+        );
+    }
+
+    public async updateUserGrouplistByApplicationToken(
+        test: IApiTestItem, operationResults?: IOperationResults
+    ): Promise<void> {
+        await this.userClientOperationByApplicationToken(
+            operationResults!.beforeResults![0].token,
+            'updateUserGrouplist',
+            ['sdk_test_user', ['default']]
         );
     }
 
