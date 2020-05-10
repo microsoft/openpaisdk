@@ -146,7 +146,18 @@ async function runOperation(
             }
         }
     }
-    const res: any = await client[operation.operationId!](...parameters);
+
+    let res: any;
+    try {
+        res = await client[operation.operationId!](...parameters);
+    } catch (err) {
+        if (err !== undefined && err.isAxiosError && operation.response!.statusCode !== err.response.status) {
+            throw err;
+        } else {
+            res = err.response.data;
+        }
+    }
+
     if (operation.response) {
         if (operation.response.schema) {
             const valid: boolean = ajvInstance.validate(operation.response.schema, res) as boolean;

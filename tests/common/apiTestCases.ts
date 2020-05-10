@@ -169,6 +169,79 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
             }]
         }]
     },
+    'post /api/v2/authn/basic/login': {
+        tests: [
+            {
+                description: 'login with correct username and password',
+                operation: {
+                    parameters: [
+                        {
+                            type: 'raw',
+                            value: clustersJson[0].username
+                        },
+                        {
+                            type: 'raw',
+                            value: clustersJson[0].password
+                        }
+                    ]
+                }
+            },
+            {
+                description: 'login with non-existent username',
+                operation: {
+                    parameters: [
+                        {
+                            type: 'raw',
+                            value: 'nonexistentuser'
+                        },
+                        {
+                            type: 'raw',
+                            value: 'password'
+                        }
+                    ],
+                    response: {
+                        statusCode: 400,
+                        expectResult: {
+                            code: 'NoUserError',
+                            message: 'User nonexistentuser is not found.'
+                        }
+                    }
+                }
+            },
+            {
+                description: 'login with incorrect password',
+                operation: {
+                    parameters: [
+                        {
+                            type: 'raw',
+                            value: clustersJson[0].username
+                        },
+                        {
+                            type: 'raw',
+                            value: 'incorrectpassword'
+                        }
+                    ],
+                    response: {
+                        statusCode: 400,
+                        expectResult: {
+                            code: 'IncorrectPasswordError',
+                            message: 'Password is incorrect.'
+                        }
+                    }
+                }
+            }
+        ],
+        after: [{
+            tag: 'token',
+            operationId: 'deleteToken',
+            parameters: [{
+                type: 'fromResult',
+                resultType: 'testResults',
+                resultPath: ['token'],
+                resultIndex: 0
+            }]
+        }]
+    },
     'get /api/v2/users/{user}': {
         tests: [{
             operation: {
