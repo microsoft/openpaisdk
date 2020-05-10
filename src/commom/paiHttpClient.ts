@@ -119,7 +119,6 @@ export class PAIHttpClient {
                 return res.data;
             }
         } catch (error) {
-            console.log(error);
             throw error;
         }
     }
@@ -152,6 +151,7 @@ export class PAIHttpClient {
                 return res.data;
             }
         } catch (error) {
+            console.log(error);
             throw error;
         }
     }

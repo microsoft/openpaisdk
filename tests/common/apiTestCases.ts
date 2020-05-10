@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import { TokenClient } from '@pai/api/v2/clients';
-import { UnauthorizedUserError } from '@pai/commom/errors/paiJobErrors.js';
+import { UnauthorizedUserError } from '@pai/commom/errors/paiJobErrors';
 import ajv, { Ajv } from 'ajv';
 import { expect } from 'chai';
 import crypto from 'crypto';
@@ -34,6 +34,27 @@ class RandomString {
 }
 
 const randomString: RandomString = new RandomString();
+
+const createTestUser: IApiOperation = {
+    tag: 'user',
+    operationId: 'createUser',
+    parameters: [{
+        type: 'raw',
+        value: {
+            username: 'sdk_test_user',
+            password: 'test_password'
+        }
+    }]
+};
+
+const deleteTestUser: IApiOperation = {
+    tag: 'user',
+    operationId: 'deleteUser',
+    parameters: [{
+        type: 'raw',
+        value: 'sdk_test_user'
+    }]
+};
 
 const createTestGroup: IApiOperation = {
     tag: 'group',
@@ -157,6 +178,90 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
                 }]
             }
         }]
+    },
+    'post /api/v2/users': {
+        tests: [{
+            operation: createTestUser
+        }],
+        after: [ deleteTestUser ]
+    },
+    'put /api/v2/users': {
+        before: [ createTestUser ],
+        tests: [
+            {
+                description: 'patch: true',
+                operation: {
+                    parameters: [
+                        {
+                            type: 'raw',
+                            value: {
+                                username: 'sdk_test_user',
+                                email: 'new_email@test1.com'
+                            }
+                        }
+                    ]
+                }
+            },
+            {
+                description: 'patch: false',
+                operation: {
+                    parameters: [
+                        {
+                            type: 'raw',
+                            value: {
+                                username: 'sdk_test_user',
+                                email: 'new_email@test2.com',
+                                virtualCluster: ['default'],
+                                admin: false,
+                                password: 'new_test_password',
+                                extension: {}
+                            }
+                        },
+                        {
+                            type: 'raw',
+                            value: false
+                        }
+                    ]
+                }
+            }
+        ],
+        after: [ deleteTestUser ]
+    },
+    'put /api/v2/users/me': {
+        tests: [
+            {
+                description: 'patch: true',
+                operation: {
+                    parameters: [{
+                        type: 'raw',
+                        value: {
+                            username: clustersJson[0].username,
+                            email: 'new_email@test1.com'
+                        }
+                    }]
+                }
+            },
+            {
+                description: 'patch: false',
+                operation: {
+                    parameters: [
+                        {
+                            type: 'raw',
+                            value: {
+                                username: clustersJson[0].username,
+                                email: 'new_email@test2.com',
+                                oldPassword: clustersJson[0].password,
+                                newPassword: clustersJson[0].password
+                            }
+                        },
+                        {
+                            type: 'raw',
+                            value: false
+                        }
+                    ]
+                }
+            }
+        ]
     },
     'post /api/v2/groups': {
         tests: [{

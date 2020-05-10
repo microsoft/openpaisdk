@@ -13,7 +13,7 @@
     "pretest": "tslint --config tslint.json --project tsconfig.json",
     "test": "mocha -r ts-node/register -r tsconfig-paths/register tests/unit_tests/**/*.spec.ts",
     "preapi-test": "ts-node -r tsconfig-paths/register tests/common/apiTestCaseGenerator.ts -- \"src/api/v2/swagger.yaml\" \"tests/api_tests/v2/apiTestCase.json\"",
-    "api-test": "mocha -r ts-node/register -r tsconfig-paths/register tests/api_tests/**/*.spec.ts -t 10000",
+    "api-test": "mocha -r ts-node/register -r tsconfig-paths/register tests/api_tests/**/*.spec.ts -t 20000",
     "prebuild": "tslint --config tslint.json --project tsconfig.json",
     "build": "tsc -p tsconfig.build.json"
   },
