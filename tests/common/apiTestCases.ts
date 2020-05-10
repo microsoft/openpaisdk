@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { TokenClient } from '@pai/api/v2/clients';
+import { TokenClient, AuthnClient } from '@pai/api/v2/clients';
 import { UnauthorizedUserError } from '@pai/commom/errors/paiJobErrors';
 import ajv, { Ajv } from 'ajv';
 import { expect } from 'chai';
@@ -241,6 +241,32 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
                 resultIndex: 0
             }]
         }]
+    },
+    'delete /api/v2/authn/basic/logout': {
+        before: [{
+            tag: 'authn',
+            operationId: 'basicLogin',
+            parameters: [
+                {
+                    type: 'raw',
+                    value: clustersJson[0].username
+                },
+                {
+                    type: 'raw',
+                    value: clustersJson[0].password
+                }
+            ]
+        }],
+        tests: [
+            {
+                description: 'Logout with correct token',
+                customizedTest: 'logoutWithCorrectToken'
+            },
+            {
+                description: 'Logout with incorrect token',
+                customizedTest: 'logoutWithIncorrectToken'
+            }
+        ]
     },
     'get /api/v2/users/{user}': {
         tests: [{
@@ -527,6 +553,31 @@ class CustomizedTestsClass {
         });
 
         expect(await client.getTokens()).to.throw(UnauthorizedUserError);
+    }
+
+    public async logoutWithCorrectToken(
+        test: IApiTestItem, operationResults?: IOperationResults
+    ): Promise<void> {
+        const client: AuthnClient = new AuthnClient({
+            token: operationResults!.beforeResults![0].token,
+            https: true,
+            rest_server_uri: clustersJson[0].rest_server_uri
+        });
+
+        const res: string = await client.basicLogout();
+        expect(res).to.be.eq('Logout successfully');
+    }
+
+    public async logoutWithIncorrectToken(
+        test: IApiTestItem, operationResults?: IOperationResults
+    ): Promise<void> {
+        const client: AuthnClient = new AuthnClient({
+            token: 'unauthorized user token',
+            https: true,
+            rest_server_uri: clustersJson[0].rest_server_uri
+        });
+
+        expect(await client.basicLogout()).to.throw(UnauthorizedUserError);
     }
 }
 
