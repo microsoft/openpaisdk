@@ -42,7 +42,7 @@ export class PAIHttpClient {
             );
             return res.data;
         } catch (error) {
-            throw error;
+            throw paiError(error);
         }
     }
 
@@ -86,8 +86,7 @@ export class PAIHttpClient {
                 return res.data;
             }
         } catch (error) {
-            paiError(error);
-            throw error;
+            throw paiError(error);
         }
     }
 
@@ -119,7 +118,7 @@ export class PAIHttpClient {
                 return res.data;
             }
         } catch (error) {
-            throw error;
+            throw paiError(error);
         }
     }
 
@@ -151,8 +150,7 @@ export class PAIHttpClient {
                 return res.data;
             }
         } catch (error) {
-            console.log(error);
-            throw error;
+            throw paiError(error);
         }
     }
 
@@ -183,7 +181,7 @@ export class PAIHttpClient {
                 return res.data;
             }
         } catch (error) {
-            throw error;
+            throw paiError(error);
         }
     }
 

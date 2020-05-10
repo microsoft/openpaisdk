@@ -151,10 +151,10 @@ async function runOperation(
     try {
         res = await client[operation.operationId!](...parameters);
     } catch (err) {
-        if (err !== undefined && err.isAxiosError && operation.response!.statusCode !== err.response.status) {
+        if (err !== undefined && operation.response!.statusCode !== err.status) {
             throw err;
         } else {
-            res = err.response.data;
+            res = err.data;
         }
     }
 

@@ -1,8 +1,9 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { TokenClient, AuthnClient } from '@pai/api/v2/clients';
-import { UnauthorizedUserError } from '@pai/commom/errors/paiJobErrors';
+import { AuthnClient, OpenPAIClient, TokenClient, UserClient } from '@pai/api/v2/clients';
+import { ILoginInfo } from '@pai/api/v2/index.js';
+import { ForbiddenUserError, UnauthorizedUserError } from '@pai/commom/errors/paiUserErrors';
 import ajv, { Ajv } from 'ajv';
 import { expect } from 'chai';
 import crypto from 'crypto';
@@ -268,21 +269,49 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
             }
         ]
     },
-    'get /api/v2/users/{user}': {
-        tests: [{
-            operation: {
+    'post /api/v2/users': {
+        before: [{
+            tag: 'token',
+            operationId: 'createApplicationToken'
+        }],
+        tests: [
+            {
+                description: 'Create a user',
+                operation: createTestUser
+            },
+            {
+                description: 'Create a conflict user',
+                operation: {
+                    ...createTestUser,
+                    ...{
+                        response: {
+                            statusCode: 409
+                        }
+                    }
+                }
+            },
+            {
+                description: 'Create a user by application token',
+                customizedTest: 'createUserByApplicationToken'
+            },
+            {
+                description: 'Create a user by non-admin user token',
+                customizedTest: 'createUserByNonadminToken'
+            }
+        ],
+        after: [
+            deleteTestUser,
+            {
+                tag: 'token',
+                operationId: 'deleteToken',
                 parameters: [{
-                    type: 'raw',
-                    value: clustersJson[0].username
+                    type: 'fromResult',
+                    resultType: 'beforeResults',
+                    resultPath: ['token'],
+                    resultIndex: 0
                 }]
             }
-        }]
-    },
-    'post /api/v2/users': {
-        tests: [{
-            operation: createTestUser
-        }],
-        after: [ deleteTestUser ]
+        ]
     },
     'put /api/v2/users': {
         before: [ createTestUser ],
@@ -361,6 +390,22 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
                 }
             }
         ]
+    },
+    'get /api/v2/users/{user}': {
+        tests: [{
+            operation: {
+                parameters: [{
+                    type: 'raw',
+                    value: clustersJson[0].username
+                }]
+            }
+        }]
+    },
+    'delete /api/v2/users/{user}': {
+        before: [ createTestUser ],
+        tests: [{
+            operation: deleteTestUser
+        }]
     },
     'post /api/v2/groups': {
         tests: [{
@@ -552,7 +597,11 @@ class CustomizedTestsClass {
             rest_server_uri: clustersJson[0].rest_server_uri
         });
 
-        expect(await client.getTokens()).to.throw(UnauthorizedUserError);
+        try {
+            await client.getTokens();
+        } catch (err) {
+            expect (err).to.be.an.instanceof(UnauthorizedUserError);
+        }
     }
 
     public async logoutWithCorrectToken(
@@ -578,6 +627,70 @@ class CustomizedTestsClass {
         });
 
         expect(await client.basicLogout()).to.throw(UnauthorizedUserError);
+    }
+
+    public async createUserByNonadminToken(
+        test: IApiTestItem, operationResults?: IOperationResults
+    ): Promise<void> {
+        const openPAIClient: OpenPAIClient = new OpenPAIClient({
+            token: clustersJson[0].token,
+            https: true,
+            rest_server_uri: clustersJson[0].rest_server_uri
+        });
+
+        try {
+            await openPAIClient.user.createUser({
+                admin: false,
+                username: 'nonadminTestUser',
+                password: 'nonadminTestUser'
+            });
+        } catch (err) {
+            if (err.data.code !== 'ConflictUserError') {
+                throw err;
+            }
+        }
+
+        const info: ILoginInfo = await openPAIClient.authn.basicLogin(
+            'nonadminTestUser', 'nonadminTestUser'
+        );
+
+        const client: UserClient = new UserClient({
+            token: info.token,
+            https: true,
+            rest_server_uri: clustersJson[0].rest_server_uri
+        });
+
+        try {
+            await client.createUser({
+                username: 'sdk_test_user',
+                password: 'test_password'
+            });
+        } catch (err) {
+            expect(err.message).to.be.equal('Non-admin is not allow to do this operation.');
+            expect(err).to.be.an.instanceof(ForbiddenUserError);
+        }
+
+        after(async () => await openPAIClient.user.deleteUser('nonadminTestUser'));
+    }
+
+    public async createUserByApplicationToken(
+        test: IApiTestItem, operationResults?: IOperationResults
+    ): Promise<void> {
+        const client: UserClient = new UserClient({
+            token: operationResults!.beforeResults![0].token,
+            https: true,
+            rest_server_uri: clustersJson[0].rest_server_uri
+        });
+
+        try {
+            await client.createUser({
+                username: 'sdk_test_user',
+                password: 'test_password'
+            });
+        } catch (err) {
+            expect(err.message).to.be.equal('Applications are not allowed to do this operation.');
+            expect(err).to.be.an.instanceof(ForbiddenUserError);
+        }
     }
 }
 
