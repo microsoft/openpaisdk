@@ -314,10 +314,16 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
         ]
     },
     'put /api/v2/users': {
-        before: [ createTestUser ],
+        before: [
+            createTestUser,
+            {
+                tag: 'token',
+                operationId: 'createApplicationToken'
+            }
+        ],
         tests: [
             {
-                description: 'patch: true',
+                description: 'Update a user, patch: true',
                 operation: {
                     parameters: [
                         {
@@ -331,7 +337,7 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
                 }
             },
             {
-                description: 'patch: false',
+                description: 'Update a user, patch: false',
                 operation: {
                     parameters: [
                         {
@@ -351,14 +357,51 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
                         }
                     ]
                 }
+            },
+            {
+                description: 'Update a non-existent user',
+                operation: {
+                    parameters: [
+                        {
+                            type: 'raw',
+                            value: {
+                                username: 'non_exist_user',
+                                email: 'new_email@test1.com'
+                            }
+                        }
+                    ],
+                    response: {
+                        statusCode: 404
+                    }
+                }
+            },
+            {
+                description: 'Update a user by application token',
+                customizedTest: 'updateUserByApplicationToken'
+            },
+            {
+                description: 'Update a user by non-admin user token',
+                customizedTest: 'updateUserByNonadminToken'
             }
         ],
-        after: [ deleteTestUser ]
+        after: [
+            deleteTestUser,
+            {
+                tag: 'token',
+                operationId: 'deleteToken',
+                parameters: [{
+                    type: 'fromResult',
+                    resultType: 'beforeResults',
+                    resultPath: ['token'],
+                    resultIndex: 1
+                }]
+            }
+        ]
     },
     'put /api/v2/users/me': {
         tests: [
             {
-                description: 'patch: true',
+                description: 'Update user self, patch: true',
                 operation: {
                     parameters: [{
                         type: 'raw',
@@ -370,7 +413,7 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
                 }
             },
             {
-                description: 'patch: false',
+                description: 'Update user self, patch: false',
                 operation: {
                     parameters: [
                         {
@@ -388,6 +431,21 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
                         }
                     ]
                 }
+            },
+            {
+                description: 'Update user self with incorrect username',
+                operation: {
+                    parameters: [{
+                        type: 'raw',
+                        value: {
+                            username: 'incorrect_username',
+                            email: 'new_email@test1.com'
+                        }
+                    }],
+                    response: {
+                        statusCode: 403
+                    }
+                }
             }
         ]
     },
@@ -402,9 +460,50 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
         }]
     },
     'delete /api/v2/users/{user}': {
-        before: [ createTestUser ],
-        tests: [{
-            operation: deleteTestUser
+        before: [
+            createTestUser,
+            {
+                tag: 'token',
+                operationId: 'createApplicationToken'
+            }
+        ],
+        tests: [
+            {
+                description: 'Delete a user',
+                operation: deleteTestUser
+            },
+            {
+                description: 'Delete a non-existent user',
+                operation: {
+                    parameters: [
+                        {
+                            type: 'raw',
+                            value: 'non_exist_user'
+                        }
+                    ],
+                    response: {
+                        statusCode: 404
+                    }
+                }
+            },
+            {
+                description: 'Delete a user by application token',
+                customizedTest: 'deleteUserByApplicationToken'
+            },
+            {
+                description: 'Delete a user by non-admin user token',
+                customizedTest: 'deleteUserByNonadminToken'
+            }
+        ],
+        after: [{
+            tag: 'token',
+            operationId: 'deleteToken',
+            parameters: [{
+                type: 'fromResult',
+                resultType: 'beforeResults',
+                resultPath: ['token'],
+                resultIndex: 1
+            }]
         }]
     },
     'post /api/v2/groups': {
@@ -632,6 +731,104 @@ class CustomizedTestsClass {
     public async createUserByNonadminToken(
         test: IApiTestItem, operationResults?: IOperationResults
     ): Promise<void> {
+        await this.userClientOperationByNonadminToken(
+            'updateUser',
+            {
+                username: 'sdk_test_user',
+                password: 'test_password'
+            });
+    }
+
+    public async createUserByApplicationToken(
+        test: IApiTestItem, operationResults?: IOperationResults
+    ): Promise<void> {
+        await this.userClientOperationByApplicationToken(
+            operationResults!.beforeResults![0].token,
+            'createUser',
+            {
+                username: 'sdk_test_user',
+                password: 'test_password'
+            }
+        );
+    }
+
+    public async updateUserByNonadminToken(
+        test: IApiTestItem, operationResults?: IOperationResults
+    ): Promise<void> {
+        await this.userClientOperationByNonadminToken(
+            'updateUser',
+            {
+                username: 'sdk_test_user',
+                email: 'new_email@test.com'
+            });
+    }
+
+    public async updateUserByApplicationToken(
+        test: IApiTestItem, operationResults?: IOperationResults
+    ): Promise<void> {
+        await this.userClientOperationByApplicationToken(
+            operationResults!.beforeResults![1].token,
+            'updateUser',
+            {
+                username: 'sdk_test_user',
+                email: 'new_email@test.com'
+            }
+        );
+    }
+
+    public async deleteUserByNonadminToken(
+        test: IApiTestItem, operationResults?: IOperationResults
+    ): Promise<void> {
+        await this.userClientOperationByNonadminToken('deleteUser', 'sdk_test_user');
+    }
+
+    public async deleteUserByApplicationToken(
+        test: IApiTestItem, operationResults?: IOperationResults
+    ): Promise<void> {
+        await this.userClientOperationByApplicationToken(
+            operationResults!.beforeResults![1].token, 'deleteUser', 'sdk_test_user'
+        );
+    }
+
+    private async userClientOperationByApplicationToken(
+        applicationToken: string, operationName: string, parameter: any
+    ): Promise<void> {
+        const client: UserClient = new UserClient({
+            token: applicationToken,
+            https: true,
+            rest_server_uri: clustersJson[0].rest_server_uri
+        });
+
+        try {
+            await (client as any)[operationName](parameter);
+        } catch (err) {
+            expect(err.message).to.be.equal('Applications are not allowed to do this operation.');
+            expect(err).to.be.an.instanceof(ForbiddenUserError);
+        }
+    }
+
+    private async userClientOperationByNonadminToken(
+        operationName: string, parameter: any
+    ): Promise<void> {
+        const info: ILoginInfo = await this.createNonadminUserAndToken();
+
+        const client: UserClient = new UserClient({
+            token: info.token,
+            https: true,
+            rest_server_uri: clustersJson[0].rest_server_uri
+        });
+
+        try {
+            await (client as any)[operationName](parameter);
+        } catch (err) {
+            expect(err.message).to.be.equal('Non-admin is not allow to do this operation.');
+            expect(err).to.be.an.instanceof(ForbiddenUserError);
+        }
+
+        after(async () => await this.deleteNonadminUserAndToken(info));
+    }
+
+    private async createNonadminUserAndToken(): Promise<ILoginInfo> {
         const openPAIClient: OpenPAIClient = new OpenPAIClient({
             token: clustersJson[0].token,
             https: true,
@@ -650,47 +847,19 @@ class CustomizedTestsClass {
             }
         }
 
-        const info: ILoginInfo = await openPAIClient.authn.basicLogin(
+        return await openPAIClient.authn.basicLogin(
             'nonadminTestUser', 'nonadminTestUser'
         );
-
-        const client: UserClient = new UserClient({
-            token: info.token,
-            https: true,
-            rest_server_uri: clustersJson[0].rest_server_uri
-        });
-
-        try {
-            await client.createUser({
-                username: 'sdk_test_user',
-                password: 'test_password'
-            });
-        } catch (err) {
-            expect(err.message).to.be.equal('Non-admin is not allow to do this operation.');
-            expect(err).to.be.an.instanceof(ForbiddenUserError);
-        }
-
-        after(async () => await openPAIClient.user.deleteUser('nonadminTestUser'));
     }
 
-    public async createUserByApplicationToken(
-        test: IApiTestItem, operationResults?: IOperationResults
-    ): Promise<void> {
-        const client: UserClient = new UserClient({
-            token: operationResults!.beforeResults![0].token,
+    private async deleteNonadminUserAndToken(info: ILoginInfo): Promise<void> {
+        const openPAIClient: OpenPAIClient = new OpenPAIClient({
+            token: clustersJson[0].token,
             https: true,
             rest_server_uri: clustersJson[0].rest_server_uri
         });
 
-        try {
-            await client.createUser({
-                username: 'sdk_test_user',
-                password: 'test_password'
-            });
-        } catch (err) {
-            expect(err.message).to.be.equal('Applications are not allowed to do this operation.');
-            expect(err).to.be.an.instanceof(ForbiddenUserError);
-        }
+        await openPAIClient.user.deleteUser(info.user);
     }
 }
 

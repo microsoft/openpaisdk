@@ -18,3 +18,8 @@ export class ForbiddenUserError extends PAIBaseError {}
  * Conflict user error.
  */
 export class ConflictUserError extends PAIBaseError {}
+
+/**
+ * No user error.
+ */
+export class NoUserError extends PAIBaseError {}

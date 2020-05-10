@@ -11,6 +11,7 @@ import {
 import {
     ConflictUserError,
     ForbiddenUserError,
+    NoUserError,
     UnauthorizedUserError
 } from './paiUserErrors';
 
@@ -27,6 +28,8 @@ export function paiError(error: AxiosError): PAIBaseError {
                 throw new ForbiddenUserError(error);
             case 'ConflictUserError':
                 throw new ConflictUserError(error);
+            case 'NoUserError':
+                throw new NoUserError(error);
             default:
                 throw new PAIBaseError(error);
         }
