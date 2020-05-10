@@ -75,6 +75,6 @@
     "@commands": "lib/src/commands"
   },
   "bin": {
-    "pai": "lib/cli.js"
+    "pai": "lib/src/cli.js"
   }
 }
