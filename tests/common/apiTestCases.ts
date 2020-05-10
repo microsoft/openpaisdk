@@ -506,6 +506,154 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
             }]
         }]
     },
+    'put /api/v2/users/{user}/group/': {
+        before: [
+            {
+                tag: 'token',
+                operationId: 'createApplicationToken'
+            },
+            createTestUser,
+            createTestGroup
+        ],
+        tests: [
+            {
+                description: 'Add a group to a user\'s grouplist',
+                operation: {
+                    parameters: [
+                        {
+                            type: 'raw',
+                            value: 'sdk_test_user'
+                        },
+                        {
+                            type: 'raw',
+                            value: 'sdktestgroup'
+                        }
+                    ]
+                }
+            },
+            {
+                description: 'Add a group to a non-existent user\'s grouplist',
+                operation: {
+                    parameters: [
+                        {
+                            type: 'raw',
+                            value: 'non_exist_user'
+                        },
+                        {
+                            type: 'raw',
+                            value: 'sdktestgroup'
+                        }
+                    ],
+                    response: {
+                        statusCode: 404
+                    }
+                }
+            },
+            {
+                description: 'Add a group to a user\'s grouplist by application token',
+                customizedTest: 'updateUserGroupByApplicationToken'
+            },
+            {
+                description: 'Add a group to a user\'s grouplist by non-admin user token',
+                customizedTest: 'updateUserGroupByNonadminToken'
+            }
+        ],
+        after: [
+            {
+                tag: 'token',
+                operationId: 'deleteToken',
+                parameters: [{
+                    type: 'fromResult',
+                    resultType: 'beforeResults',
+                    resultPath: ['token'],
+                    resultIndex: 0
+                }]
+            },
+            deleteTestUser,
+            deleteTestGroup
+        ]
+    },
+    'delete /api/v2/users/{user}/group/': {
+        before: [
+            {
+                tag: 'token',
+                operationId: 'createApplicationToken'
+            },
+            createTestUser,
+            createTestGroup,
+            {
+                tag: 'user',
+                operationId: 'updateUserGroup',
+                parameters: [
+                    {
+                        type: 'raw',
+                        value: 'sdk_test_user'
+                    },
+                    {
+                        type: 'raw',
+                        value: 'sdktestgroup'
+                    }
+                ]
+            }
+        ],
+        tests: [
+            {
+                description: 'Remove a group to a user\'s grouplist',
+                operation: {
+                    parameters: [
+                        {
+                            type: 'raw',
+                            value: 'sdk_test_user'
+                        },
+                        {
+                            type: 'raw',
+                            value: 'sdktestgroup'
+                        }
+                    ]
+                }
+            },
+            {
+                description: 'Remove a group to a non-existent user\'s grouplist',
+                operation: {
+                    parameters: [
+                        {
+                            type: 'raw',
+                            value: 'non_exist_user'
+                        },
+                        {
+                            type: 'raw',
+                            value: 'sdktestgroup'
+                        }
+                    ],
+                    response: {
+                        statusCode: 404
+                    }
+                }
+            },
+            {
+                description: 'Remove a group to a user\'s grouplist by application token',
+                customizedTest: 'deleteUserGroupByApplicationToken'
+            },
+            {
+                description: 'Remove a group to a user\'s grouplist by non-admin user token',
+                customizedTest: 'deleteUserGroupByNonadminToken'
+            }
+        ],
+        after: [
+            {
+                tag: 'token',
+                operationId: 'deleteToken',
+                parameters: [{
+                    type: 'fromResult',
+                    resultType: 'beforeResults',
+                    resultPath: ['token'],
+                    resultIndex: 0
+                }]
+            },
+            deleteTestUser,
+            deleteTestGroup
+        ]
+    },
     'post /api/v2/groups': {
         tests: [{
             operation: createTestGroup
@@ -733,10 +881,10 @@ class CustomizedTestsClass {
     ): Promise<void> {
         await this.userClientOperationByNonadminToken(
             'updateUser',
-            {
+            [{
                 username: 'sdk_test_user',
                 password: 'test_password'
-            });
+            }]);
     }
 
     public async createUserByApplicationToken(
@@ -745,10 +893,10 @@ class CustomizedTestsClass {
         await this.userClientOperationByApplicationToken(
             operationResults!.beforeResults![0].token,
             'createUser',
-            {
+            [{
                 username: 'sdk_test_user',
                 password: 'test_password'
-            }
+            }]
         );
     }
 
@@ -757,10 +905,10 @@ class CustomizedTestsClass {
     ): Promise<void> {
         await this.userClientOperationByNonadminToken(
             'updateUser',
-            {
+            [{
                 username: 'sdk_test_user',
                 email: 'new_email@test.com'
-            });
+            }]);
     }
 
     public async updateUserByApplicationToken(
@@ -769,29 +917,57 @@ class CustomizedTestsClass {
         await this.userClientOperationByApplicationToken(
             operationResults!.beforeResults![1].token,
             'updateUser',
-            {
+            [{
                 username: 'sdk_test_user',
                 email: 'new_email@test.com'
-            }
+            }]
         );
     }
 
     public async deleteUserByNonadminToken(
         test: IApiTestItem, operationResults?: IOperationResults
     ): Promise<void> {
-        await this.userClientOperationByNonadminToken('deleteUser', 'sdk_test_user');
+        await this.userClientOperationByNonadminToken('deleteUser', ['sdk_test_user']);
     }
 
     public async deleteUserByApplicationToken(
         test: IApiTestItem, operationResults?: IOperationResults
     ): Promise<void> {
         await this.userClientOperationByApplicationToken(
-            operationResults!.beforeResults![1].token, 'deleteUser', 'sdk_test_user'
+            operationResults!.beforeResults![1].token, 'deleteUser', ['sdk_test_user']
+        );
+    }
+
+    public async updateUserGroupByNonadminToken(
+        test: IApiTestItem, operationResults?: IOperationResults
+    ): Promise<void> {
+        await this.userClientOperationByNonadminToken('updateUserGroup', ['sdk_test_user', 'sdktestgroup']);
+    }
+
+    public async updateUserGroupByApplicationToken(
+        test: IApiTestItem, operationResults?: IOperationResults
+    ): Promise<void> {
+        await this.userClientOperationByApplicationToken(
+            operationResults!.beforeResults![0].token, 'updateUserGroup', ['sdk_test_user', 'sdktestgroup']
+        );
+    }
+
+    public async deleteUserGroupByNonadminToken(
+        test: IApiTestItem, operationResults?: IOperationResults
+    ): Promise<void> {
+        await this.userClientOperationByNonadminToken('deleteUserGroup', ['sdk_test_user', 'sdktestgroup']);
+    }
+
+    public async deleteUserGroupByApplicationToken(
+        test: IApiTestItem, operationResults?: IOperationResults
+    ): Promise<void> {
+        await this.userClientOperationByApplicationToken(
+            operationResults!.beforeResults![0].token, 'deleteUserGroup', ['sdk_test_user', 'sdktestgroup']
         );
     }
 
     private async userClientOperationByApplicationToken(
-        applicationToken: string, operationName: string, parameter: any
+        applicationToken: string, operationName: string, parameter: any[]
     ): Promise<void> {
         const client: UserClient = new UserClient({
             token: applicationToken,
@@ -800,7 +976,7 @@ class CustomizedTestsClass {
         });
 
         try {
-            await (client as any)[operationName](parameter);
+            await (client as any)[operationName](...parameter);
         } catch (err) {
             expect(err.message).to.be.equal('Applications are not allowed to do this operation.');
             expect(err).to.be.an.instanceof(ForbiddenUserError);
@@ -808,7 +984,7 @@ class CustomizedTestsClass {
     }
 
     private async userClientOperationByNonadminToken(
-        operationName: string, parameter: any
+        operationName: string, parameter: any[]
     ): Promise<void> {
         const info: ILoginInfo = await this.createNonadminUserAndToken();
 
@@ -819,7 +995,7 @@ class CustomizedTestsClass {
         });
 
         try {
-            await (client as any)[operationName](parameter);
+            await (client as any)[operationName](...parameter);
         } catch (err) {
             expect(err.message).to.be.equal('Non-admin is not allow to do this operation.');
             expect(err).to.be.an.instanceof(ForbiddenUserError);
@@ -859,7 +1035,13 @@ class CustomizedTestsClass {
             rest_server_uri: clustersJson[0].rest_server_uri
         });
 
-        await openPAIClient.user.deleteUser(info.user);
+        try {
+            await openPAIClient.user.deleteUser(info.user);
+        } catch (err) {
+            if (err.data.code !== 'NoUserError') {
+                throw err;
+            }
+        }
     }
 }
 
