@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import { AuthnClient, OpenPAIClient, TokenClient, UserClient } from '@pai/api/v2/clients';
-import { ILoginInfo } from '@pai/api/v2/index.js';
+import { ILoginInfo, IPAIResponse } from '@pai/api/v2/index.js';
 import { ForbiddenUserError, UnauthorizedUserError } from '@pai/commom/errors/paiUserErrors';
 import ajv, { Ajv } from 'ajv';
 import { expect } from 'chai';
@@ -34,6 +34,9 @@ class RandomString {
     }
 }
 
+const unauthorizedToken: string =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InlpeWkiLCJhcHBsaWNhdGlvbiI6ZmFsc2' +
+    'UsImlhdCI6MTU4ODgzNDQyNCwiZXhwIjoxNTg5NDM5MjI0fQ.1GHA3t8Moy_y9_sTJA3VTWkNbw1jlw0ef6dKXJX8yYo';
 const randomString: RandomString = new RandomString();
 
 const createTestUser: IApiOperation = {
@@ -904,7 +907,7 @@ class CustomizedTestsClass {
         test: IApiTestItem, operationResults?: IOperationResults
     ): Promise<void> {
         const client: TokenClient = new TokenClient({
-            token: 'unauthorized user token',
+            token: unauthorizedToken,
             https: true,
             rest_server_uri: clustersJson[0].rest_server_uri
         });
@@ -925,20 +928,25 @@ class CustomizedTestsClass {
             rest_server_uri: clustersJson[0].rest_server_uri
         });
 
-        const res: string = await client.basicLogout();
-        expect(res).to.be.eq('Logout successfully');
+        const res: IPAIResponse = await client.basicLogout();
+        expect(res.message).to.be.eq('Logout successfully');
     }
 
     public async logoutWithIncorrectToken(
         test: IApiTestItem, operationResults?: IOperationResults
     ): Promise<void> {
         const client: AuthnClient = new AuthnClient({
-            token: 'unauthorized user token',
+            token: unauthorizedToken,
             https: true,
             rest_server_uri: clustersJson[0].rest_server_uri
         });
 
-        expect(await client.basicLogout()).to.throw(UnauthorizedUserError);
+        try {
+            await client.basicLogout();
+        } catch (err) {
+            expect(err.message).to.be.equal('Your token is invalid.');
+            expect(err).to.be.an.instanceof(UnauthorizedUserError);
+        }
     }
 
     public async createUserByNonadminToken(
