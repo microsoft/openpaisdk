@@ -13,3 +13,8 @@ export class NoJobError extends PAIBaseError {}
  * No job config error.
  */
 export class NoJobConfigError extends PAIBaseError {}
+
+/**
+ * No job config error.
+ */
+export class UnknownError extends PAIBaseError {}

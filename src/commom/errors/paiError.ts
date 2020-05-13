@@ -6,7 +6,8 @@ import { AxiosError } from 'axios';
 import { PAIBaseError } from './paiBaseError';
 import {
     NoJobConfigError,
-    NoJobError
+    NoJobError,
+    UnknownError
 } from './paiJobErrors';
 import {
     ConflictUserError,
@@ -30,6 +31,8 @@ export function paiError(error: AxiosError): PAIBaseError {
                 throw new ConflictUserError(error);
             case 'NoUserError':
                 throw new NoUserError(error);
+            case 'UnknownError':
+                throw new UnknownError(error);
             default:
                 throw new PAIBaseError(error);
         }
