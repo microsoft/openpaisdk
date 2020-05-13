@@ -808,38 +808,77 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
     },
     'get /api/v2/jobs/{user}~{job}': {
         before: [ createTestJob() ],
-        tests: [{
-            operation: {
-                parameters: [
-                    {
-                        type: 'raw',
-                        value: clustersJson[0].username
-                    },
-                    {
-                        type: 'raw',
-                        value: 'sdk_test_job' + randomString.get()
+        tests: [
+            {
+                description: 'Get a job detail',
+                operation: {
+                    parameters: [
+                        {
+                            type: 'raw',
+                            value: clustersJson[0].username
+                        },
+                        {
+                            type: 'raw',
+                            value: 'sdk_test_job' + randomString.get()
+                        }
+                    ]
+                }
+            },
+            {
+                description: 'Get nonexist job detail',
+                operation: {
+                    parameters: [
+                        {
+                            type: 'raw',
+                            value: clustersJson[0].username
+                        },
+                        {
+                            type: 'raw',
+                            value: 'sdk_test_nonexist_job'
+                        }
+                    ],
+                    response: {
+                        statusCode: 404
                     }
-                ]
+                }
             }
-        }],
+        ],
         after: [ updateTestJobExecutionType('STOP') ]
     },
     'get /api/v2/jobs/{user}~{job}/config': {
         before: [ createTestJob() ],
-        tests: [{
-            operation: {
-                parameters: [
-                    {
-                        type: 'raw',
-                        value: clustersJson[0].username
-                    },
-                    {
-                        type: 'raw',
-                        value: 'sdk_test_job' + randomString.get()
-                    }
-                ]
+        tests: [
+            {
+                description: 'Get a job config',
+                operation: {
+                    parameters: [
+                        {
+                            type: 'raw',
+                            value: clustersJson[0].username
+                        },
+                        {
+                            type: 'raw',
+                            value: 'sdk_test_job' + randomString.get()
+                        }
+                    ]
+                }
+            },
+            {
+                description: 'Get nonexist job config',
+                operation: {
+                    parameters: [
+                        {
+                            type: 'raw',
+                            value: clustersJson[0].username
+                        },
+                        {
+                            type: 'raw',
+                            value: 'sdk_test_nonexist_job'
+                        }
+                    ]
+                }
             }
-        }],
+        ],
         after: [ updateTestJobExecutionType('STOP') ]
     },
     'put /api/v2/jobs/{user}~{job}/exectionType': {
