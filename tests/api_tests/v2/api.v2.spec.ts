@@ -7,11 +7,10 @@ import * as chai from 'chai';
 import { expect } from 'chai';
 import dirtyChai from 'dirty-chai';
 
+import apiTestCaseJson from '../../../.tests/apiTestCase.json';
 import { IApiOperation, IApiTestCase } from '../../common/apiTestCaseGenerator';
 import { CustomizedTests } from '../../common/apiTestCases';
 import { TestCluster } from '../../common/testCluster';
-
-import apiTestCaseJson from './apiTestCase.json';
 
 /**
  * End to end tests for OpenPAI API v2.
