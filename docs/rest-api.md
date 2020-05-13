@@ -3,13 +3,15 @@
 Initialize the `openPAIClient`
 
 ```ts
-const cluster: IPAICluster = {
+import { PAIV2 } from '@microsoft/openpai-js-sdk';
+
+const cluster: PAIV2.IPAICluster = {
     username: '<username>',
     password: '<password>',
     token: '<token>',
     rest_server_uri: '<The host>/rest-server'
 };
-const openPAIClient = new OpenPAIClient(cluster);
+const openPAIClient = new PAIV2.OpenPAIClient(cluster);
 ```
 
 ## Job related
