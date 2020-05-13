@@ -53,7 +53,9 @@
     "tslint": "^6.1.1",
     "tslint-config-prettier": "^1.18.0",
     "tslint-microsoft-contrib": "^6.2.0",
-    "typescript": "^3.5.3"
+    "ttypescript": "^1.5.10",
+    "typescript": "^3.5.3",
+    "typescript-transform-paths": "^1.1.14"
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "^9.0.1",
@@ -67,12 +69,6 @@
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
     "table": "^5.4.6"
-  },
-  "_moduleAliases": {
-    "@pai": "lib/src",
-    "@protocol": "lib/src/protocol",
-    "@api": "lib/src/api",
-    "@commands": "lib/src/commands"
   },
   "bin": {
     "pai": "lib/src/cli.js"
