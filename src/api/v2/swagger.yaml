@@ -1354,9 +1354,7 @@ components:
           type: string
           description: Component type, should be "job" here.
         version:
-          oneOf:
-            - type: number
-            - type: string
+          type: string
           description: Component version, default is latest.
         contributor:
           type: string
@@ -1502,7 +1500,7 @@ components:
           properties:
             submitFrom:
               type: string
-            hivedscheduler:
+            hivedScheduler:
               type: object
               properties:
                 jobPriorityClass:
@@ -1512,9 +1510,7 @@ components:
                   additionalProperties:
                     type: object
                     properties:
-                      gpuType:
-                        type: string
-                      reservationId:
+                      skuType:
                         type: string
                       affinityGroupName:
                         type: string
@@ -1596,9 +1592,7 @@ components:
             type: string
             description: virtual cluster to which the job submitted, or "unknown"
           totalGpuNumber:
-            oneOf:
-              - type: number
-              - type: string
+            type: integer
             description: total gpu number used in the job
           totalTaskNumber:
             type: integer
@@ -2083,10 +2077,13 @@ components:
               properties:
                 exitCode:
                   type: integer
+                  nullable: true
                 originUserExitCode:
                   type: integer
+                  nullable: true
                 errorLogs:
                   type: object
+                  nullable: true
                   properties:
                     user:
                       type: string
@@ -2151,10 +2148,13 @@ components:
               properties:
                 exitCode:
                   type: integer
+                  nullable: true
                 originUserExitCode:
                   type: integer
+                  nullable: true
                 errorLogs:
                   type: object
+                  nullable: true
                   properties:
                     user:
                       type: string
@@ -2166,9 +2166,7 @@ components:
               type: string
               nullable: true
         totalGpuNumber:
-          oneOf:
-            - type: number
-            - type: string
+          type: integer
         totalTasknumber:
           type: integer
         totalTaskRoleNumber:

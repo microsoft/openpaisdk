@@ -1,6 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
+// tslint:disable: max-classes-per-file
 import { PAIBaseError } from './paiBaseError';
 
 /**
@@ -14,6 +15,6 @@ export class NoJobError extends PAIBaseError {}
 export class NoJobConfigError extends PAIBaseError {}
 
 /**
- * Unauthorized user error.
+ * No job config error.
  */
-export class UnauthorizedUserError extends PAIBaseError {}
+export class UnknownError extends PAIBaseError {}

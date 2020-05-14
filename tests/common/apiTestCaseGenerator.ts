@@ -80,6 +80,12 @@ export class ApiTestCaseGenerator {
                     }
                     if (!item.operation.response) {
                         item.operation.response = testResponse;
+                    } else {
+                        if (item.operation.response.statusCode !== undefined && !item.operation.response.schema) {
+                            item.operation.response.schema = test.schemas![
+                                item.operation.response.statusCode
+                            ];
+                        }
                     }
                 }
 

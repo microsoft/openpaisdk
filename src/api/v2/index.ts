@@ -24,7 +24,7 @@ import { IJobAttempt, IJobFrameworkInfo, IJobInfo, IJobSshInfo, IJobStatus } fro
 import { IPAIResponse } from './models/paiResponse';
 import { IMountInfo, IStorageConfig, IStorageDetail, IStorageServer, IStorageSummary } from './models/storage';
 import { IToken, ITokenList } from './models/token';
-import { IUser } from './models/user';
+import { IUpdateUserProfile, IUser } from './models/user';
 import { INodeResource, IVirtualCluster } from './models/virtualCluster';
 
 /**
@@ -46,6 +46,7 @@ export {
     IJobSshInfo,
     IJobAttempt,
     IUser,
+    IUpdateUserProfile,
     IToken,
     ITokenList,
     IVirtualCluster,

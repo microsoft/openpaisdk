@@ -7,11 +7,10 @@ import * as chai from 'chai';
 import { expect } from 'chai';
 import dirtyChai from 'dirty-chai';
 
+import apiTestCaseJson from '../../../.tests/apiTestCase.json';
 import { IApiOperation, IApiTestCase } from '../../common/apiTestCaseGenerator';
 import { CustomizedTests } from '../../common/apiTestCases';
 import { TestCluster } from '../../common/testCluster';
-
-import apiTestCaseJson from './apiTestCase.json';
 
 /**
  * End to end tests for OpenPAI API v2.
@@ -146,7 +145,18 @@ async function runOperation(
             }
         }
     }
-    const res: any = await client[operation.operationId!](...parameters);
+
+    let res: any;
+    try {
+        res = await client[operation.operationId!](...parameters);
+    } catch (err) {
+        if (err !== undefined && operation.response!.statusCode !== err.status) {
+            throw err;
+        } else {
+            res = err.data;
+        }
+    }
+
     if (operation.response) {
         if (operation.response.schema) {
             const valid: boolean = ajvInstance.validate(operation.response.schema, res) as boolean;
