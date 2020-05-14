@@ -1,4 +1,4 @@
-import { Identifiable } from '@pai/commom/identifiable';
+import { Identifiable } from "../../../commom/identifiable";
 /**
  * for some stable API calling (the results may not change for a long while)
  * the cache mechanism will help to reduce communication consumption

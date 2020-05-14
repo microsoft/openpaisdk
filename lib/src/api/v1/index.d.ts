@@ -1,5 +1,5 @@
-import { IJobConfig } from '@protocol/v1';
-import { AuthnClient, JobClient, OpenPAIBaseClient, OpenPAIClient } from './clients';
+import { IJobConfig } from "../../protocol/v1";
+import { AuthnClient, JobClient, OpenPAIBaseClient, OpenPAIClient } from "./clients";
 /**
  * Export OpenPAI RestAPI V1.
  */

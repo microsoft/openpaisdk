@@ -1,5 +1,5 @@
-import { IAzureBlobCfg } from '../clients/azureBlobClient';
-import { IFileInfo, IStorageNode, IStorageNodeClient } from '../models/storageOperation';
+import { IAzureBlobCfg } from "../clients/azureBlobClient";
+import { IFileInfo, IStorageNode, IStorageNodeClient } from "../models/storageOperation";
 /**
  * Essential information for accessing a storage
  */

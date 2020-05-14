@@ -1,7 +1,7 @@
-import { IPAICluster, OpenPAIClient } from '@api/v2';
-import { ICacheRecord } from '@api/v2/clients/cacheClient';
+import { IPAICluster, OpenPAIClient } from "../api/v2";
+import { ICacheRecord } from "../api/v2/clients/cacheClient";
 import * as argparse from 'argparse';
-import { Identifiable } from '../commom/identifiable';
+import { Identifiable } from "../commom/identifiable";
 export interface IClusterWithCache {
     cluster: IPAICluster;
     cache?: ICacheRecord[];

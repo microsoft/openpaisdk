@@ -1,5 +1,5 @@
-import { IPAICluster } from '@api/v2';
-import { PAIHttpClient } from '@pai/commom/paiHttpClient';
+import { IPAICluster } from "..";
+import { PAIHttpClient } from "../../../commom/paiHttpClient";
 /**
  * OpenPAI basic client.
  */

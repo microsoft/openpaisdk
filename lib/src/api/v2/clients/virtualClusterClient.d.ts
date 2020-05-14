@@ -1,6 +1,6 @@
-import { IPAICluster, IVirtualCluster } from '@api/v2';
-import { ISkuType } from '../models/virtualCluster';
-import { OpenPAIBaseClient } from './baseClient';
+import { IPAICluster, IVirtualCluster } from "..";
+import { ISkuType } from "../models/virtualCluster";
+import { OpenPAIBaseClient } from "./baseClient";
 /**
  * OpenPAI Virtual Cluster client.
  */

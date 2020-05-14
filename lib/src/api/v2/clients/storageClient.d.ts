@@ -1,7 +1,7 @@
-import { IPAICluster } from '@api/v2';
-import { IStorageDetail, IStorageSummary } from '@api/v2/models/storage';
-import { IStorageDispatcher, StorageNode } from '@pai/storage/clients/storageNode';
-import { OpenPAIBaseClient } from './baseClient';
+import { IPAICluster } from "..";
+import { IStorageDetail, IStorageSummary } from "../models/storage";
+import { IStorageDispatcher, StorageNode } from "../../../storage/clients/storageNode";
+import { OpenPAIBaseClient } from "./baseClient";
 /**
  * OpenPAI Job client.
  */

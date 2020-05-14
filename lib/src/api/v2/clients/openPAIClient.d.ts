@@ -1,5 +1,5 @@
-import { IPAICluster } from '@api/v2';
-import { ApiClient, AuthnClient, CacheClient, GroupClient, ICacheRecord, JobClient, JobHistoryClient, KubernetesClient, OpenPAIBaseClient, StorageClient, TokenClient, UserClient, VirtualClusterClient } from '@api/v2/clients';
+import { IPAICluster } from "..";
+import { ApiClient, AuthnClient, CacheClient, GroupClient, ICacheRecord, JobClient, JobHistoryClient, KubernetesClient, OpenPAIBaseClient, StorageClient, TokenClient, UserClient, VirtualClusterClient } from "./";
 /**
  * OpenPAI Client.
  */

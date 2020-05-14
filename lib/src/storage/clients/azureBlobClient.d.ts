@@ -1,6 +1,6 @@
 import { PagedAsyncIterableIterator } from '@azure/core-paging';
 import { BlobItem, BlobPrefix, ContainerListBlobHierarchySegmentResponse } from '@azure/storage-blob';
-import { IFileInfo, IStorageNodeClient } from '../models/storageOperation';
+import { IFileInfo, IStorageNodeClient } from "../models/storageOperation";
 export declare type BlobIter = PagedAsyncIterableIterator<({
     kind: 'prefix';
 } & BlobPrefix) | ({

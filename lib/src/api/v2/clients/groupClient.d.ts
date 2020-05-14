@@ -1,5 +1,5 @@
-import { IGroup, IPAICluster, IPAIResponse, IUser } from '@api/v2';
-import { OpenPAIBaseClient } from './baseClient';
+import { IGroup, IPAICluster, IPAIResponse, IUser } from "..";
+import { OpenPAIBaseClient } from "./baseClient";
 /**
  * OpenPAI group client.
  */

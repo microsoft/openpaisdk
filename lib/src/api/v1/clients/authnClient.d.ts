@@ -1,5 +1,5 @@
-import { IAuthnInfo, IPAICluster } from '@api/v2';
-import { OpenPAIBaseClient } from './baseClient';
+import { IAuthnInfo, IPAICluster } from "../../v2";
+import { OpenPAIBaseClient } from "./baseClient";
 /**
  * OpenPAI Authn client.
  */

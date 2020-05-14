@@ -1,4 +1,4 @@
-import { IJobConfig } from './jobConfig';
+import { IJobConfig } from "./jobConfig";
 /**
  * Export
  */

@@ -1,5 +1,5 @@
-import { IPAICluster } from '@api/v2';
-import { OpenPAIBaseClient } from './baseClient';
+import { IPAICluster } from "..";
+import { OpenPAIBaseClient } from "./baseClient";
 /**
  * OpenPAI Kubernetes client.
  */

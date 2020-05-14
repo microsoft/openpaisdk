@@ -1,5 +1,5 @@
-import { IMountInfo, IStorageServer } from '@api/v2/models/storage';
-import { IFileInfo, IStorageNodeClient } from '../models/storageOperation';
+import { IMountInfo, IStorageServer } from "../../api/v2/models/storage";
+import { IFileInfo, IStorageNodeClient } from "../models/storageOperation";
 /**
  * Web HDFS Client.
  */

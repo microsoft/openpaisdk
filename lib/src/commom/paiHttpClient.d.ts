@@ -1,6 +1,6 @@
-import { ILoginInfo, IPAICluster } from '@api/v2';
+import { ILoginInfo, IPAICluster } from "../api/v2";
 import { AxiosRequestConfig } from 'axios';
-import { IPAIResponseProcessor } from './paiResponseProcessor';
+import { IPAIResponseProcessor } from "./paiResponseProcessor";
 /**
  * Http client for PAI rest-server.
  */

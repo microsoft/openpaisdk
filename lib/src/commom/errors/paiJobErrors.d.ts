@@ -1,4 +1,4 @@
-import { PAIBaseError } from './paiBaseError';
+import { PAIBaseError } from "./paiBaseError";
 /**
  * No job error.
  */

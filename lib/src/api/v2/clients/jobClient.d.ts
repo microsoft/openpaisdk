@@ -1,5 +1,5 @@
-import { IJobConfig, IJobInfo, IJobStatus, IPAICluster, IPAIResponse } from '@api/v2';
-import { OpenPAIBaseClient } from './baseClient';
+import { IJobConfig, IJobInfo, IJobStatus, IPAICluster, IPAIResponse } from "..";
+import { OpenPAIBaseClient } from "./baseClient";
 /**
  * OpenPAI Job client.
  */

@@ -1,4 +1,4 @@
-import { IAzureBlobCfg } from '@pai/storage/clients/azureBlobClient';
+import { IAzureBlobCfg } from "../../../storage/clients/azureBlobClient";
 /**
  * OpenPAI storage information.
  */

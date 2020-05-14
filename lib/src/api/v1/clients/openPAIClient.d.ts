@@ -1,6 +1,6 @@
-import { AuthnClient, JobClient } from '@api/v1/clients';
-import { IPAICluster } from '@api/v2';
-import { OpenPAIBaseClient } from './baseClient';
+import { AuthnClient, JobClient } from "./";
+import { IPAICluster } from "../../v2";
+import { OpenPAIBaseClient } from "./baseClient";
 /**
  * OpenPAI Client.
  */

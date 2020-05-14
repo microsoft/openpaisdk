@@ -1,4 +1,4 @@
-import { ILoginInfo, IPAICluster } from '@api/v2';
+import { ILoginInfo, IPAICluster } from "../../v2";
 /**
  * OpenPAI basic client.
  */

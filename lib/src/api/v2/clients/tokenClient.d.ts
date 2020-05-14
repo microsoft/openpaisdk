@@ -1,5 +1,5 @@
-import { IPAICluster, IPAIResponse, IToken, ITokenList } from '@api/v2';
-import { OpenPAIBaseClient } from './baseClient';
+import { IPAICluster, IPAIResponse, IToken, ITokenList } from "..";
+import { OpenPAIBaseClient } from "./baseClient";
 /**
  * OpenPAI Api client.
  */

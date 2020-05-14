@@ -1,5 +1,5 @@
-import * as ApiV1 from './v1';
-import * as ApiV2 from './v2';
+import * as ApiV1 from "./v1";
+import * as ApiV2 from "./v2";
 /**
  * Export
  */

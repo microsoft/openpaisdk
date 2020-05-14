@@ -1,5 +1,5 @@
-import { IPAICluster, IPAIClusterInfo } from '@api/v2';
-import { OpenPAIBaseClient } from './baseClient';
+import { IPAICluster, IPAIClusterInfo } from "..";
+import { OpenPAIBaseClient } from "./baseClient";
 /**
  * OpenPAI Api client.
  */
