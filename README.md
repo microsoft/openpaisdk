@@ -1,7 +1,8 @@
 # OpenPAI JS SDK
+
 [![Build Status](https://www.travis-ci.org/microsoft/openpaisdk.svg?branch=master)](https://travis-ci.org/microsoft/openpaisdk)
 
-The `JavaScript` SDK is designed to facilitate the developers of [OpenPAI](https://github.com/microsoft/pai) to offer user friendly experience. 
+The `JavaScript` SDK is designed to facilitate the developers of [OpenPAI](https://github.com/microsoft/pai) to offer user friendly experience.
 
 The SDK mainly provides client side sharable functions such as RESTful API wrapping, error handling, storage accessing and processing of [job protocol](https://github.com/microsoft/openpai-protocol). *Now the OpenPAI RESTful API is updating, please waiting for our stable release.*
 
@@ -18,18 +19,20 @@ npm install --save microsoft/openpaisdk
 Initialize the `openPAIClient`
 
 ```ts
-const cluster: IPAICluster = {
+import { PAIV2 } from '@microsoft/openpai-js-sdk';
+
+const cluster: PAIV2.IPAICluster = {
     username: '<username>',
     password: '<password>',
     token: '<token>',
     rest_server_uri: '<The host>/rest-server'
 };
-const openPAIClient = new OpenPAIClient(cluster);
+const openPAIClient = new PAIV2.OpenPAIClient(cluster);
 ```
 
 ### Installation of CLI tool
 
-The SDK offers a command line interface (CLI) prefixed by `pai`. For end users that use CLI only, we provide an easy way to install it via `pip` and the `Python` package `nodeenv`. 
+The SDK offers a command line interface (CLI) prefixed by `pai`. For end users that use CLI only, we provide an easy way to install it via `pip` and the `Python` package `nodeenv`.
 
 ```bash
 pip install nodeenv
@@ -41,19 +44,23 @@ npm i -g microsoft/openpaisdk
 This installation commands will generate a virtual environment with latest `node` in the directory `./myenv`, and install the CLI in it. Then user could use `pai` command by any of below methods
 
 - activate the virtual environment first
+
     ```bash
     myenv/Scripts/activate
     pai -h
     ```
+
 - use a absolute path to `pai`
+
     ```bash
     myenv/Scripts/pai -h
     ```
+
 - add `myenv/Scripts` to environment variable `path`
 
-
 ## RESTful API
-The SDK provides ease-of-use `JavaScript` and `TypeScript` wrapping of  [OpenPAI RESTful APIs](https://github.com/microsoft/pai/blob/master/docs/rest-server/API.md). 
+
+The SDK provides ease-of-use `JavaScript` and `TypeScript` wrapping of  [OpenPAI RESTful APIs](https://github.com/microsoft/pai/blob/master/docs/rest-server/API.md).
 
 Details are in [rest-api.md](https://github.com/microsoft/openpaisdk/blob/master/docs/rest-api.md).
 
@@ -61,12 +68,14 @@ Details are in [rest-api.md](https://github.com/microsoft/openpaisdk/blob/master
 
 Multiple types of storages are supported by OpenPAI, however, the end user and developers should not be bothered by too much details of it. The SDK provides an abstract storage accessing methods to let users access the storages.
 
-User could get the `IStorageNode` object for each cluster provisioned storage by 
+User could get the `IStorageNode` object for each cluster provisioned storage by
+
 ```ts
 // get a storage object with its name
 let storageDetail: IStorageDetail = await opanPAIClient.storage.getStorageByName(name)
 let storageNode: IStorageNode = new StorageNode(storageDetail)
 ```
+
 It would provide storage accessing methods (`getinfo, listdir, makedir, upload, download, delete`) and CLI storage operations.
 
 Details are in [storage.md](https://github.com/microsoft/openpaisdk/blob/master/docs/storage.md).
@@ -83,7 +92,7 @@ The SDK will center the error handling, thus all front ends depending on it coul
 
 The interoperation of `OpenPAI` components depends on the [job protocol](https://github.com/microsoft/openpai-protocol), and there have been some common operations of it, such as validation, preprocessing before submission (e.g. embedding essential user information). The SDK will provide essential common operations for all the front ends.
 
-# Contributing
+## Contributing
 
 This project welcomes contributions and suggestions.  Most contributions require you to agree to a
 Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
