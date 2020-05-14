@@ -8,6 +8,7 @@
     "lib/**/*"
   ],
   "scripts": {
+    "prepublish": "npm run build",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "pretest": "tslint --config tslint.json --project tsconfig.json",
@@ -15,7 +16,7 @@
     "preapi-test": "ts-node -r tsconfig-paths/register tests/common/apiTestCaseGenerator.ts -- \"src/api/v2/swagger.yaml\" \"tests/api_tests/v2/apiTestCase.json\"",
     "api-test": "mocha -r ts-node/register -r tsconfig-paths/register tests/api_tests/**/*.spec.ts -t 10000",
     "prebuild": "tslint --config tslint.json --project tsconfig.json",
-    "build": "tsc -p tsconfig.build.json"
+    "build": "ttsc -p tsconfig.json"
   },
   "homepage": "https://github.com/Microsoft/openpaisdk",
   "repository": {
@@ -53,7 +54,9 @@
     "tslint": "^6.1.1",
     "tslint-config-prettier": "^1.18.0",
     "tslint-microsoft-contrib": "^6.2.0",
-    "typescript": "^3.5.3"
+    "ttypescript": "^1.5.10",
+    "typescript": "^3.5.3",
+    "typescript-transform-paths": "^1.1.14"
   },
   "dependencies": {
     "@apidevtools/swagger-parser": "^9.0.1",
@@ -67,12 +70,6 @@
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
     "table": "^5.4.6"
-  },
-  "_moduleAliases": {
-    "@pai": "lib/src",
-    "@protocol": "lib/src/protocol",
-    "@api": "lib/src/api",
-    "@commands": "lib/src/commands"
   },
   "bin": {
     "pai": "lib/src/cli.js"

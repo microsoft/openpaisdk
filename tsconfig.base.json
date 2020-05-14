@@ -19,6 +19,14 @@
             "@protocol/*": ["protocol/*"],
             "@api/*": ["api/*"],
             "@commands/*": ["commands/*"]
-        }
+        },
+        "plugins": [{
+                "transform": "typescript-transform-paths"
+            },
+            {
+                "transform": "typescript-transform-paths",
+                "afterDeclarations": true
+            }
+        ]
     }
 }
