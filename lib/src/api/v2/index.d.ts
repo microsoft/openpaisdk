@@ -9,9 +9,9 @@ import { IJobAttempt, IJobFrameworkInfo, IJobInfo, IJobSshInfo, IJobStatus } fro
 import { IPAIResponse } from "./models/paiResponse";
 import { IMountInfo, IStorageConfig, IStorageDetail, IStorageServer, IStorageSummary } from "./models/storage";
 import { IToken, ITokenList } from "./models/token";
-import { IUser } from "./models/user";
+import { IUpdateUserProfile, IUser } from "./models/user";
 import { INodeResource, IVirtualCluster } from "./models/virtualCluster";
 /**
  * Export OpenPAI RestAPI V1.
  */
-export { AuthnClient, JobClient, OpenPAIClient, OpenPAIBaseClient, StorageClient, UserClient, VirtualClusterClient, IPAICluster, IPAIClusterInfo, IJobConfig, IJobInfo, IJobFrameworkInfo, IJobSshInfo, IJobAttempt, IUser, IToken, ITokenList, IVirtualCluster, INodeResource, IAuthnInfo, ILoginInfo, IStorageServer, IStorageConfig, IStorageSummary, IStorageDetail, IMountInfo, IJobStatus, StorageNode, IGroup, GroupClient, ApiClient, JobHistoryClient, IPAIResponse, KubernetesClient };
+export { AuthnClient, JobClient, OpenPAIClient, OpenPAIBaseClient, StorageClient, UserClient, VirtualClusterClient, IPAICluster, IPAIClusterInfo, IJobConfig, IJobInfo, IJobFrameworkInfo, IJobSshInfo, IJobAttempt, IUser, IUpdateUserProfile, IToken, ITokenList, IVirtualCluster, INodeResource, IAuthnInfo, ILoginInfo, IStorageServer, IStorageConfig, IStorageSummary, IStorageDetail, IMountInfo, IJobStatus, StorageNode, IGroup, GroupClient, ApiClient, JobHistoryClient, IPAIResponse, KubernetesClient };

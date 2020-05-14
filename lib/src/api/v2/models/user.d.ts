@@ -11,3 +11,9 @@ export interface IUser {
     virtualCluster?: string[] | null;
     storageConfig?: any | null;
 }
+export interface IUpdateUserProfile {
+    username?: string;
+    email?: string;
+    oldPassword?: string;
+    newPassword?: string;
+}

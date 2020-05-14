@@ -1,4 +1,4 @@
-import { ILoginInfo, IPAICluster } from "..";
+import { ILoginInfo, IPAICluster, IPAIResponse } from "..";
 import { OpenPAIBaseClient } from "./baseClient";
 /**
  * OpenPAI Authn client.
@@ -22,6 +22,6 @@ export declare class AuthnClient extends OpenPAIBaseClient {
     /**
      * Revoke current login token.
      */
-    basicLogout(): Promise<string>;
+    basicLogout(): Promise<IPAIResponse>;
     private oidcRequest;
 }

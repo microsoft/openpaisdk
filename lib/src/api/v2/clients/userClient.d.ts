@@ -1,4 +1,4 @@
-import { IPAICluster, IPAIResponse, IUser } from "..";
+import { IPAICluster, IPAIResponse, IUpdateUserProfile, IUser } from "..";
 import { OpenPAIBaseClient } from "./baseClient";
 /**
  * OpenPAI User client.
@@ -18,7 +18,7 @@ export declare class UserClient extends OpenPAIBaseClient {
      * Update a user in the system. Admin only.
      * @param user The user info: { username, email, password, admin, virtualCluster, extension }.
      */
-    updateUser(user: IUser): Promise<IPAIResponse>;
+    updateUser(user: IUser, patch?: boolean): Promise<IPAIResponse>;
     /**
      * Update user's own profile in the system.
      * @param username The user name.
@@ -26,7 +26,7 @@ export declare class UserClient extends OpenPAIBaseClient {
      * @param newPassword The new password, optional.
      * @param oldPassword The old password, optional.
      */
-    updateUserSelf(username: string, email?: string, newPassword?: string, oldPassword?: string): Promise<IPAIResponse>;
+    updateUserSelf(user: IUpdateUserProfile, patch?: boolean): Promise<IPAIResponse>;
     /**
      * Get a user's data.
      * @param userName The user's name.

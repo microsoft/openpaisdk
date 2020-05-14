@@ -1,2 +1,3 @@
 import { AxiosError } from 'axios';
-export declare function paiError(error: AxiosError): void;
+import { PAIBaseError } from "./paiBaseError";
+export declare function paiError(error: AxiosError): PAIBaseError;
