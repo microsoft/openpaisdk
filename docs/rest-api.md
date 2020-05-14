@@ -14,296 +14,243 @@ const cluster: PAIV2.IPAICluster = {
 const openPAIClient = new PAIV2.OpenPAIClient(cluster);
 ```
 
-## Job related
+## api info
 
-- [x] List jobs (GET /api/v1/jobs)
+## token
 
-    ```ts
-    list = await openPAIClient.job.list();
-    list = await openPAIClient.job.list('username=xxx');
-    ```
-
-- [x] Get job (GET /api/v2/user/{username}/jobs/{jobname})
-
-    ```ts
-    job = await openPAIClient.job.get(username, jobname);
-    ```
-
-- [x] Get framework info (GET /api/v2/jobs/{username}~{jobname})
-
-    ```ts
-    info = await openPAIClient.job.getFrameworkInfo(username, jobname);
-    ```
-
-- [x] Get job config (GET /api/v2/jobs/{username}~{jobname}/config)
-
-    ```ts
-    config = await openPAIClient.job.getConfig(username, jobname);
-    ```
-
-- [x] Get job ssh info (GET /api/v1/user/{username}/jobs/{jobname}/ssh)
-
-    ```ts
-    sshInfo = await openPAIClient.job.getSshInfo(username, jobname);
-    ```
-
-- [x] Submit v1 job (POST /api/v1/user/{username}/jobs)
-
-    ```ts
-    await openPAIClient.job.submitV1((userName, config)
-    ```
-
-- [x] Submit v2 job (POST /api/v2/jobs)
-
-    ```ts
-    await openPAIClient.job.submit(config);
-    ```
-
-- [x] Remove job (DELETE /api/v2/user/{username}/jobs/{jobname})
-
-    ```ts
-    await openPAIClient.job.delete(username, jobname);
-    ```
-
-- [x] Start/Stop job (PUT /api/v2/user/{username}/jobs/{jobname}/executionType)
-
-    ```ts
-    await openPAIClient.job.execute(username, jobname, 'START');
-    await openPAIClient.job.execute(username, jobname, 'STOP');
-    ```
-
-## User related
-
-- [x] Get user (GET /api/v2/user/{username})
-
-    ```ts
-    user = await openPAIClient.user.get(username);
-    ```
-
-- [x] List users (GET /api/v2/user/)
-
-    ```ts
-    list = await openPAIClient.user.list();
-    ```
-
-- [x] Create user (POST /api/v2/user/)
-
-    ```ts
-    await openPAIClient.user.create(username, password, admin, email, virtualClusters);
-    ```
-
-- [x] Delete user (DELETE /api/v2/user/{username})
-
-    ```ts
-    await openPAIClient.user.delete(username);
-    ```
-
-- [x] Update user extension (PUT /api/v2/user/{username}/extension)
-
-    ```ts
-    await openPAIClient.user.updateExtension(username, {
-        "extension-key1": "extension-value1",
-        "extension-key2": "extension-value2",
-        ...
-    });
-    ```
-
-- [x] Update user virtual cluster (PUT /api/v2/user/{username}/virtualcluster)
-
-    ```ts
-    await openPAIClient.user.updateVirtualcluster(username, ['vc1', 'vc2', ...]);
-    ```
-
-- [x] Update user password (PUT /api/v2/user/{username}/password)
-
-    ```ts
-    await openPAIClient.user.updatePassword(username, oldPassword, newPassword);
-    ```
-
-- [x] Update user email (PUT /api/v2/user/{username}/email)
-
-    ```ts
-    await openPAIClient.user.updateEmail(username, newEmail);
-    ```
-
-- [x] Update user admin permission (PUT /api/v2/user/{username}/admin)
-
-    ```ts
-    await openPAIClient.user.updateAdminPermission(username, newAdminPermission);
-    ```
-
-- [x] Update user group list (PUT /api/v2/user/{username}/grouplist)
-
-    ```ts
-    await openPAIClient.user.updateGroupList(username, ['group1', 'group2', ...]);
-    ```
-
-- [x] Add group into user group list (PUT /api/v2/user/{username}/group)
-
-    ```ts
-    await openPAIClient.user.addGroup(username, groupName);
-    ```
-
-- [x] Remove group from user group list (DELETE /api/v2/user/{username}/group)
-
-    ```ts
-    await openPAIClient.user.removeGroup(username, groupName);
-    ```
-
-## VC related
-
-- [x] List all virtual clusters (GET /api/v2/virtual-clusters)
-
-    ```ts
-    list = await openPAIClient.virtualCluster.list();
-    ```
-
-- [x] Get node resource (GET /api/v2/virtual-clusters/nodeResource)
-
-    ```ts
-    resource = await openPAIClient.virtualCluster.getNodeResource();
-    ```
-
-- [x] Get virtual cluster (GET /api/v2/virtual-clusters/{vcName})
-
-    ```ts
-    vc = await openPAIClient.virtualCluster.get(vcName);
-    ```
-
-- [x] Create or update virtual cluster (PUT /api/v1/virtual-clusters/{vcName})
-
-    ```ts
-    await openPAIClient.virtualCluster.createOrUpdate(vcName, vcCapacity, vcMaxCapacity);
-    ```
-
-- [x] Remove virtual cluster (DELETE /api/v1/virtual-clusters/{vcName})
-
-    ```ts
-    await openPAIClient.virtualCluster.delete(vcName);
-    ```
-
-- [x] Change virtual cluster status (PUT /api/v1/virtual-clusters/{vcName}/status)
-
-    ```ts
-    await openPAIClient.virtualCluster.changeStatus(vcName, newStatus);
-    ```
-
-- [ ] Get virtual cluster available resourceUnit (GET /api/v2/virtual-clusters/{vcName}/resourceUnits)
-
-    ```json
-    {
-        "code":"NotImplementedError",
-        "message":"getResourceUnits not implemented in yarn"
-    }
-    ```
-
-## Auth related
-
-- [x] Get token (POST /api/v1/token)
-
-    ```ts
-    token = await openPAIClient.token();
-    ```
-
-- [x] Get auth info (GET /api/v1/authn/info)
-
-    ```ts
-    info = await openPAIClient.authn.info();
-    ```
-
-- [x] Basic login (POST /api/v1/authn/basic/login)
-
-    ```ts
-    loginInfo = await openPAIClient.authn.login();
-    ```
-
-- [x] OIDC login (GET /api/v1/authn/oidc/login)
-
-    ```ts
-    redirect = await openPAIClient.authn.oidcLogin();
-    ```
-
-- [x] OIDC logout (GET /api/v1/authn/oidc/logout)
-
-    ```ts
-    redirect = await openPAIClient.authn.oidcLogout();
-    ```
-
-- [x] Get list of available tokens (portal token + application token) (GET /api/v1/token)
+- [x] Get your currently signed tokens (GET /api/v2/tokens)
 
     ```ts
     tokens = await openPAIClient.auth.getTokens();
     ```
 
-- [x] Create an application access token (POST /api/v1/token/application)
-
-    ```ts
-    token = await openPAIClient.auth.createApplicationToken();
-    ```
-
-- [x] Revoke a token (DELETE /api/v1/token/{token})
+- [x] Revoke a token (DELETE /api/v2/tokens/{token})
 
     ```ts
     await openPAIClient.auth.deleteToken(token);
     ```
 
-- [ ] OIDC return (GET/POST /api/v1/authn/oidc/return)
-
-    ```text
-    Web-browser will call this API automatically after OIDC login step.
-    ```
-
-## Group related
-
-- [ ] Create a group (POST /api/v2/group)
-- [ ] Change a group's extension
-      (POST /api/v2/group/:groupname/extension)
-- [ ] Change a specific attribute in a nested group extension
-      (PUT /api/v2/group/:groupname/extension/path/to/attr)
-- [ ] Change a group's description
-      (POST /api/v2/group/:groupname/description)
-- [ ] Change a group's externalname, and bind it with another external group
-      (POST /api/v2/group/:groupname/externalname)
-- [ ] Delete a group from system (DELETE /api/v2/group/:groupname)
-
-## Storage
-
-- [x] Get storage server data in the system (GET /api/v2/storage/server/{storage})
+- [x] Create an application access token in the system (POST /api/v2/tokens/application)
 
     ```ts
-    await openPAIClient.storage.getServerByName(storage);
+    token = await openPAIClient.auth.createApplicationToken();
     ```
 
-- [ ] Remove storage server in the system (DELETE /api/v2/storage/server/{storage})
-- [x] Get storage server data in the system (GET /api/v2/storage/server)
+## authn
+
+- [x] User login with Azure AD (GET /api/v2/authn/oidc/login)
 
     ```ts
-    await openPAIClient.storage.getServer();
-    await openPAIClient.storage.getServer(names);
+    redirect = await openPAIClient.authn.oidcLogin();
     ```
 
-- [ ] Create storage server in the system (POST /api/v2/storage/server)
-- [ ] Update storage server in the system (PUT /api/v2/storage/server)
-- [x] Get storage config data in the system (GET /api/v2/storage/config/{storage})
+- [x] User logout from Azure AD (GET /api/v2/authn/oidc/logout)
 
     ```ts
-    await openPAIClient.storage.getConfigByName(storage);
+    redirect = await openPAIClient.authn.oidcLogout();
     ```
 
-- [ ] Remove storage config in the system (DELETE /api/v2/storage/config/{storage})
-- [x] Get storage config data in the system (GET /api/v2/storage/config)
+- [x] Get an access token using username and password (POST /api/v2/authn/basic/login)
 
     ```ts
-    await openPAIClient.storage.getConfig();
-    await openPAIClient.storage.getConfig(names);
+    loginInfo = await openPAIClient.authn.login(username, password);
     ```
 
-- [ ] Create storage config in system (POST /api/v2/storage/config)
-- [ ] Update storage config in system (PUT /api/v2/storage/config)
+- [x] Logout and revoke the token (DELETE /api/v2/authn/basic/logout)
 
-## Job history
+    ```ts
+    await openPAIClient.authn.logout();
+    ```
 
-- [ ] Check if job attempts is healthy (GET /api/v2/jobs/{user}~{job}/job-attempts/healthz)
-- [ ] Get all attempts of a job (GET /api/v2/jobs/{user}~{job}/job-attempts)
-- [ ] Get a specific attempt by attempt index
-      (GET /api/v2/jobs/{user}~{job}/job-attempts/{attempt})
+## user
+
+- [x] Create a user in the system (POST /api/v2/users/)
+
+    ```ts
+    await openPAIClient.user.createUser(user);
+    await openPAIClient.user.createUser({username, password, admin, email, virtualClusters});
+    ```
+
+- [x] Get all users in the system (GET /api/v2/users/)
+
+    ```ts
+    list = await openPAIClient.user.getAllUser();
+    ```
+
+- [x] Update a user in the system (PUT /api/v2/users)
+
+    ```ts
+    await openPAIClient.user.updateVirtualcluster(user);
+    await openPAIClient.user.updateVirtualcluster(user, patch);
+    ```
+
+- [x] Update user's own profile (PUT /api/v2/users/me)
+
+    ```ts
+    await openPAIClient.user.updateUserSelf(user);
+    await openPAIClient.user.updateUserSelf(user, patch);
+    ```
+
+- [x] Get a user's data (GET /api/v2/users/{username})
+
+    ```ts
+    user = await openPAIClient.user.getUser(username);
+    ```
+
+- [x] Remove a user in the system (DELETE /api/v2/users/{username})
+
+    ```ts
+    await openPAIClient.user.deleteUser(username);
+    ```
+
+- [x] Add a group for user (PUT /api/v2/users/{username}/group/)
+
+    ```ts
+    await openPAIClient.user.updateUserGroup(username, groupname);
+    ```
+
+- [x] Remove a group from user's grouplist (DELETE /api/v2/users/{username}/group)
+
+    ```ts
+    await openPAIClient.user.removeGroup(username, groupName);
+    ```
+
+- [x] Replace user's grouplist (PUT /api/v2/users/{username}/grouplist/)
+
+    ```ts
+    await openPAIClient.user.updateUserGrouplist(username, grouplist);
+    ```
+
+## group
+
+- [x] Get all group objects in the system (GET /api/v2/groups)
+
+    ```ts
+    groups = await openPAIClient.group.getAllGroup();
+    ```
+
+- [x] Create a group in the system (POST /api/v2/groups)
+
+    ```ts
+    await openPAIClient.group.createGroup(group);
+    ```
+
+- [x] Update a group in the system (PUT /api/v2/groups)
+
+    ```ts
+    await openPAIClient.group.updateGroup(group);
+    ```
+
+- [x] Get a group in the system (GET /api/v2/groups/{groupname})
+
+    ```ts
+    group = await openPAIClient.group.getGroup(groupname);
+    ```
+
+- [x] Delete a group in the system (DELETE /api/v2/groups/{groupname})
+
+    ```ts
+    await openPAIClient.group.deleteGroup(groupname);
+    ```
+
+- [x] Get the user array of a group in the system (GET /api/v2/groups/{groupname}/userlist)
+
+    ```ts
+    users = await openPAIClient.group.getGroupMembers(groupname);
+    ```
+
+## virtual cluster
+
+- [x] Get the list of virtual clusters (GET /api/v2/virtual-clusters)
+
+    ```ts
+    list = await openPAIClient.virtualCluster.listVirtualClusters();
+    ```
+
+- [x] Get virtual cluster status in the system (GET /api/v2/virtual-clusters/{vcName})
+
+    ```ts
+    vc = await openPAIClient.virtualCluster.getVirtualCluster(vcName);
+    ```
+
+## job
+
+- [x] Submit a job in the system (POST /api/v2/jobs)
+
+    ```ts
+    await openPAIClient.job.createJob(config);
+    ```
+
+- [x] Get the list of jobs (GET /api/v2/jobs)
+
+    ```ts
+    list = await openPAIClient.job.listJobs();
+    list = await openPAIClient.job.listJobs(username);
+    ```
+
+- [x] Get job status (GET /api/v2/jobs/{username}~{jobname})
+
+    ```ts
+    job = await openPAIClient.job.getJob(username, jobname);
+    ```
+
+- [x] Get job config (GET /api/v2/jobs/{username}~{jobname}/config)
+
+    ```ts
+    config = await openPAIClient.job.getJobConfig(username, jobname);
+    ```
+
+- [x] Start or stop a job (PUT /api/v2/jobs/{username}~{jobname}/exectionType)
+
+    ```ts
+    await openPAIClient.job.updateJobExecutionType(username, jobname, 'START');
+    await openPAIClient.job.updateJobExecutionType(username, jobname, 'STOP');
+    ```
+
+## job history
+
+- [x] Check if job attempts is healthy (GET /api/v2/jobs/{username}~{jobname}/job-attempts/healthz)
+
+    ```ts
+    response = await openPAIClient.job.getJobAttemptsHealthz(username, jobname);
+    ```
+
+- [x] Get all attempts of a job (GET /api/v2/jobs/{user}~{job}/job-attempts)
+
+    ```ts
+    attempts = await openPAIClient.job.getJobAttempts(username, jobname);
+    ```
+
+- [x] Get a specific attempt by attempt index (GET /api/v2/jobs/{user}~{job}/job-attempts/{attempt})
+
+    ```ts
+    attempt = await openPAIClient.job.getJobAttempt(username, jobname, index);
+    ```
+
+## storage
+
+- [x] Get storage list (persistent volume claims) for current user (GET /api/v2/storages)
+
+    ```ts
+    storages = await openPAIClient.storage.getStorages();
+    ```
+
+- [x] Get storage (persistent volume claim) for the given name (GET /api/v2/storages/{storagename})
+
+    ```ts
+    storage = await openPAIClient.storage.getStorage(storagename);
+    ```
+
+## kubernetes
+
+- [x] Get kubernetes node list (GET /api/v2/kubernetes/nodes)
+
+    ```ts
+    nodes = await openPAIClient.kubernetes.getK8sNodes();
+    ```
+
+- [x] Get kubernetes pod list (GET /api/v2/kubernetes/pods)
+
+    ```ts
+    pods = await openPAIClient.kubernetes.getK8sPods();
+    ```
