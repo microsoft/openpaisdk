@@ -8,6 +8,7 @@
     "lib/**/*"
   ],
   "scripts": {
+    "prepublish": "npm run build",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "pretest": "tslint --config tslint.json --project tsconfig.json",
