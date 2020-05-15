@@ -26,8 +26,9 @@ jobs:
           nodeenv myenv
       - name: Setup local install
         run: |
-          source myenv/bin/activate
+          . myenv/bin/activate
           node --version
+          sudo npm install -g typescript tslint
           npm run build
           sudo npm install -g
           pai -h
