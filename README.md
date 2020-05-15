@@ -13,7 +13,7 @@ It could be used to support existing or future front-ends (e.g. Web Portal, VS C
 ## Installation
 
 ```bash
-npm install --save microsoft/openpaisdk
+npm install --save @microsoft/openpai-js-sdk
 ```
 
 Initialize the `openPAIClient`
@@ -38,7 +38,7 @@ The SDK offers a command line interface (CLI) prefixed by `pai`. For end users t
 pip install nodeenv
 nodeenv myenv
 source myenv/bin/activate # use `myenv/Scripts/activate` instead on Windows
-npm i -g microsoft/openpaisdk
+npm i -g @microsoft/openpai-js-sdk
 ```
 
 This installation commands will generate a virtual environment with latest `node` in the directory `./myenv`, and install the CLI in it. Then user could use `pai` command by any of below methods
