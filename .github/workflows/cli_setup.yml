@@ -24,12 +24,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install nodeenv
           nodeenv myenv
+      - name: Setup local install
+        run: |
           source myenv/bin/activate
           node --version
-          pwd
-          ls
-          ls ~
-      - name: Setup
-        run: |
-          npm install -g
+          sudo npm install -g
           pai -h
+          deactivate_node
