@@ -30,6 +30,6 @@ jobs:
           node --version
           npm install typescript tslint tslint-microsoft-contrib
           npm run build
-          sudo npm install -g
+          npm link
           pai -h
           deactivate_node
