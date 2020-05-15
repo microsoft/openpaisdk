@@ -28,8 +28,7 @@ jobs:
         run: |
           . myenv/bin/activate
           node --version
-          sudo npm install -g typescript tslint 
-          npm install tslint-microsoft-contrib
+          npm install typescript tslint tslint-microsoft-contrib
           npm run build
           sudo npm install -g
           pai -h
