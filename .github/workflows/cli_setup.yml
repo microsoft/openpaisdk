@@ -25,6 +25,10 @@ jobs:
           pip install nodeenv
           nodeenv myenv
           source myenv/bin/activate
+          node --version
+          pwd
+          ls
+          ls ~
       - name: Setup
         run: |
           npm install -g
