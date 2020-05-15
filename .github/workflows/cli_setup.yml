@@ -28,6 +28,7 @@ jobs:
         run: |
           source myenv/bin/activate
           node --version
+          npm run build
           sudo npm install -g
           pai -h
           deactivate_node
