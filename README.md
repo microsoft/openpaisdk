@@ -45,17 +45,17 @@ This installation commands will generate a virtual environment with latest `node
 - activate the virtual environment first
 
     ```bash
-    myenv/Scripts/activate
+    source myenv/bin/activate # use `myenv/Scripts/activate` instead on Windows
     pai -h
     ```
 
 - use a absolute path to `pai`
 
     ```bash
-    myenv/Scripts/pai -h
+    myenv/bin/pai -h # use `myenv/Scripts/pai` instead on Windows
     ```
 
-- add `myenv/Scripts` to environment variable `path`
+- add `myenv/bin` to environment variable `path`
 
 ## RESTful API
 
