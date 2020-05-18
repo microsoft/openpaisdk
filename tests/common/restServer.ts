@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import { IPAICluster } from '@api/v2';
-import * as nock from 'nock';
+import nock from 'nock';
 
 import { testJobList } from '../common/test_data/testJobList';
 import { testJobStatus } from '../common/test_data/testJobStatus';

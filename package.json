@@ -2,8 +2,8 @@
   "name": "@microsoft/openpai-js-sdk",
   "version": "0.0.0",
   "description": "The `Javascript` SDK for `OpenPAI`",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "lib/src/index.js",
+  "types": "lib/src/index.d.ts",
   "files": [
     "lib/**/*"
   ],
@@ -11,9 +11,11 @@
     "prepublishOnly": "npm run build",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
-    "pretest": "tslint --config tslint.json --project tsconfig.json",
-    "test": "mocha -r ts-node/register -r tsconfig-paths/register tests/**/*.spec.ts",
-    "prebuild": "tslint --config tslint.json --project tsconfig.json",
+    "pretest": "npm run preapi-test && tslint --config tslint.json --project tsconfig.json",
+    "test": "mocha -r ts-node/register -r tsconfig-paths/register tests/unit_tests/**/*.spec.ts",
+    "preapi-test": "ts-node -r tsconfig-paths/register tests/common/apiTestCaseGenerator.ts -- \"src/api/v2/swagger.yaml\" \".tests/apiTestCase.json\"",
+    "api-test": "mocha -r ts-node/register -r tsconfig-paths/register tests/api_tests/**/*.spec.ts -t 20000",
+    "prebuild": "tslint --config tslint.json --project tsconfig.build.json",
     "build": "ttsc -p tsconfig.json"
   },
   "homepage": "https://github.com/Microsoft/openpaisdk",
@@ -33,11 +35,13 @@
     "@types/dirty-chai": "^2.0.1",
     "@types/fs-extra": "^8.1.0",
     "@types/js-yaml": "^3.12.1",
+    "@types/lodash": "^4.14.150",
     "@types/mocha": "^5.2.7",
     "@types/mock-fs": "^4.10.0",
     "@types/nock": "^10.0.3",
     "@types/request-promise-native": "^1.0.16",
     "@types/table": "^4.0.7",
+    "ajv": "^6.12.2",
     "chai": "^4.2.0",
     "dirty-chai": "^2.0.1",
     "minimist": ">=1.2.2",
@@ -55,16 +59,19 @@
     "typescript-transform-paths": "^1.1.14"
   },
   "dependencies": {
+    "@apidevtools/swagger-parser": "^9.0.1",
     "@azure/storage-blob": "^12.1.0",
     "argparse": "^1.0.10",
     "axios": "^0.19.2",
     "fs-extra": "^8.1.0",
     "js-yaml": "^3.13.1",
+    "lodash": "^4.17.15",
+    "module-alias": "^2.2.2",
     "request": "^2.88.0",
     "request-promise-native": "^1.0.7",
     "table": "^5.4.6"
   },
   "bin": {
-    "pai": "lib/cli.js"
+    "pai": "lib/src/cli.js"
   }
 }

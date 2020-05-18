@@ -13,6 +13,7 @@ import {
     KubernetesClient,
     OpenPAIBaseClient,
     StorageClient,
+    TokenClient,
     UserClient,
     VirtualClusterClient
 } from '@api/v2/clients';
@@ -30,6 +31,11 @@ export class OpenPAIClient extends OpenPAIBaseClient {
      * OpenPAI User Client.
      */
     public user: UserClient;
+
+    /**
+     * OpenPAI Token Client.
+     */
+    public token: TokenClient;
 
     /**
      * OpenPAI Virtual Cluster Client.
@@ -74,6 +80,7 @@ export class OpenPAIClient extends OpenPAIBaseClient {
     constructor(cluster: IPAICluster, cache?: ICacheRecord[]) {
         super(cluster);
         this.job = new JobClient(cluster);
+        this.token = new TokenClient(cluster);
         this.user = new UserClient(cluster);
         this.virtualCluster = new VirtualClusterClient(cluster);
         this.authn = new AuthnClient(cluster);

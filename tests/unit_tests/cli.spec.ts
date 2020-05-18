@@ -6,8 +6,8 @@ import { registerBuiltinCommands, CliEngine } from '@pai/commands';
 import { Util } from '@pai/commom/util';
 import * as chai from 'chai';
 import { expect } from 'chai';
-import * as dirtyChai from 'dirty-chai';
-import * as mockfs from 'mock-fs';
+import dirtyChai from 'dirty-chai';
+import mockFs from 'mock-fs';
 
 import { fakeRestSrv as F } from '../common/restServer';
 import { testJobStatus } from '../common/test_data/testJobStatus';
@@ -24,7 +24,7 @@ beforeEach(async () => {
             { cluster: OpenPAIBaseClient.parsePaiUri(F.cluster) }
         ])
     };
-    mockfs(mockDirectory);
+    mockFs(mockDirectory);
 });
 
 interface ITestCase {

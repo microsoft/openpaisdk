@@ -7,10 +7,12 @@ import { AxiosError } from 'axios';
  * Base PAI error class.
  */
 export class PAIBaseError extends Error {
-    public code: string;
+    public status: number;
+    public data: any;
 
     constructor(error: AxiosError) {
         super(error.response!.data.message);
-        this.code = error.response!.data.code;
+        this.status = error.response!.status;
+        this.data = error.response!.data;
     }
 }

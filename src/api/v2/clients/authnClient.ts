@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IAuthnInfo, ILoginInfo, IPAICluster } from '@api/v2';
+import { IAuthnInfo, ILoginInfo, IPAICluster, IPAIResponse } from '@api/v2';
 import { Util } from '@pai/commom/util';
 
 import { OpenPAIBaseClient } from './baseClient';
@@ -40,12 +40,12 @@ export class AuthnClient extends OpenPAIBaseClient {
     /**
      * Revoke current login token.
      */
-    public async basicLogout(): Promise<string> {
+    public async basicLogout(): Promise<IPAIResponse> {
         const url: string = Util.fixUrl(
             `${this.cluster.rest_server_uri}/api/v2/authn/basic/logout`,
             this.cluster.https
         );
-        return await this.httpClient.get(url);
+        return await this.httpClient.delete(url);
     }
 
     private async oidcRequest(req: 'login' | 'logout', queryString?: string): Promise<string> {

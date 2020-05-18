@@ -1,0 +1,35 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Test CLI Installation
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [2.7, 3.5]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Create node env
+        run: |
+          python -m pip install --upgrade pip
+          pip install nodeenv
+          nodeenv myenv
+      - name: Setup local install
+        run: |
+          . myenv/bin/activate
+          node --version
+          npm install typescript tslint tslint-microsoft-contrib
+          npm run build
+          npm link
+          pai -h
+          deactivate_node

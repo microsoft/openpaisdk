@@ -4,8 +4,8 @@
 import { IPAICluster, OpenPAIBaseClient } from '@api/v2';
 import * as chai from 'chai';
 import { expect } from 'chai';
-import * as dirtyChai from 'dirty-chai';
-import * as nock from 'nock';
+import dirtyChai from 'dirty-chai';
+import nock from 'nock';
 
 /**
  * Unit tests for baseClient.
@@ -28,7 +28,7 @@ describe('Get token', () => {
 
     it('should return a token', async () => {
         const baseClient: OpenPAIBaseClient = new OpenPAIBaseClient(cluster);
-        const result: any = await baseClient.token();
+        const result: any = await baseClient.getToken();
         expect(result).to.be.a('string');
     });
 });
