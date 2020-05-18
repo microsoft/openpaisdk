@@ -34,9 +34,10 @@ class RandomString {
     }
 }
 
+// A revoked jwt token, from user: sdk_test
 const unauthorizedToken: string =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InlpeWkiLCJhcHBsaWNhdGlvbiI6ZmFsc2' +
-    'UsImlhdCI6MTU4ODgzNDQyNCwiZXhwIjoxNTg5NDM5MjI0fQ.1GHA3t8Moy_y9_sTJA3VTWkNbw1jlw0ef6dKXJX8yYo';
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InNka190ZXN0IiwiYXBwbGljYXRpb24iOmZhbHN' +
+    'lLCJpYXQiOjE1ODk3NzE3NDMsImV4cCI6MTU5MDM3NjU0M30.LxDbmzzhhEQ0SKHOFkNFzstEdxCfTgDnu7nZE7Nm-hA';
 const randomString: RandomString = new RandomString();
 
 const createTestUser: IApiOperation = {
