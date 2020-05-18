@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IPAICluster, IPAIResponse, IUser } from '@api/v2';
+import { IPAICluster, IPAIResponse, IUpdateUserProfile, IUser } from '@api/v2';
 import { Util } from '@pai/commom/util';
 
 import { OpenPAIBaseClient } from './baseClient';
@@ -41,12 +41,12 @@ export class UserClient extends OpenPAIBaseClient {
      * Update a user in the system. Admin only.
      * @param user The user info: { username, email, password, admin, virtualCluster, extension }.
      */
-    public async updateUser(user: IUser): Promise<IPAIResponse> {
+    public async updateUser(user: IUser, patch: boolean = true): Promise<IPAIResponse> {
         const url: string = Util.fixUrl(
             `${this.cluster.rest_server_uri}/api/v2/users`,
             this.cluster.https
         );
-        return this.httpClient.put(url, user);
+        return this.httpClient.put(url, { patch: patch, data: user });
     }
 
     /**
@@ -56,14 +56,12 @@ export class UserClient extends OpenPAIBaseClient {
      * @param newPassword The new password, optional.
      * @param oldPassword The old password, optional.
      */
-    public async updateUserSelf(
-        username: string, email?: string, newPassword?: string, oldPassword?: string
-    ): Promise<IPAIResponse> {
+    public async updateUserSelf(user: IUpdateUserProfile, patch: boolean = true): Promise<IPAIResponse> {
         const url: string = Util.fixUrl(
             `${this.cluster.rest_server_uri}/api/v2/users/me`,
             this.cluster.https
         );
-        return await this.httpClient.put(url, { username, email, newPassword, oldPassword });
+        return await this.httpClient.put(url, { patch: patch, data: user });
     }
 
     /**

@@ -1,8 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { AxiosError } from 'axios';
-
+// tslint:disable: max-classes-per-file
 import { PAIBaseError } from './paiBaseError';
 
 /**
@@ -14,3 +13,8 @@ export class NoJobError extends PAIBaseError {}
  * No job config error.
  */
 export class NoJobConfigError extends PAIBaseError {}
+
+/**
+ * No job config error.
+ */
+export class UnknownError extends PAIBaseError {}

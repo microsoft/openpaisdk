@@ -1,0 +1,10 @@
+[
+    {
+        "alias": "",
+        "rest_server_uri": "hostname/rest-server",
+        "username": "",
+        "password": "",
+        "token": "",
+        "https": true
+    }
+]

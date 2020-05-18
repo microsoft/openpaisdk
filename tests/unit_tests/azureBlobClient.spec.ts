@@ -4,10 +4,10 @@
 import { AzureBlobClient, IAzureBlobCfg, IFileInfo } from '@pai/storage';
 import * as chai from 'chai';
 import { expect } from 'chai';
-import * as dirtyChai from 'dirty-chai';
+import dirtyChai from 'dirty-chai';
 import * as fs from 'fs';
-import * as mockFs from 'mock-fs';
-import * as nock from 'nock';
+import mockFs from 'mock-fs';
+import nock from 'nock';
 import * as os from 'os';
 import * as path from 'path';
 

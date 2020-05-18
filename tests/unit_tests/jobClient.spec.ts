@@ -7,9 +7,9 @@ import {
 } from '@api/v2';
 import * as chai from 'chai';
 import { expect } from 'chai';
-import * as dirtyChai from 'dirty-chai';
+import dirtyChai from 'dirty-chai';
 import * as yaml from 'js-yaml';
-import * as nock from 'nock';
+import nock from 'nock';
 
 import { testJobConfig, testJobConfigV1 } from '../common/test_data/testJobConfig';
 import { testJobList } from '../common/test_data/testJobList';
