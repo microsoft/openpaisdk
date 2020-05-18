@@ -15,7 +15,7 @@ export const testJobConfig: IJobConfig = {
         // tslint:disable-next-line:max-line-length
         'This example uses the simple Softmax Regression model introduced in the TensorFlow tutorial for handwritten image (MNIST data) classification.\n' +
         'Reference https://www.tensorflow.org/tfx/serving/serving_basic.\n',
-    name: 'tensorflow_serving_mnist_2019_6585ba19_test',
+    name: 'sdk_test_job',
     parameters: {
         modelPath: '/tmp/mnist_model'
     },
@@ -52,7 +52,7 @@ export const testJobConfig: IJobConfig = {
         }
     },
     type: 'job',
-    version: 1
+    version: '1.0'
 };
 
 export const testJobConfigV1: IJobConfigV1 = {

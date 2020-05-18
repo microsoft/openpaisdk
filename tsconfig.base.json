@@ -4,11 +4,15 @@
         "module": "commonjs",
         "declaration": true,
         "outDir": "./lib",
+        "rootDir": ".",
         "strict": true,
         "lib": [
             "es2019",
             "DOM"
         ],
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
         "baseUrl": "src",
         "paths": {
             "@pai/*": ["*"],

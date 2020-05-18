@@ -55,7 +55,7 @@ export class OpenPAIBaseClient {
     /**
      * Get OpenPAI access token.
      */
-    public async token(): Promise<string> {
+    public async getToken(): Promise<string> {
         if (!this.cluster.token) {
             const info: ILoginInfo = await this.httpClient.login();
             this.cluster.token = info.token;

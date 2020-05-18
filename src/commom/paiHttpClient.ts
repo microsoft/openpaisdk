@@ -4,6 +4,8 @@
 import { ILoginInfo, IPAICluster } from '@api/v2';
 import { Util } from '@pai/commom/util';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import lodash from 'lodash';
+import querystring from 'querystring';
 
 import { paiError } from './errors/paiError';
 import { processResponse, IPAIResponseProcessor } from './paiResponseProcessor';
@@ -12,7 +14,7 @@ import { processResponse, IPAIResponseProcessor } from './paiResponseProcessor';
  * Http client for PAI rest-server.
  */
 export class PAIHttpClient {
-    protected static readonly TIMEOUT: number = 60 * 1000;
+    protected static readonly TIMEOUT: number = 10 * 1000;
     private readonly cluster: IPAICluster;
 
     constructor(cluster: IPAICluster) {
@@ -27,20 +29,20 @@ export class PAIHttpClient {
         try {
             const res: AxiosResponse<ILoginInfo> = await axios.post(
                 url,
-                {
+                querystring.stringify({
                     expiration: 4000,
                     password: password ? password : this.cluster.password,
                     username: username ? username : this.cluster.username
-                },
+                }),
                 {
                     headers: {
-                        'content-type': 'application/json'
+                        'content-type': 'application/x-www-form-urlencoded'
                     }
                 }
             );
             return res.data;
         } catch (error) {
-            throw error;
+            throw paiError(error);
         }
     }
 
@@ -64,18 +66,27 @@ export class PAIHttpClient {
             const defaultOptions: AxiosRequestConfig = await this.defaultOptions();
             if (processor) {
                 const res: AxiosResponse = await axios.get(
-                    url, { ...{ responseType: 'text' }, ...defaultOptions, ...options }
+                    url,
+                    lodash.merge(
+                        {
+                            ...<AxiosRequestConfig> {
+                                responseType: 'text',
+                                transformResponse: [(data) => { return data; }]
+                            },
+                            ...defaultOptions
+                        },
+                        options
+                    )
                 );
                 return processResponse(res, processor);
             } else {
                 const res: AxiosResponse<T> = await axios.get<T>(
-                    url, { ...defaultOptions, ...options }
+                    url, lodash.merge(defaultOptions, options)
                 );
                 return res.data;
             }
         } catch (error) {
-            paiError(error);
-            throw error;
+            throw paiError(error);
         }
     }
 
@@ -86,17 +97,28 @@ export class PAIHttpClient {
             const defaultOptions: AxiosRequestConfig = await this.defaultOptions();
             if (processor) {
                 const res: AxiosResponse = await axios.post(
-                    url, data, { ...{ responseType: 'text' }, ...defaultOptions, ...options }
+                    url,
+                    data,
+                    lodash.merge(
+                        {
+                            ...<AxiosRequestConfig> {
+                                responseType: 'text',
+                                transformResponse: [(dat) => { return dat; }]
+                            },
+                            ...defaultOptions
+                        },
+                        options
+                    )
                 );
                 return processResponse(res, processor);
             } else {
                 const res: AxiosResponse<T> = await axios.post(
-                    url, data, { ...defaultOptions, ...options }
+                    url, data, lodash.merge(defaultOptions, options)
                 );
                 return res.data;
             }
         } catch (error) {
-            throw error;
+            throw paiError(error);
         }
     }
 
@@ -107,17 +129,28 @@ export class PAIHttpClient {
             const defaultOptions: AxiosRequestConfig = await this.defaultOptions();
             if (processor) {
                 const res: AxiosResponse = await axios.put(
-                    url, data, { ...{ responseType: 'text' }, ...defaultOptions, ...options }
+                    url,
+                    data,
+                    lodash.merge(
+                        {
+                            ...<AxiosRequestConfig> {
+                                responseType: 'text',
+                                transformResponse: [(dat) => { return dat; }]
+                            },
+                            ...defaultOptions
+                        },
+                        options
+                    )
                 );
                 return processResponse(res, processor);
             } else {
                 const res: AxiosResponse<T> = await axios.put(
-                    url, data, { ...defaultOptions, ...options }
+                    url, data, lodash.merge(defaultOptions, options)
                 );
                 return res.data;
             }
         } catch (error) {
-            throw error;
+            throw paiError(error);
         }
     }
 
@@ -128,17 +161,27 @@ export class PAIHttpClient {
             const defaultOptions: AxiosRequestConfig = await this.defaultOptions();
             if (processor) {
                 const res: AxiosResponse = await axios.delete(
-                    url, { ...{ responseType: 'text' }, ...defaultOptions, ...options }
+                    url,
+                    lodash.merge(
+                        {
+                            ...<AxiosRequestConfig> {
+                                responseType: 'text',
+                                transformResponse: [(data) => { return data; }]
+                            },
+                            ...defaultOptions
+                        },
+                        options
+                    )
                 );
                 return processResponse(res, processor);
             } else {
                 const res: AxiosResponse<T> = await axios.delete(
-                    url, { ...defaultOptions, ...options }
+                    url, lodash.merge(defaultOptions, options)
                 );
                 return res.data;
             }
         } catch (error) {
-            throw error;
+            throw paiError(error);
         }
     }
 
