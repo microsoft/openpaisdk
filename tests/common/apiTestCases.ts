@@ -876,7 +876,10 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
                             type: 'raw',
                             value: 'sdk_test_nonexist_job'
                         }
-                    ]
+                    ],
+                    response: {
+                        statusCode: 404
+                    }
                 }
             }
         ],
