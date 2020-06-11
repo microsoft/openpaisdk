@@ -14,9 +14,17 @@ import { ApiDefaultTestCases } from './apiTestCases';
 export class ApiTestCaseGenerator {
     public async generate(
         swaggerPath: string = 'src/api/v2/swagger.yaml', outputPath?: string
-    ): Promise<IApiTestCase[]> {
+    ): Promise<{
+        tests: IApiTestCase[],
+        map: {
+            [key: string]: string
+        }
+    }> {
         const api: any = await swaggerParser.dereference(swaggerPath);
         const tests: IApiTestCase[] = [];
+        const map: {
+            [key: string]: string
+        } = {};
 
         for (const path of Object.keys(api.paths)) {
             const ops: any = api.paths[path];
@@ -24,6 +32,8 @@ export class ApiTestCaseGenerator {
                 if (type === 'parameters') {
                     continue;
                 }
+
+                map[ops[type].operationId] = type;
 
                 const responseCodes: string[] = Object.keys(ops[type].responses);
                 const correctCode: string | undefined =
@@ -97,7 +107,7 @@ export class ApiTestCaseGenerator {
             fs.writeFileSync(outputPath, JSON.stringify(tests));
         }
 
-        return tests;
+        return { tests, map };
     }
 }
 

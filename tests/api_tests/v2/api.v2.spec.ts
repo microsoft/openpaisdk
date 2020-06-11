@@ -6,6 +6,7 @@ import ajv, { Ajv } from 'ajv';
 import * as chai from 'chai';
 import { expect } from 'chai';
 import dirtyChai from 'dirty-chai';
+import nock from 'nock';
 
 import apiTestCaseJson from '../../../.tests/apiTestCase.json';
 import { IApiOperation, IApiTestCase } from '../../common/apiTestCaseGenerator';
@@ -114,7 +115,7 @@ function skipTest(operation: IApiOperation): boolean {
     return false;
 }
 
-function getClientName(tag: string): string {
+export function getClientName(tag: string): string {
     const words: string[] = tag.split(' ');
     if (words.length === 1) {
         return tag;
@@ -123,9 +124,13 @@ function getClientName(tag: string): string {
     return words[0] + words[1].charAt(0).toUpperCase() + words[1].slice(1);
 }
 
-async function runOperation(
-    operation: IApiOperation, operationResults?: IOperationResults
+export async function runOperation(
+    operation: IApiOperation, operationResults?: IOperationResults, mock?: any
 ): Promise<any> {
+    if (mock) {
+        nock()
+    }
+
     const client: any = operation.cluster ?
         (new OpenPAIClient(operation.cluster) as any)[operation.tag!] :
         openPAIClient[getClientName(operation.tag!)];
@@ -175,13 +180,13 @@ async function runOperation(
     return res;
 }
 
-async function runOperations(
-    operations?: IApiOperation[], operationResults?: IOperationResults
+export async function runOperations(
+    operations?: IApiOperation[], operationResults?: IOperationResults, mock?: any
 ): Promise<any> {
     const result: any[] = [];
     if (operations) {
         for (const operation of operations) {
-            const res: any = await runOperation(operation, operationResults);
+            const res: any = await runOperation(operation, operationResults, mock);
             if (res) {
                 result.push(res);
             }
