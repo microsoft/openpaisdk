@@ -16,7 +16,8 @@
     "preapi-test": "ts-node -r tsconfig-paths/register tests/common/apiTestCaseGenerator.ts -- \"src/api/v2/swagger.yaml\" \".tests/apiTestCase.json\"",
     "api-test": "mocha -r ts-node/register -r tsconfig-paths/register tests/api_tests/**/*.spec.ts -t 20000",
     "prebuild": "tslint --config tslint.json --project tsconfig.build.json",
-    "build": "ttsc -p tsconfig.json"
+    "build": "ttsc -p tsconfig.json && npm run copy-swagger",
+    "copy-swagger": "node copy_swagger.js"
   },
   "homepage": "https://github.com/Microsoft/openpaisdk",
   "repository": {
