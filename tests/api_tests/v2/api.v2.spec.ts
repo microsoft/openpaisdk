@@ -4,13 +4,12 @@
 import { IPAIClusterInfo, OpenPAIClient } from '@api/v2';
 import ajv, { Ajv } from 'ajv';
 import * as chai from 'chai';
-import { expect } from 'chai';
 import dirtyChai from 'dirty-chai';
-import nock from 'nock';
 
 import apiTestCaseJson from '../../../.tests/apiTestCase.json';
 import { IApiOperation, IApiTestCase } from '../../common/apiTestCaseGenerator';
 import { CustomizedTests } from '../../common/apiTestCases';
+import { ApiTestRunner } from '../../common/apiTestRunner.js';
 import { TestCluster } from '../../common/testCluster';
 
 /**
@@ -19,28 +18,24 @@ import { TestCluster } from '../../common/testCluster';
 let ajvInstance: Ajv;
 let openPAIClient: any;
 let clusterInfo: IPAIClusterInfo;
-
-export interface IOperationResults {
-    beforeEachResults: any[];
-    beforeResults: any[];
-    testResults: any[];
-}
+let runner: ApiTestRunner;
 
 chai.use(dirtyChai);
 before(async () => {
     ajvInstance = new ajv({ nullable: true });
     openPAIClient = new OpenPAIClient(TestCluster.cluster);
     clusterInfo = await openPAIClient.api.getClusterInfo();
+    runner = new ApiTestRunner(openPAIClient, ajvInstance, apiTestCaseJson.map);
 });
 
-for (const test of apiTestCaseJson as IApiTestCase[]) {
+for (const test of apiTestCaseJson.tests as IApiTestCase[]) {
     let beforeEachResults: any[];
     let beforeResults: any[];
     const testResults: any[] = [];
 
     describe(test.description!, () => {
-        beforeEach(async () => beforeEachResults = await runOperations(test.beforeEach));
-        before(async () => beforeResults = await runOperations(test.before));
+        beforeEach(async () => beforeEachResults = await runner.runOperations(test.beforeEach));
+        before(async () => beforeResults = await runner.runOperations(test.before));
 
         for (const testItem of test.tests) {
             it (testItem.description || test.description || 'unknown test', async () => {
@@ -58,7 +53,7 @@ for (const test of apiTestCaseJson as IApiTestCase[]) {
                         }
                     );
                 } else {
-                    const res: any = await runOperation(
+                    const res: any = await runner.runOperation(
                         testItem.operation!,
                         {
                             beforeEachResults,
@@ -73,14 +68,14 @@ for (const test of apiTestCaseJson as IApiTestCase[]) {
             });
         }
 
-        after(async () => await runOperations(
+        after(async () => await runner.runOperations(
             test.after,
             {
                 beforeEachResults,
                 beforeResults,
                 testResults
             }));
-        afterEach(async () => await runOperations(
+        afterEach(async () => await runner.runOperations(
             test.afterEach,
             {
                 beforeEachResults,
@@ -113,84 +108,4 @@ function skipTest(operation: IApiOperation): boolean {
     }
 
     return false;
-}
-
-export function getClientName(tag: string): string {
-    const words: string[] = tag.split(' ');
-    if (words.length === 1) {
-        return tag;
-    }
-
-    return words[0] + words[1].charAt(0).toUpperCase() + words[1].slice(1);
-}
-
-export async function runOperation(
-    operation: IApiOperation, operationResults?: IOperationResults, mock?: any
-): Promise<any> {
-    if (mock) {
-        nock()
-    }
-
-    const client: any = operation.cluster ?
-        (new OpenPAIClient(operation.cluster) as any)[operation.tag!] :
-        openPAIClient[getClientName(operation.tag!)];
-    const parameters: any[] = [];
-    if (operation.parameters) {
-        for (const para of operation.parameters) {
-            if (para.type === 'raw') {
-                parameters.push(para.value);
-            } else  if (operationResults) {
-                let parameter: any = operationResults[para.resultType!][para.resultIndex!];
-                if (para.resultPath) {
-                    for (const item of para.resultPath) {
-                        parameter = parameter[item];
-                    }
-                }
-                parameters.push(parameter);
-            }
-        }
-    }
-
-    let res: any;
-    try {
-        res = await client[operation.operationId!](...parameters);
-    } catch (err) {
-        if (err !== undefined && operation.response!.statusCode !== err.status) {
-            throw err;
-        } else {
-            res = err.data;
-        }
-    }
-
-    if (operation.response) {
-        if (operation.response.schema) {
-            const valid: boolean = ajvInstance.validate(operation.response.schema, res) as boolean;
-            if (!valid) {
-                console.log(ajvInstance.errors);
-            }
-            expect(valid, 'response should be valid.').to.be.true();
-        }
-        if (operation.response.expectResult) {
-            for (const key of Object.keys(operation.response.expectResult)) {
-                expect(res[key]).to.be.eq(operation.response.expectResult[key]);
-            }
-        }
-    }
-
-    return res;
-}
-
-export async function runOperations(
-    operations?: IApiOperation[], operationResults?: IOperationResults, mock?: any
-): Promise<any> {
-    const result: any[] = [];
-    if (operations) {
-        for (const operation of operations) {
-            const res: any = await runOperation(operation, operationResults, mock);
-            if (res) {
-                result.push(res);
-            }
-        }
-    }
-    return result;
 }

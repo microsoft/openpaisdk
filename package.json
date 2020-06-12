@@ -15,6 +15,7 @@
     "test": "mocha -r ts-node/register -r tsconfig-paths/register tests/unit_tests/**/*.spec.ts",
     "preapi-test": "ts-node -r tsconfig-paths/register tests/common/apiTestCaseGenerator.ts -- \"src/api/v2/swagger.yaml\" \".tests/apiTestCase.json\"",
     "api-test": "mocha -r ts-node/register -r tsconfig-paths/register tests/api_tests/**/*.spec.ts -t 20000",
+    "api-test:mock": "npm run preapi-test && mocha -r ts-node/register -r tsconfig-paths/register tests/unit_tests/v2/v2.specdraft.ts",
     "prebuild": "tslint --config tslint.json --project tsconfig.build.json",
     "build": "ttsc -p tsconfig.json"
   },

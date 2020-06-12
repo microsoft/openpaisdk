@@ -9,9 +9,9 @@ import dirtyChai from 'dirty-chai';
 import nock from 'nock';
 
 import apiTestCaseJson from '../../../.tests/apiTestCase.json';
-import { runOperation, runOperations } from '../../api_tests/v2/api.v2.spec.js';
 import { IApiOperation, IApiTestCase } from '../../common/apiTestCaseGenerator';
 import { CustomizedTests } from '../../common/apiTestCases';
+import { ApiTestRunner } from '../../common/apiTestRunner';
 import { TestCluster } from '../../common/testCluster';
 
 /**
@@ -20,6 +20,7 @@ import { TestCluster } from '../../common/testCluster';
 let ajvInstance: Ajv;
 let openPAIClient: any;
 let clusterInfo: IPAIClusterInfo;
+let runner: ApiTestRunner;
 
 // A revoked jwt token, from user: sdk_test
 const testToken: string =
@@ -29,6 +30,14 @@ const testToken: string =
 const testUrl: string = 'https://openpai.test/rest-server';
 
 const apiGetClusterInfo: string = '/api/v2/info';
+const basicLogin: string = '/api/v2/authn/basic/login';
+
+const testClusterInfo: IPAIClusterInfo = {
+    name: 'PAI RESTful API',
+    version: 'v1.0.1',
+    launcherType: 'k8s',
+    authnMethod: 'basic'
+};
 
 const testCluster: IPAICluster = {
     rest_server_uri: testUrl,
@@ -39,19 +48,24 @@ const testCluster: IPAICluster = {
 
 chai.use(dirtyChai);
 before(async () => {
+    nock(testUrl).get(apiGetClusterInfo).reply(200, testClusterInfo);
+
     ajvInstance = new ajv({ nullable: true });
-    openPAIClient = new OpenPAIClient(TestCluster.cluster);
+    openPAIClient = new OpenPAIClient(testCluster);
     clusterInfo = await openPAIClient.api.getClusterInfo();
+    runner = new ApiTestRunner(openPAIClient, ajvInstance, apiTestCaseJson.map, {
+        rest_server_uri: testUrl
+    });
 });
 
-for (const test of apiTestCaseJson as IApiTestCase[]) {
+for (const test of apiTestCaseJson.tests as IApiTestCase[]) {
     let beforeEachResults: any[];
     let beforeResults: any[];
     const testResults: any[] = [];
 
     describe(test.description!, () => {
-        beforeEach(async () => beforeEachResults = await runOperations(test.beforeEach));
-        before(async () => beforeResults = await runOperations(test.before));
+        beforeEach(async () => beforeEachResults = await runner.runOperations(test.beforeEach));
+        before(async () => beforeResults = await runner.runOperations(test.before));
 
         for (const testItem of test.tests) {
             it (testItem.description || test.description || 'unknown test', async () => {
@@ -66,7 +80,7 @@ for (const test of apiTestCaseJson as IApiTestCase[]) {
                         }
                     );*/
                 } else {
-                    const res: any = await runOperation(
+                    const res: any = await runner.runOperation(
                         testItem.operation!,
                         {
                             beforeEachResults,
@@ -81,14 +95,14 @@ for (const test of apiTestCaseJson as IApiTestCase[]) {
             });
         }
 
-        after(async () => await runOperations(
+        after(async () => await runner.runOperations(
             test.after,
             {
                 beforeEachResults,
                 beforeResults,
                 testResults
             }));
-        afterEach(async () => await runOperations(
+        afterEach(async () => await runner.runOperations(
             test.afterEach,
             {
                 beforeEachResults,

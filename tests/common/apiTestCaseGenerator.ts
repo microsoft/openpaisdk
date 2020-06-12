@@ -16,15 +16,11 @@ export class ApiTestCaseGenerator {
         swaggerPath: string = 'src/api/v2/swagger.yaml', outputPath?: string
     ): Promise<{
         tests: IApiTestCase[],
-        map: {
-            [key: string]: string
-        }
+        map: any
     }> {
         const api: any = await swaggerParser.dereference(swaggerPath);
         const tests: IApiTestCase[] = [];
-        const map: {
-            [key: string]: string
-        } = {};
+        const map: any = {};
 
         for (const path of Object.keys(api.paths)) {
             const ops: any = api.paths[path];
@@ -33,7 +29,11 @@ export class ApiTestCaseGenerator {
                     continue;
                 }
 
-                map[ops[type].operationId] = type;
+                map[ops[type].operationId] = {
+                    path: path,
+                    method: type,
+                    examples: {}
+                };
 
                 const responseCodes: string[] = Object.keys(ops[type].responses);
                 const correctCode: string | undefined =
@@ -41,7 +41,7 @@ export class ApiTestCaseGenerator {
                 let testResponse: any;
                 if (correctCode !== undefined) {
                     testResponse = {
-                        statusCode: correctCode
+                        statusCode: Number(correctCode)
                     };
                     const correctResponse: any = ops[type].responses[correctCode];
                     if (correctResponse.content) {
@@ -61,10 +61,8 @@ export class ApiTestCaseGenerator {
                         description: testName,
                         tests: [{}]
                     };
-
-                if (!test.schemas) {
-                    test.schemas = {};
-                }
+                this.fillMap(responseCodes, ops[type], map);
+                test.schemas = {};
                 responseCodes.forEach(code => {
                     if (!test.schemas![code]) {
                         test.schemas![code] = ops[type].responses[code];
@@ -104,10 +102,27 @@ export class ApiTestCaseGenerator {
         }
 
         if (outputPath) {
-            fs.writeFileSync(outputPath, JSON.stringify(tests));
+            fs.writeFileSync(outputPath, JSON.stringify({ tests, map }));
         }
 
         return { tests, map };
+    }
+
+    private fillMap(responseCodes: string[], opsType: any, map: any): void {
+        responseCodes.forEach(code => {
+            if (opsType.responses[code].content) {
+                for (const contentType of Object.keys(opsType.responses[code].content)) {
+                    const content: any = opsType.responses[code].content[contentType];
+                    if (content.example) {
+                        map[opsType.operationId].examples[code] =
+                            opsType.responses[code].content[contentType].example;
+                    } else if (content.examples) {
+                        map[opsType.operationId].examples[code] =
+                            Object.values(opsType.responses[code].content[contentType].examples)[0];
+                    }
+                }
+            }
+        });
     }
 }
 

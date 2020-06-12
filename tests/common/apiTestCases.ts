@@ -9,9 +9,9 @@ import { expect } from 'chai';
 import crypto from 'crypto';
 
 import clustersJson from '../../.tests/clusters.json';
-import { IOperationResults } from '../api_tests/v2/api.v2.spec';
 
 import { IApiOperation, IApiTestCase, IApiTestItem } from './apiTestCaseGenerator';
+import { IOperationResults } from './apiTestRunner';
 import { testJobConfig } from './test_data/testJobConfig';
 
 /**
