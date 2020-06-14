@@ -29,6 +29,7 @@ jobs:
       run: |
         npm install
         npm run code-coverage
+        mkdir coverage
         npm run coveralls
 
     - name: Coveralls GitHub Action
