@@ -67,14 +67,6 @@ for (const test of apiTestCaseJson.tests as IApiTestCase[]) {
             it (testItem.description || test.description || 'unknown test', async () => {
                 if (testItem.customizedTest) {
                     return;
-                    /*await (CustomizedTests as any)[testItem.customizedTest](
-                        testItem,
-                        {
-                            beforeEachResults,
-                            beforeResults,
-                            testResults
-                        }
-                    );*/
                 } else {
                     const res: any = await runner.runOperation(
                         testItem.operation!,

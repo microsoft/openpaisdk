@@ -3,8 +3,7 @@
     "all": true,
     "cache": false,
     "include": [
-        "src/**/*.ts",
-        "lib/src/**/*.js"
+        "src/**/*.ts"
     ],
     "require": [
         "ts-node/register",

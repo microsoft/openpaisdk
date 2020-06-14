@@ -9,7 +9,7 @@ import dirtyChai from 'dirty-chai';
 import apiTestCaseJson from '../../../.tests/apiTestCase.json';
 import { IApiOperation, IApiTestCase } from '../../common/apiTestCaseGenerator';
 import { CustomizedTests } from '../../common/apiTestCases';
-import { ApiTestRunner } from '../../common/apiTestRunner.js';
+import { ApiTestRunner } from '../../common/apiTestRunner';
 import { TestCluster } from '../../common/testCluster';
 
 /**
