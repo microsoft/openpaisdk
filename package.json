@@ -12,7 +12,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "pretest": "npm run preapi-test && tslint --config tslint.json --project tsconfig.json",
-    "test": "mocha -r ts-node/register -r tsconfig-paths/register -r source-map-support/register tests/unit_tests/**/*.spec.ts",
+    "test": "mocha -r ts-node/register -r tsconfig-paths/register -r source-map-support/register --recursive \"tests/unit_tests/**/*.spec.ts\"",
     "preapi-test": "ts-node -r tsconfig-paths/register tests/common/apiTestCaseGenerator.ts -- \"src/api/v2/swagger.yaml\" \".tests/apiTestCase.json\"",
     "api-test": "mocha -r ts-node/register -r tsconfig-paths/register tests/api_tests/**/*.spec.ts -t 20000",
     "mock-api-test": "npm run preapi-test && mocha -r ts-node/register -r tsconfig-paths/register tests/unit_tests/v2/v2.spec.ts",
@@ -20,7 +20,7 @@
     "build": "ttsc -p tsconfig.json && npm run copy-swagger",
     "copy-swagger": "node copy_swagger.js",
     "precode-coverage": "npm run build && npm run pretest",
-    "code-coverage": "nyc mocha -r ts-node/register -r tsconfig-paths/register -r source-map-support/register tests/unit_tests/**/*.spec.ts",
+    "code-coverage": "nyc mocha -r ts-node/register -r tsconfig-paths/register -r source-map-support/register \"tests/unit_tests/**/*.spec.ts\"",
     "coveralls": "nyc report --reporter=text-lcov > coverage/lcov.info"
   },
   "homepage": "https://github.com/Microsoft/openpaisdk",
