@@ -4,15 +4,12 @@
 import { IPAICluster, IPAIClusterInfo, OpenPAIClient } from '@api/v2';
 import ajv, { Ajv } from 'ajv';
 import * as chai from 'chai';
-import { expect } from 'chai';
 import dirtyChai from 'dirty-chai';
 import nock from 'nock';
 
 import apiTestCaseJson from '../../../.tests/apiTestCase.json';
-import { IApiOperation, IApiTestCase } from '../../common/apiTestCaseGenerator';
-import { CustomizedTests } from '../../common/apiTestCases';
+import { IApiTestCase } from '../../common/apiTestCaseGenerator';
 import { ApiTestRunner } from '../../common/apiTestRunner';
-import { TestCluster } from '../../common/testCluster';
 
 /**
  * End to end tests for OpenPAI API v2.
@@ -30,7 +27,6 @@ const testToken: string =
 const testUrl: string = 'https://openpai.test/rest-server';
 
 const apiGetClusterInfo: string = '/api/v2/info';
-const basicLogin: string = '/api/v2/authn/basic/login';
 
 const testClusterInfo: IPAIClusterInfo = {
     name: 'PAI RESTful API',

@@ -1,18 +1,12 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IPAIClusterInfo, OpenPAIClient } from '@api/v2';
-import ajv, { Ajv } from 'ajv';
-import * as chai from 'chai';
+import { OpenPAIClient } from '@api/v2';
+import { Ajv } from 'ajv';
 import { expect } from 'chai';
-import dirtyChai from 'dirty-chai';
 import nock from 'nock';
 
-import apiTestCaseJson from '../../.tests/apiTestCase.json';
-
-import { IApiOperation, IApiTestCase } from './apiTestCaseGenerator';
-import { CustomizedTests } from './apiTestCases';
-import { TestCluster } from './testCluster';
+import { IApiOperation } from './apiTestCaseGenerator';
 
 export interface IOperationResults {
     beforeEachResults: any[];
