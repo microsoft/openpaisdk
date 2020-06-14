@@ -2,6 +2,8 @@
 
 [![Build Status](https://www.travis-ci.org/microsoft/openpaisdk.svg?branch=master)](https://travis-ci.org/microsoft/openpaisdk)
 
+[![Coverage Status](https://coveralls.io/repos/github/microsoft/openpaisdk/badge.svg)](https://coveralls.io/github/microsoft/openpaisdk)
+
 The `JavaScript` SDK is designed to facilitate the developers of [OpenPAI](https://github.com/microsoft/pai) to offer user friendly experience.
 
 The SDK mainly provides client side sharable functions such as RESTful API wrapping, error handling, storage accessing and processing of [job protocol](https://github.com/microsoft/openpai-protocol). *Now the OpenPAI RESTful API is updating, please waiting for our stable release.*
