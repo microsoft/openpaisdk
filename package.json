@@ -20,7 +20,7 @@
     "build": "ttsc -p tsconfig.json && npm run copy-swagger",
     "copy-swagger": "node copy_swagger.js",
     "precode-coverage": "npm run build && npm run pretest",
-    "code-coverage": "nyc mocha -r ts-node/register -r tsconfig-paths/register -r source-map-support/register \"tests/unit_tests/**/*.spec.ts\"",
+    "code-coverage": "nyc mocha -r ts-node/register -r tsconfig-paths/register -r source-map-support/register \"tests/unit_tests/**/*.spec.ts\" --exit",
     "coveralls": "nyc report --reporter=text-lcov > coverage/lcov.info"
   },
   "homepage": "https://github.com/Microsoft/openpaisdk",
