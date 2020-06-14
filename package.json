@@ -21,7 +21,7 @@
     "copy-swagger": "node copy_swagger.js",
     "precode-coverage": "npm run build && npm run pretest",
     "code-coverage": "nyc mocha -r ts-node/register -r tsconfig-paths/register -r source-map-support/register --recursive tests/unit_tests/**/*.spec.ts",
-    "coveralls": "nyc report --reporter=text-lcov"
+    "coveralls": "nyc report --reporter=text-lcov > coverage/lcov.info"
   },
   "homepage": "https://github.com/Microsoft/openpaisdk",
   "repository": {
