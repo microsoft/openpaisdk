@@ -25,10 +25,12 @@ jobs:
       with:
         node-version: 12.x
 
-    - name: npm install, build
+    - name: npm install, build, test
       run: |
         npm install
         npm run build
+        npm run code-coverage
+        npm run coveralls
 
     - name: Coveralls GitHub Action
       uses: coverallsapp/github-action@v1.1.1
