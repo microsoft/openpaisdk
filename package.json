@@ -20,7 +20,7 @@
     "build": "ttsc -p tsconfig.json && npm run copy-swagger",
     "copy-swagger": "node copy_swagger.js",
     "precode-coverage": "npm run build && npm run pretest",
-    "code-coverage": "nyc mocha -r ts-node/register -r tsconfig-paths/register -r source-map-support/register \"tests/unit_tests/**/*.spec.ts\" --exit",
+    "code-coverage": "nyc mocha --reporter dot -r ts-node/register -r tsconfig-paths/register -r source-map-support/register \"tests/unit_tests/**/*.spec.ts\" --exit",
     "coveralls": "nyc report --reporter=text-lcov > coverage/lcov.info"
   },
   "homepage": "https://github.com/Microsoft/openpaisdk",
@@ -72,7 +72,7 @@
     "@azure/storage-blob": "^12.1.0",
     "argparse": "^1.0.10",
     "axios": "^0.19.2",
-    "fs-extra": "^8.1.0",
+    "fs-extra": "^9.0.1",
     "js-yaml": "^3.13.1",
     "lodash": "^4.17.15",
     "module-alias": "^2.2.2",
