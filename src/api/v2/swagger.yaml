@@ -1687,6 +1687,7 @@ components:
                 Epoch.
             appId:
               type: string
+              nullable: true
               description: unique id for the job
             appLaunchedTime:
               type: integer
