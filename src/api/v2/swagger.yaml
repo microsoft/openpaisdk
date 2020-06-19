@@ -2206,6 +2206,7 @@ components:
                           - UNKNOWN
                       containerId:
                         type: string
+                        nullable: true
                       containerIp:
                         type: string
                       containerGpus:
