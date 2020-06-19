@@ -141,6 +141,9 @@ async function runOperation(
                         parameter = parameter[item];
                     }
                 }
+                if (!parameter) {
+                    return;
+                }
                 parameters.push(parameter);
             }
         }
