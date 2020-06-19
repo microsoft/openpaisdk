@@ -78,16 +78,15 @@ export class PAIHttpClient {
                         options
                     )
                 );
-                console.log(res);
                 return processResponse(res, processor);
             } else {
                 const res: AxiosResponse<T> = await axios.get<T>(
                     url, lodash.merge(defaultOptions, options)
                 );
-                console.log(res);
                 return res.data;
             }
         } catch (error) {
+            console.log(error);
             throw paiError(error);
         }
     }
