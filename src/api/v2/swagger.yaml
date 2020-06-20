@@ -1687,7 +1687,6 @@ components:
                 Epoch.
             appId:
               type: string
-              nullable: true
               description: unique id for the job
             appLaunchedTime:
               type: integer
@@ -1780,7 +1779,6 @@ components:
             - retries
             - createdTime
             - completedTime
-            - appId
             - appLaunchedTime
             - appCompletedTime
             - appExitCode
