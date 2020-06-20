@@ -1822,6 +1822,7 @@ components:
                       description: uid of the task container
                     containerIp:
                       type: string
+                      nullable: true
                       description: ip of the task container
                     containerPorts:
                       type: object
