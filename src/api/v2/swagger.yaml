@@ -1818,6 +1818,7 @@ components:
                         - UNKNOWN
                     containerId:
                       type: string
+                      nullable: true
                       description: uid of the task container
                     containerIp:
                       type: string
