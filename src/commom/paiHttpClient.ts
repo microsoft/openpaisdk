@@ -86,7 +86,6 @@ export class PAIHttpClient {
                 return res.data;
             }
         } catch (error) {
-            console.log(error);
             throw paiError(error);
         }
     }
