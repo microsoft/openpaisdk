@@ -885,7 +885,7 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
         ],
         after: [ updateTestJobExecutionType('STOP') ]
     },
-    'put /api/v2/jobs/{user}~{job}/exectionType': {
+    'put /api/v2/jobs/{user}~{job}/executionType': {
         before: [ createTestJob() ],
         tests: [
             {

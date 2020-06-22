@@ -1083,7 +1083,7 @@ paths:
                   $ref: '#/components/responses/NoJobConfigError/content/application~1json/examples/NoJobConfigError'
         '500':
           $ref: '#/components/responses/UnknownError'
-  '/api/v2/jobs/{user}~{job}/exectionType':
+  '/api/v2/jobs/{user}~{job}/executionType':
     put:
       tags:
         - job
