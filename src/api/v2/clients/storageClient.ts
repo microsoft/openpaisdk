@@ -20,12 +20,14 @@ export class StorageClient extends OpenPAIBaseClient {
     /**
      * Get storage list for which current user has permissions.
      */
-    public async getStorages(): Promise<IStorageSummary> {
+    public async getStorages(filterDefault?: boolean): Promise<IStorageSummary> {
         const url: string = Util.fixUrl(
             `${this.cluster.rest_server_uri}/api/v2/storages`,
             this.cluster.https
         );
-        return await this.httpClient.get(url);
+        return await this.httpClient.get(
+            url, undefined, undefined, filterDefault ? { default: filterDefault } : undefined
+        );
     }
 
     /**
