@@ -27,6 +27,8 @@ beforeEach(async () => {
     mockFs(mockDirectory);
 });
 
+afterEach(mockFs.restore);
+
 interface ITestCase {
     name: string;
     command: string[];
@@ -72,7 +74,7 @@ const testCases: ITestCase[] = [
 ];
 
 for (const tc of testCases) {
-    describe(tc.name, async () => {
+    describe(tc.name, () => {
         for (const d of tc.dependencies || []) {
             before(d);
         }

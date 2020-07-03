@@ -6,3 +6,5 @@ node_modules
 .tests/
 .lib/
 lib/
+.nyc_output/
+coverage/
