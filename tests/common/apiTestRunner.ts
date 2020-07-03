@@ -62,8 +62,15 @@ export class ApiTestRunner {
                     let parameter: any = operationResults[para.resultType!][para.resultIndex!];
                     if (para.resultPath) {
                         for (const item of para.resultPath) {
-                            parameter = parameter[item];
+                            if (parameter) {
+                                parameter = parameter[item];
+                            } else {
+                                return;
+                            }
                         }
+                    }
+                    if (!parameter) {
+                        return;
                     }
                     parameters.push(parameter);
                 }
