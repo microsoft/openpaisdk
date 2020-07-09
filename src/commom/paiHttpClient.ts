@@ -15,13 +15,20 @@ import { processResponse, IPAIResponseProcessor } from './paiResponseProcessor';
  */
 export class PAIHttpClient {
     protected static readonly TIMEOUT: number = 10 * 1000;
+    protected static readonly EXPIRATION: number = 4000;
     private readonly cluster: IPAICluster;
 
     constructor(cluster: IPAICluster) {
         this.cluster = cluster;
     }
 
-    public async login(username?: string, password?: string): Promise<ILoginInfo> {
+    /**
+     * Login by username and password.
+     * @param username Username, set undefined to use the username in cluster setting.
+     * @param password Password, set undefined to use the password in cluster setting.
+     * @param expiration Expiration time in seconds, default 4000s.
+     */
+    public async login(username?: string, password?: string, expiration?: number): Promise<ILoginInfo> {
         const url: string = Util.fixUrl(
             `${this.cluster.rest_server_uri}/api/v2/authn/basic/login`,
             this.cluster.https
@@ -30,7 +37,7 @@ export class PAIHttpClient {
             const res: AxiosResponse<ILoginInfo> = await axios.post(
                 url,
                 querystring.stringify({
-                    expiration: 4000,
+                    expiration: expiration || PAIHttpClient.EXPIRATION,
                     password: password ? password : this.cluster.password,
                     username: username ? username : this.cluster.username
                 }),
