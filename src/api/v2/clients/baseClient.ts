@@ -48,6 +48,8 @@ export class OpenPAIBaseClient {
             if (!cluster.alias) {
                 cluster.alias = paiUri.hostname;
             }
+
+            cluster.rest_server_uri = cluster.rest_server_uri.replace(/\/+$/, '');
         }
         return cluster;
     }
