@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-import { IAuthnInfo, ILoginInfo, IPAICluster, IPAIResponse } from '@api/v2';
+import { ILoginInfo, IPAICluster, IPAIResponse } from '@api/v2';
 import { Util } from '@pai/commom/util';
 
 import { OpenPAIBaseClient } from './baseClient';
@@ -32,9 +32,10 @@ export class AuthnClient extends OpenPAIBaseClient {
      * Get an access token using username and password.
      * @param username Username, set undefined to use the username in cluster setting.
      * @param password Password, set undefined to use the password in cluster setting.
+     * @param expiration Expiration time in seconds, default 4000s.
      */
-    public async basicLogin(username?: string, password?: string): Promise<ILoginInfo> {
-        return await this.httpClient.login(username, password);
+    public async basicLogin(username?: string, password?: string, expiration?: number): Promise<ILoginInfo> {
+        return await this.httpClient.login(username, password, expiration);
     }
 
     /**
