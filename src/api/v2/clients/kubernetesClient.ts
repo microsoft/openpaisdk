@@ -19,12 +19,12 @@ export class KubernetesClient extends OpenPAIBaseClient {
     /**
      * Get kubernetes node list. Need administrator permission.
      */
-    public async getK8sNodes(): Promise<any> {
+    public async getK8sNodes(namespace?: string): Promise<any> {
         const url: string = Util.fixUrl(
             `${this.cluster.rest_server_uri}/api/v2/kubernetes/nodes`,
             this.cluster.https
         );
-        return await this.httpClient.get(url);
+        return await this.httpClient.get(url, undefined, undefined, namespace ? { namespace } : undefined);
     }
 
     /**
