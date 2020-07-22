@@ -1,6 +1,6 @@
 {
   "name": "@microsoft/openpai-js-sdk",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "The `Javascript` SDK for `OpenPAI`",
   "main": "lib/src/index.js",
   "types": "lib/src/index.d.ts",
