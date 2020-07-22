@@ -17,6 +17,7 @@ export interface IPAICluster {
     k8s_dashboard_uri?: string;
     web_portal_uri?: string;
     protocol_version?: string;
+    request_timeout?: number;
 }
 
 /**

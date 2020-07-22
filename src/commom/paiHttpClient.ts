@@ -14,7 +14,7 @@ import { processResponse, IPAIResponseProcessor } from './paiResponseProcessor';
  * Http client for PAI rest-server.
  */
 export class PAIHttpClient {
-    protected static readonly TIMEOUT: number = 10 * 1000;
+    protected static readonly TIMEOUT: number = 60 * 1000;
     protected static readonly EXPIRATION: number = 4000;
     private readonly cluster: IPAICluster;
 
@@ -203,7 +203,7 @@ export class PAIHttpClient {
                 Authorization: `Bearer ${this.cluster.token}`,
                 'content-type': 'application/json'
             },
-            timeout: PAIHttpClient.TIMEOUT
+            timeout: this.cluster.request_timeout || PAIHttpClient.TIMEOUT
         };
     }
 }
