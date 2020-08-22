@@ -41,7 +41,7 @@ export class JobClient extends OpenPAIBaseClient {
      * Get the list of jobs.
      * @param query filter jobs by username, vc, state and keyword. Set offset, limit, order and withTotalCount.
      */
-    public async listJobs(query?: IJobListQeury): Promise<IJobInfo[]> {
+    public async listJobs(query?: IJobListQeury): Promise<IJobInfo[] | { totalCount: number, data: IJobInfo[] }> {
         const url: string = Util.fixUrl(
             `${this.cluster.rest_server_uri}/api/v2/jobs`,
             this.cluster.https
