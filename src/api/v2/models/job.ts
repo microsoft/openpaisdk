@@ -29,6 +29,30 @@ export interface IJobInfo {
     totalTaskRoleNumber: number;
 }
 
+/**
+ * Query object for list job, filter jobs by username, vc, state and keyword. Set offset, limit, order and withTotalCount.
+ * e.g.
+ * {
+ *    username: 'user1,user2',
+ *    vc: 'vc1,vc2',
+ *    state: 'RUNNING,WAITING,STOPPED',
+ *    keyword: 'mnist',
+ *    offset: 0,
+ *    order: 'submissionTime,DESC',
+ *    withTotalCount: false
+ * }
+ */
+export interface IJobListQeury {
+    username?: string;
+    vc?: string;
+    state?: string;
+    keyword?: string;
+    offset?: number;
+    limit?: number;
+    order?: string; // format <field>,<ASC|DESC>, default value is "submissionTime,DESC"
+    withTotalCount?: boolean;
+}
+
 export interface IAppExitSpec {
     code: number;
     phrase: string;
