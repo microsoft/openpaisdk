@@ -7,6 +7,8 @@ import {
 import { Util } from '@pai/commom/util';
 import * as yaml from 'js-yaml';
 
+import { IJobListQeury } from '../models/job';
+
 import { OpenPAIBaseClient } from './baseClient';
 
 /**
@@ -37,15 +39,15 @@ export class JobClient extends OpenPAIBaseClient {
 
     /**
      * Get the list of jobs.
-     * @param username filter jobs with username.
+     * @param query filter jobs by username, vc, state and keyword. Set offset, limit, order and withTotalCount.
      */
-    public async listJobs(username?: string): Promise<IJobInfo[]> {
+    public async listJobs(query?: IJobListQeury): Promise<IJobInfo[] | { totalCount: number, data: IJobInfo[] }> {
         const url: string = Util.fixUrl(
             `${this.cluster.rest_server_uri}/api/v2/jobs`,
             this.cluster.https
         );
         return await this.httpClient.get(
-            url, undefined, undefined, { username }
+            url, undefined, undefined, query
         );
     }
 

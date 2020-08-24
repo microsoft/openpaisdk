@@ -37,7 +37,7 @@ describe('List jobs', () => {
     // tslint:disable-next-line:mocha-no-side-effect-code
     it('should return a list of jobs', async () => {
         const jobClient: JobClient = new JobClient(cluster);
-        const result: IJobInfo[] = await jobClient.listJobs();
+        const result: any = await jobClient.listJobs();
         expect(result).is.not.empty();
     }).timeout(10000);
 });
@@ -50,8 +50,22 @@ describe('List jobs with query', () => {
     // tslint:disable-next-line:mocha-no-side-effect-code
     it('should return a list of jobs', async () => {
         const jobClient: JobClient = new JobClient(cluster);
-        const result: IJobInfo[] = await jobClient.listJobs('core');
+        const result: any = await jobClient.listJobs({ username: 'core' });
         expect(result).is.not.empty();
+    }).timeout(10000);
+});
+
+describe('List jobs with total count', () => {
+    const response: any = { totalCount: 1, data: testJobList };
+    const queryString: string = 'username=core&withTotalCount=true';
+    before(() => nock(`http://${testUri}`).get(`/api/v2/jobs?${queryString}`).reply(200, response));
+
+    // tslint:disable-next-line:mocha-no-side-effect-code
+    it('should return a list of jobs', async () => {
+        const jobClient: JobClient = new JobClient(cluster);
+        const result: any = await jobClient.listJobs({ username: 'core', withTotalCount: true });
+        expect(result.totalCount).equal(1);
+        expect(result.data).is.not.empty();
     }).timeout(10000);
 });
 

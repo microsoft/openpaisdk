@@ -25,7 +25,7 @@ export function registerJobCommands(cli: CliEngine): void {
             if (a.all) {
                 return client.job.listJobs();
             }
-            return client.job.listJobs(a.user || client.config.username());
+            return client.job.listJobs({ username: a.user || client.config.username() });
         },
         [
             {
