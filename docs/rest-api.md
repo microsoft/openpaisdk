@@ -207,6 +207,18 @@ const openPAIClient = new PAIV2.OpenPAIClient(cluster);
     await openPAIClient.job.updateJobExecutionType(username, jobname, 'STOP');
     ```
 
+- [x] Add a tag to a job (PUT /api/v2/jobs/{username}~{jobname}/tag)
+
+    ```ts
+    await openPAIClient.job.addTag(username, jobname, tag);
+    ```
+
+- [x] Delete a tag from a job (DELETE /api/v2/jobs/{username}~{jobname}/tag)
+
+    ```ts
+    await openPAIClient.job.deleteTag(username, jobname, tag);
+    ```
+
 ## job history
 
 - [x] Check if job attempts is healthy (GET /api/v2/jobs/{username}~{jobname}/job-attempts/healthz)

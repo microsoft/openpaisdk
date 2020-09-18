@@ -156,3 +156,33 @@ describe('Stop a job', () => {
         expect(result).to.be.eql(response);
     });
 });
+
+describe('Add a tag', () => {
+    const response: any = {
+        message: 'Add tag testTag for job tensorflow_serving_mnist_2019_6585ba19 successfully.'
+    };
+    const userName: string = 'core';
+    const jobName: string = 'tensorflow_serving_mnist_2019_6585ba19';
+    before(() => nock(`http://${testUri}`).put(`/api/v2/jobs/${userName}~${jobName}/tag`).reply(200, response));
+
+    it('should add a tag', async () => {
+        const jobClient: JobClient = new JobClient(cluster);
+        const result: any = await jobClient.addTag(userName, jobName, 'testTag');
+        expect(result).to.be.eql(response);
+    });
+});
+
+describe('Delete a tag', () => {
+    const response: any = {
+        message: 'Delete tag testTag from job tensorflow_serving_mnist_2019_6585ba19 successfully.'
+    };
+    const userName: string = 'core';
+    const jobName: string = 'tensorflow_serving_mnist_2019_6585ba19';
+    before(() => nock(`http://${testUri}`).delete(`/api/v2/jobs/${userName}~${jobName}/tag`).reply(200, response));
+
+    it('should delete a tag', async () => {
+        const jobClient: JobClient = new JobClient(cluster);
+        const result: any = await jobClient.deleteTag(userName, jobName, 'testTag');
+        expect(result).to.be.eql(response);
+    });
+});

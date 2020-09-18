@@ -94,4 +94,32 @@ export class JobClient extends OpenPAIBaseClient {
         );
         return await this.httpClient.put(url, { value: type });
     }
+
+    /**
+     * Add a tag.
+     * @param userName The user name.
+     * @param jobName The job name.
+     * @param tag The tag.
+     */
+    public async addTag(userName: string, jobName: string, tag: string): Promise<any> {
+        const url: string = Util.fixUrl(
+            `${this.cluster.rest_server_uri}/api/v2/jobs/${userName}~${jobName}/tag`,
+            this.cluster.https
+        );
+        return await this.httpClient.put(url, { value: tag });
+    }
+
+    /**
+     * Delelte a tag.
+     * @param userName The user name.
+     * @param jobName The job name.
+     * @param tag The tag.
+     */
+    public async deleteTag(userName: string, jobName: string, tag: string): Promise<any> {
+        const url: string = Util.fixUrl(
+            `${this.cluster.rest_server_uri}/api/v2/jobs/${userName}~${jobName}/tag`,
+            this.cluster.https
+        );
+        return await this.httpClient.delete(url, undefined, { data: { value: tag } });
+    }
 }
