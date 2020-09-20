@@ -15,6 +15,7 @@ import {
     UserClient,
     VirtualClusterClient
 } from './clients';
+import { ClusterClient } from './clients/clusterClient';
 import { GroupClient } from './clients/groupClient';
 import { StorageNodeV2 as StorageNode } from './clients/storageClient';
 import { IAuthnInfo, ILoginInfo } from './models/authn';
@@ -32,6 +33,7 @@ import { INodeResource, IVirtualCluster } from './models/virtualCluster';
  */
 export {
     AuthnClient,
+    ClusterClient,
     JobClient,
     OpenPAIClient,
     OpenPAIBaseClient,
