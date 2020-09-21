@@ -81,11 +81,11 @@ const deleteTestGroup: IApiOperation = {
     }]
 };
 
-const addTestTag: IApiOperation = {
-    tag: 'job',
-    operationId: 'addTag',
-    parameters: [
-        {
+function addTestTag(): IApiOperation {
+    return {
+        tag: 'job',
+        operationId: 'addTag',
+        parameters: [{
             type: 'raw',
             value: clustersJson[0].username
         },
@@ -96,15 +96,15 @@ const addTestTag: IApiOperation = {
         {
             type: 'raw',
             value: 'testTag'
-        }
-    ]
-};
+        }]
+    };
+}
 
-const deleteTestTag: IApiOperation = {
-    tag: 'job',
-    operationId: 'deleteTag',
-    parameters: [
-        {
+function deleteTestTag(): IApiOperation {
+    return {
+        tag: 'job',
+        operationId: 'deleteTag',
+        parameters: [{
             type: 'raw',
             value: clustersJson[0].username
         },
@@ -115,9 +115,9 @@ const deleteTestTag: IApiOperation = {
         {
             type: 'raw',
             value: 'testTag'
-        }
-    ]
-};
+        }]
+    };
+}
 
 function createTestJob(): IApiOperation {
     return {
@@ -939,14 +939,14 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
     'put /api/v2/jobs/{user}~{job}/tag': {
         before: [ createTestJob() ],
         tests: [{
-            operation: addTestTag
+            operation: addTestTag()
         }],
-        after: [ updateTestJobExecutionType('STOP'), deleteTestTag ]
+        after: [ updateTestJobExecutionType('STOP'), deleteTestTag() ]
     },
     'delete /api/v2/jobs/{user}~{job}/tag': {
-        before: [ createTestJob(), addTestTag ],
+        before: [ createTestJob(), addTestTag() ],
         tests: [{
-            operation: deleteTestTag
+            operation: deleteTestTag()
         }],
         after: [ updateTestJobExecutionType('STOP') ]
     },
