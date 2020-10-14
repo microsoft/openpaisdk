@@ -2126,6 +2126,84 @@ components:
           - createdTime
           - completedTime
           - appExitCode
+    JobEventsWithTotalCount:
+      type: object
+      properties:
+        totalCount:
+          type: number
+          description: total count of events with given filters
+        data:
+          $ref: "#/components/schemas/JobEvents"
+      required:
+        - totalCount
+        - data
+    JobEvents:
+      type: array
+      description: job event list
+      items:
+        type: object
+        properties:
+          uid:
+            type: string
+            description: event uid
+          frameworkName:
+            type: string
+            description: related framework name
+          podUid:
+            type: string
+            description: pod uid of the event
+          taskroleName:
+            type: string
+            description: taskrole name of the event
+          taskName:
+            type: string
+            description: task name of the event
+          taskIndex:
+            type: integer
+            description: task index of the event
+          type:
+            type: string
+            description: type of the event
+            enum:
+              - Normal
+              - Warning
+          reason:
+            type: string
+            description: event reason
+          message:
+            type: string
+            description: event message
+          firstTimestamp:
+            type: string
+            description: firstTimestamp of the event
+          lastTimestamp:
+            type: string
+            description: lastTimestamp of the event
+          count:
+            type: integer
+            description: event count between firstTimestamp and lastTimestamp
+          sourceComponent:
+            type: string
+            description: source component of the event
+          sourceHost:
+            type: string
+            nullable: true
+            description: source host of the event
+        required:
+          - uid
+          - frameworkName
+          - podUid
+          - taskroleName
+          - taskName
+          - taskIndex
+          - type
+          - reason
+          - message
+          - firstTimestamp
+          - lastTimestamp
+          - count
+          - sourceComponent
+          - sourceHost
     JobDetail:
       type: object
       description: job details
