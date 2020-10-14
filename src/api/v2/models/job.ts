@@ -53,6 +53,10 @@ export interface IJobListQeury {
     withTotalCount?: boolean;
 }
 
+export interface IEventListQuery {
+    type?: string; // "Warning" or "Normal"
+}
+
 export interface IAppExitSpec {
     code: number;
     phrase: string;

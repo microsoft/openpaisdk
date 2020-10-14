@@ -7,7 +7,7 @@ import {
 import { Util } from '@pai/commom/util';
 import * as yaml from 'js-yaml';
 
-import { IJobListQeury } from '../models/job';
+import { IEventListQuery, IJobListQeury } from '../models/job';
 
 import { OpenPAIBaseClient } from './baseClient';
 
@@ -122,4 +122,18 @@ export class JobClient extends OpenPAIBaseClient {
         );
         return await this.httpClient.delete(url, undefined, { data: { value: tag } });
     }
+
+   /**
+    * Get the events of a job.
+    * @param userName The user name.
+    * @param jobName The job name.
+    * @param query filter jobs by event type
+    */
+  public async listEvents(userName: string, jobName: string, query?: IEventListQuery): Promise<any> {
+    const url: string = Util.fixUrl(
+      `${this.cluster.rest_server_uri}/api/v2/jobs/${userName}~${jobName}/events`,
+      this.cluster.https
+    );
+    return await this.httpClient.get(url, undefined, undefined, query);
+  }
 }
