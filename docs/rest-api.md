@@ -224,7 +224,7 @@ const openPAIClient = new PAIV2.OpenPAIClient(cluster);
     ```ts
     await openPAIClient.job.deleteTag(username, jobname, tag);
     ```
-- [x] Get task status (GET /api/v2/jobs/{username}~{jobname}/attempts/{jobAattemptId}/taskRoles/{taskRoleName}/taskIndex/{taskIndex}/attempts)
+- [x] Get task status (GET /api/v2/jobs/{username}~{jobname}/attempts/{jobAttemptId}/taskRoles/{taskRoleName}/taskIndex/{taskIndex}/attempts)
 
     ```ts
     await openPAIClient.job.getTask(username, jobname, jobAttemptId, taskRoleName, taskIndex);

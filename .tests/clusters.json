@@ -1,0 +1,10 @@
+[
+    {
+        "alias": "int",
+        "rest_server_uri": "openpai.test/rest-server",
+        "username": "sdk_test",
+        "password": "pwd",
+        "token": "",
+        "https": true
+    }
+]

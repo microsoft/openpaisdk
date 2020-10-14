@@ -917,6 +917,10 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
                         {
                             type: 'raw',
                             value: 'sdk_test_nonexist_job'
+                        },
+                        {
+                            type: 'raw',
+                            value: 0
                         }
                     ],
                     response: {

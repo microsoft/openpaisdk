@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import {
-    IJobConfig, IJobInfo, IJobSshInfo, IJobStatus, IPAICluster, IPAIResponse
+    IJobConfig, IJobInfo, IJobStatus, IPAICluster, IPAIResponse
 } from '@api/v2';
 import { Util } from '@pai/commom/util';
 import * as yaml from 'js-yaml';
@@ -59,7 +59,7 @@ export class JobClient extends OpenPAIBaseClient {
      */
     public async getJob(userName: string, jobName: string, jobAttemptId?: number): Promise<IJobStatus> {
         let url: string;
-        if (jobAttemptId) {
+        if (jobAttemptId !== undefined) {
             url = Util.fixUrl(
                 `${this.cluster.rest_server_uri}/api/v2/jobs/${userName}~${jobName}/attempts/${jobAttemptId}`,
                 this.cluster.https
