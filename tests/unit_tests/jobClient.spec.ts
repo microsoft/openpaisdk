@@ -3,7 +3,7 @@
 
 import { IJobConfig as IJobConfigV1, JobClient as JobClientV1 } from '@api/v1';
 import {
-    IJobConfig, IJobInfo, IJobSshInfo, IJobStatus, IPAICluster, JobClient
+    IJobConfig, IJobInfo, IJobStatus, IPAICluster, ITaskDetail, JobClient
 } from '@api/v2';
 import * as chai from 'chai';
 import { expect } from 'chai';
@@ -13,8 +13,8 @@ import nock from 'nock';
 
 import { testJobConfig, testJobConfigV1 } from '../common/test_data/testJobConfig';
 import { testJobList } from '../common/test_data/testJobList';
-import { testJobSshInfo } from '../common/test_data/testJobSshInfo';
 import { testJobStatus } from '../common/test_data/testJobStatus';
+import { testTaskDetail } from '../common/test_data/testTaskDetail';
 
 /**
  * Unit tests for jobClient.
@@ -74,10 +74,39 @@ describe('Get job status', () => {
     const userName: string = 'core';
     const jobName: string = 'tensorflow_serving_mnist_2019_6585ba19';
     before(() => nock(`http://${testUri}`).get(`/api/v2/jobs/${userName}~${jobName}`).reply(200, response));
-
     it('should return the job status', async () => {
         const jobClient: JobClient = new JobClient(cluster);
         const result: any = await jobClient.getJob(userName, jobName);
+        expect(result).to.be.eql(response);
+    });
+});
+
+describe('Get job status with specific attempt', () => {
+    const response: IJobStatus = testJobStatus;
+    const userName: string = 'core';
+    const jobName: string = 'tensorflow_serving_mnist_2019_6585ba19';
+    const jobAttemptId: number = 0;
+    before(() => nock(`http://${testUri}`).get(`/api/v2/jobs/${userName}~${jobName}/attempts/${jobAttemptId}`).reply(200, response));
+
+    it('should return the job status', async () => {
+        const jobClient: JobClient = new JobClient(cluster);
+        const result: any = await jobClient.getJob(userName, jobName, jobAttemptId);
+        expect(result).to.be.eql(response);
+    });
+});
+
+describe('Get task status', () => {
+    const response: ITaskDetail = testTaskDetail;
+    const userName: string = 'core';
+    const jobName: string = 'tensorflow_serving_mnist_2019_6585ba19';
+    const jobAttemptId: number = 0;
+    const taskRoleName: string = 'worker';
+    const taskIndex: number = 0;
+    before(() => nock(`http://${testUri}`).get(`/api/v2/jobs/${userName}~${jobName}/attempts/${jobAttemptId}/taskRoles/${taskRoleName}/taskIndex/${taskIndex}/attempts`).reply(200, response));
+
+    it('should return the task status', async () => {
+        const jobClient: JobClient = new JobClient(cluster);
+        const result: any = await jobClient.getTask(userName, jobName, jobAttemptId, taskRoleName, taskIndex);
         expect(result).to.be.eql(response);
     });
 });
