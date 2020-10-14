@@ -950,6 +950,16 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
         }],
         after: [ updateTestJobExecutionType('STOP') ]
     },
+    'get /api/v2/jobs/{user}~{job}/events': {
+        tests: [
+            {
+                // We cannot predict cluster events in most time.
+                // So skip the test.
+                description: 'Skip',
+                customizedTest: 'skipTest'
+            }
+        ]
+    },
     'get /api/v2/jobs/{user}~{job}/job-attempts': {
         before: [ createTestJob() ],
         tests: [{
@@ -997,6 +1007,10 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
  */
 class CustomizedTestsClass {
     private readonly ajvInstance: Ajv = new ajv({ nullable: true });
+
+    public async skipTest(): Promise<void> {
+        return;
+    }
 
     public async getTokensWithUnauthorizedUser(
         test: IApiTestItem, operationResults?: IOperationResults

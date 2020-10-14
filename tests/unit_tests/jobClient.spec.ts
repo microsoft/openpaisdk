@@ -11,6 +11,7 @@ import dirtyChai from 'dirty-chai';
 import * as yaml from 'js-yaml';
 import nock from 'nock';
 
+import { testEventList } from '../common/test_data/testEventList';
 import { testJobConfig, testJobConfigV1 } from '../common/test_data/testJobConfig';
 import { testJobList } from '../common/test_data/testJobList';
 import { testJobSshInfo } from '../common/test_data/testJobSshInfo';
@@ -183,6 +184,20 @@ describe('Delete a tag', () => {
     it('should delete a tag', async () => {
         const jobClient: JobClient = new JobClient(cluster);
         const result: any = await jobClient.deleteTag(userName, jobName, 'testTag');
+        expect(result).to.be.eql(response);
+    });
+});
+
+describe('List events', () => {
+    const response: any = testEventList;
+    const userName: string = 'core';
+    const jobName: string = 'tensorflow_serving_mnist_2019_6585ba19';
+    const queryString: string = 'type=Warning';
+    before(() => nock(`http://${testUri}`).get(`/api/v2/jobs/${userName}~${jobName}/events?${queryString}`).reply(200, response));
+
+    it('should return events', async () => {
+        const jobClient: JobClient = new JobClient(cluster);
+        const result: any = await jobClient.listEvents(userName, jobName, { type: 'Warning' });
         expect(result).to.be.eql(response);
     });
 });
