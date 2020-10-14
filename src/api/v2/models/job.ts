@@ -54,7 +54,7 @@ export interface IJobListQeury {
 }
 
 export interface IEventListQuery {
-    type?: string; // "Warning" or "Normal"
+    type?: 'Warning' | 'Normal';
 }
 
 export interface IAppExitSpec {
