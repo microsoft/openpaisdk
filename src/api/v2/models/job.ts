@@ -135,6 +135,56 @@ export interface IJobStatus {
     };
 }
 
+interface ITaskAttempt {
+    attemptId: number;
+    attemptState: string;
+    currentAttemptLaunchedTime: number | null;
+    currentAttemptCompletedTime: number | null;
+    containerId: string | null;
+    containerIp: string | null;
+    containerNodeName: string | null;
+    containerPorts: object;
+    containerGpus?: any;
+    containerLog: string;
+    containerExitCode: number | null;
+    containerExitSpec: {
+        code: number;
+        phrase: string;
+        issuer: string;
+        causer: string;
+        type: string;
+        stage: string;
+        behavior: string;
+        reaction: string;
+        reason: string;
+        repro: string[];
+        solution?: string[];
+    } ;
+    containerExitDiagnostics: string | null;
+    hived?: {
+        affinityGroupName?: any;
+        lazyPreempted?: any;
+        lazyPreemptionStatus?: any;
+    };
+}
+
+/**
+ * OpenPAI Task Detail.
+ */
+export interface ITaskDetail {
+    taskIndex: number;
+    taskUid: string;
+    taskState: string;
+    retries: number;
+    accountableRetries: number;
+    createdTime: number | null;
+    completedTime: number | null;
+    frameworkName: string;
+    jobAttemptId: number;
+    taskRoleName: string;
+    attempts: ITaskAttempt[];
+}
+
 /**
  * OpenPAI Job Framework Infomation.
  */

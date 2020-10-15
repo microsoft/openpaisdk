@@ -2,7 +2,7 @@
 // Licensed under the MIT License.
 
 import {
-    IJobConfig, IJobInfo, IJobSshInfo, IJobStatus, IPAICluster, IPAIResponse
+    IJobConfig, IJobInfo, IJobStatus, IPAICluster, IPAIResponse
 } from '@api/v2';
 import { Util } from '@pai/commom/util';
 import * as yaml from 'js-yaml';
@@ -55,12 +55,21 @@ export class JobClient extends OpenPAIBaseClient {
      * Get job status.
      * @param userName The user name.
      * @param jobName The job name.
+     * @param jobAttemptId The job attempt id
      */
-    public async getJob(userName: string, jobName: string): Promise<IJobStatus> {
-        const url: string = Util.fixUrl(
-            `${this.cluster.rest_server_uri}/api/v2/jobs/${userName}~${jobName}`,
-            this.cluster.https
-        );
+    public async getJob(userName: string, jobName: string, jobAttemptId?: number): Promise<IJobStatus> {
+        let url: string;
+        if (jobAttemptId !== undefined) {
+            url = Util.fixUrl(
+                `${this.cluster.rest_server_uri}/api/v2/jobs/${userName}~${jobName}/attempts/${jobAttemptId}`,
+                this.cluster.https
+            );
+        } else {
+            url = Util.fixUrl(
+                `${this.cluster.rest_server_uri}/api/v2/jobs/${userName}~${jobName}`,
+                this.cluster.https
+            );
+        }
         return await this.httpClient.get(url);
     }
 
@@ -123,6 +132,22 @@ export class JobClient extends OpenPAIBaseClient {
         return await this.httpClient.delete(url, undefined, { data: { value: tag } });
     }
 
+    /**
+     * Get task status.
+     * @param userName The user name.
+     * @param jobName The job name.
+     * @param jobAttemptId The job attempt id.
+     * @param taskRoleName The task role name.
+     * @param taskIndex The task index.
+     */
+    public async getTask(userName: string, jobName: string, jobAttemptId: number, taskRoleName: string, taskIndex: number)
+        : Promise<IJobStatus> {
+        const url: string = Util.fixUrl(
+            `${this.cluster.rest_server_uri}/api/v2/jobs/${userName}~${jobName}/attempts/${jobAttemptId}/taskRoles/${taskRoleName}/taskIndex/${taskIndex}/attempts`,
+            this.cluster.https
+        );
+        return await this.httpClient.get(url);
+    }
    /**
     * Get the events of a job.
     * @param userName The user name.
