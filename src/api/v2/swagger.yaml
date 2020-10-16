@@ -14,7 +14,7 @@ info:
   license:
     name: MIT License
     url: "https://github.com/microsoft/pai/blob/master/LICENSE"
-  version: 2.1.1
+  version: 2.2.0
 externalDocs:
   description: Find out more about OpenPAI
   url: "https://github.com/microsoft/pai"
@@ -1703,7 +1703,7 @@ paths:
                 retries: 1
                 accountableRetries: 1
                 createdTime: 1602480558000
-                completedTime: 160248ask_0603000
+                completedTime: 1602480603000
                 username: test_user
                 jobName: task_retry_histry_test
                 jobAttemptId: 0
@@ -1721,9 +1721,9 @@ paths:
                       http: 24661
                     containerGpus: null
                     containerLog: http://10.151.40.34:9103/log-manager/tail/admin/9893b6e0f9f5997f4a82f23bef39bf32/taskrole/a9f9f1f2-5e43-4423-88c3-022433b8cd7c/
-                    containerExitCode: -220,
+                    containerExitCode: -220
                     containerExitSpec:
-                      code: -220,
+                      code: -220
                       phrase: FrameworkAttemptCompletion
                       issuer: PAI_FC
                       causer: USER_STOP
@@ -1747,9 +1747,9 @@ paths:
                       http: 24661
                     containerGpus: null
                     containerLog: http://10.151.40.34:9103/log-manager/tail/admin/9893b6e0f9f5997f4a82f23bef39bf32/taskrole/a9f9f1f2-5e43-4423-88c3-022433b8cd7c/
-                    containerExitCode: -220,
+                    containerExitCode: -220
                     containerExitSpec:
-                      code: -220,
+                      code: -220
                       phrase: FrameworkAttemptCompletion
                       issuer: PAI_FC
                       causer: USER_STOP
