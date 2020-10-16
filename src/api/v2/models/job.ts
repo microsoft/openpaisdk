@@ -179,7 +179,8 @@ export interface ITaskDetail {
     accountableRetries: number;
     createdTime: number | null;
     completedTime: number | null;
-    frameworkName: string;
+    username: string;
+    jobName: string;
     jobAttemptId: number;
     taskRoleName: string;
     attempts: ITaskAttempt[];
