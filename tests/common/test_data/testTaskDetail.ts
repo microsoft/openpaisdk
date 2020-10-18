@@ -7,7 +7,8 @@ import { ITaskDetail } from '@api/v2';
  * Task status test data.
  */
 export const testTaskDetail: ITaskDetail = {
-    frameworkName: 'gusui~retry_history_test_2020',
+    username: 'test_user',
+    jobName: 'retry_history_test_2020',
     jobAttemptId: 0,
     taskRoleName: 'taskrole',
     taskIndex: 0,
