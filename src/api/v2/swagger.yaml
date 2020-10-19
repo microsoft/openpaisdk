@@ -1212,6 +1212,7 @@ paths:
                   attemptId: 0
                   attemptState: SUCCEEDED,
                   appId: id
+                  appCreatedTime: 0
                   appLaunchedTime: 0
                   appCompletedTime: 0
                   appExitCode: 0
@@ -1265,6 +1266,7 @@ paths:
                   attemptId: 0
                   attemptState: SUCCEEDED,
                   appId: id
+                  appCreatedTime: 0
                   appLaunchedTime: 0
                   appCompletedTime: 0
                   appExitCode: 0
@@ -1711,6 +1713,7 @@ paths:
                 attempts:
                   - attemptId: 0
                     attemptState: FAILED
+                    currentAttemptCreatedTime: 1602480558000
                     currentAttemptLaunchedTime: 1602480558000
                     currentAttemptCompletedTime: 1602480570000
                     containerId: a9f9f1f2-5e43-4423-88c3-022433b8cd7c
@@ -1737,6 +1740,7 @@ paths:
                     containerExitDiagnostics: Stop to complete current FrameworkAttempt
                   - attemptId: 1
                     attemptState: FAILED
+                    currentAttemptCreatedTime: 1602480591000
                     currentAttemptLaunchedTime: 1602480591000
                     currentAttemptCompletedTime: 1602480603000
                     containerId: a9f9f1f2-5e43-4423-88c3-022433b8cd7c
@@ -2216,6 +2220,12 @@ components:
             appId:
               type: string
               description: unique id for the job
+            appCreatedTime:
+              type: integer
+              nullable: true
+              description: >-
+                job created time for last attempt, in number of milliseconds
+                since the Unix Epoch.
             appLaunchedTime:
               type: integer
               nullable: true
@@ -2227,11 +2237,12 @@ components:
               nullable: true
               description: >
                 job completed time for last attempt, in number of milliseconds
-                since the Unix Epoch. to get durations for last attempt:
+                since the Unix Epoch. 
+                To get durations for last attempt:
                   wholeDuration = completedTime - createdTime;
                   runningDuration = appCompletedTime - appLaunchedTime;
                   waitingDuration = wholeDuration - runningDuration.
-                to get durations for all attempts:
+                To get durations for all attempts:
                   runningDuration = sum(appCompletedTime - appLaunchedTime) for all attempts.
             appExitCode:
               type: integer
@@ -2313,6 +2324,7 @@ components:
             - retries
             - createdTime
             - completedTime
+            - appCreatedTime
             - appLaunchedTime
             - appCompletedTime
             - appExitCode
@@ -2433,6 +2445,12 @@ components:
                       type: integer
                     attemptState:
                       type: string
+                    currentAttemptCreatedTime:
+                      type: integer
+                      nullable: true
+                      description: >-
+                        the current attempt created time, in number of milliseconds since the Unix
+                        Epoch.
                     currentAttemptLaunchedTime:
                       type: integer
                       nullable: true
@@ -2891,6 +2909,12 @@ components:
                 type: integer
               attemptState:
                 type: string
+              currentAttemptCreatedTime:
+                type: integer
+                nullable: true
+                description: >-
+                  the current attempt created time, in number of milliseconds since the Unix
+                  Epoch.
               currentAttemptLaunchedTime:
                 type: integer
                 nullable: true
@@ -2969,7 +2993,7 @@ components:
                 nullable: true
                 properties:
                   affinityGroupName:
-                    type: object
+                    type: string
                     nullable: true
                   lazyPreempted:
                     type: object

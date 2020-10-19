@@ -83,9 +83,12 @@ export interface IJobStatusDetails {
     retryDelayTime?: any;
     createdTime: number;
     completedTime: number | null;
+    attemptId: number | null;
+    attemptState: string | null;
     appId: string;
     appProgress: number;
     appTrackingUrl: string;
+    appCreatedTime: number | null;
     appLaunchedTime: number | null;
     appCompletedTime: number | null;
     appExitCode: number | null;
@@ -105,7 +108,14 @@ export interface IJobStatusDetails {
 
 export interface ITaskStatus {
     taskIndex: number;
+    taskUid: string;
     taskState: string;
+    retries: number;
+    accountableRetries: number;
+    createdTime: number | null;
+    completedTime: number | null;
+    attemptId: number | null;
+    attemptState: string | null;
     containerId: string;
     containerIp: string;
     containerPorts: { [index: string]: number | number[] | string; };
@@ -138,6 +148,7 @@ export interface IJobStatus {
 interface ITaskAttempt {
     attemptId: number;
     attemptState: string;
+    currentAttemptCreatedTime: number | null;
     currentAttemptLaunchedTime: number | null;
     currentAttemptCompletedTime: number | null;
     containerId: string | null;
