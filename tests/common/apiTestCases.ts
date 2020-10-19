@@ -133,6 +133,20 @@ function createTestJob(): IApiOperation {
     };
 }
 
+function createTestRunningJob(): IApiOperation {
+    return {
+        tag: 'job',
+        operationId: 'createRunningJob',
+        parameters: [{
+            type: 'raw',
+            value: {
+                ...testJobConfig,
+                ...{ name: 'sdk_test_job' + randomString.new() }
+            }
+        }]
+    };
+}
+
 function updateTestJobExecutionType(executionType: 'START' | 'STOP'): IApiOperation {
     return {
         tag: 'job',
@@ -932,7 +946,7 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
         after: [ updateTestJobExecutionType('STOP') ]
     },
     'get /api/v2/jobs/{user}~{job}/attempts/{jobAttemptId}/taskRoles/{taskRoleName}/taskIndex/{taskIndex}/attempts': {
-        before: [ createTestJob() ],
+        before: [ createTestRunningJob() ],
         tests: [
             {
                 description: 'Get task status',
