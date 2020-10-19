@@ -194,6 +194,12 @@ const openPAIClient = new PAIV2.OpenPAIClient(cluster);
     job = await openPAIClient.job.getJob(username, jobname);
     ```
 
+- [x] Get job status with specific attempt(GET /api/v2/jobs/{username}~{jobname}/attempts/{jobAttemptId})
+
+    ```ts
+    job = await openPAIClient.job.getJob(username, jobname, jobAttemptId);
+    ```
+
 - [x] Get job config (GET /api/v2/jobs/{username}~{jobname}/config)
 
     ```ts
@@ -205,6 +211,24 @@ const openPAIClient = new PAIV2.OpenPAIClient(cluster);
     ```ts
     await openPAIClient.job.updateJobExecutionType(username, jobname, 'START');
     await openPAIClient.job.updateJobExecutionType(username, jobname, 'STOP');
+    ```
+
+- [x] Add a tag to a job (PUT /api/v2/jobs/{username}~{jobname}/tag)
+
+    ```ts
+    await openPAIClient.job.addTag(username, jobname, tag);
+    ```
+
+- [x] Delete a tag from a job (DELETE /api/v2/jobs/{username}~{jobname}/tag)
+
+    ```ts
+    await openPAIClient.job.deleteTag(username, jobname, tag);
+    ```
+
+- [x] Get task status (GET /api/v2/jobs/{username}~{jobname}/attempts/{jobAttemptId}/taskRoles/{taskRoleName}/taskIndex/{taskIndex}/attempts)
+
+    ```ts
+    await openPAIClient.job.getTask(username, jobname, jobAttemptId, taskRoleName, taskIndex);
     ```
 
 ## job history
