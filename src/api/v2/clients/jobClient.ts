@@ -38,6 +38,37 @@ export class JobClient extends OpenPAIBaseClient {
     }
 
     /**
+     * Submit a job in the system.
+     * @param jobConfig The job config.
+     */
+    public async createRunningJob(jobConfig: IJobConfig): Promise<IPAIResponse>  {
+        const url: string = Util.fixUrl(
+            `${this.cluster.rest_server_uri}/api/v2/jobs`,
+            this.cluster.https
+        );
+        const text: string = yaml.safeDump(jobConfig);
+
+        await this.httpClient.post(url, text, undefined, {
+            headers: {
+                'content-type': 'text/yaml'
+            }
+        });
+
+        let jobStatus : string;
+        while (true) {
+            const result: any = await this.getJob(this.cluster.username ? this.cluster.username : '', jobConfig.name);
+            jobStatus = result.jobStatus.state;
+            if (jobStatus === 'WAITING') {
+                setTimeout(() => { console.log('waiting for the job to run...'); }, 5000);
+                continue;
+            } else {
+                break;
+            }
+        }
+        return { code: '202', message: `The job ${jobConfig.name} is ${jobStatus}`};
+    }
+
+    /**
      * Get the list of jobs.
      * @param query filter jobs by username, vc, state and keyword. Set offset, limit, order and withTotalCount.
      */
