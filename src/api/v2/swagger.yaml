@@ -1550,7 +1550,6 @@ paths:
                   userName: userName
                   state: SUCCEEDED
                   originState: Completed
-                  maxAttemptCount: 1
                   attemptIndex: 0
                   jobStartedTime: 0
                   attemptStartedTime: 0
@@ -1627,7 +1626,6 @@ paths:
                 userName: userName
                 state: SUCCEEDED
                 originState: Completed
-                maxAttemptCount: 1
                 attemptIndex: 0
                 jobStartedTime: 0
                 attemptStartedTime: 0
@@ -2680,8 +2678,6 @@ components:
         originState:
           type: string
           nullable: true
-        maxAttemptCount:
-          type: integer
         attemptIndex:
           type: integer
           nullable: true
