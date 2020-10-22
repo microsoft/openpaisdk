@@ -133,6 +133,20 @@ function createTestJob(): IApiOperation {
     };
 }
 
+function createTestRunningJob(): IApiOperation {
+    return {
+        tag: 'job',
+        operationId: 'createRunningJob',
+        parameters: [{
+            type: 'raw',
+            value: {
+                ...testJobConfig,
+                ...{ name: 'sdk_test_job' + randomString.new() }
+            }
+        }]
+    };
+}
+
 function updateTestJobExecutionType(executionType: 'START' | 'STOP'): IApiOperation {
     return {
         tag: 'job',
@@ -932,97 +946,13 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
         after: [ updateTestJobExecutionType('STOP') ]
     },
     'get /api/v2/jobs/{user}~{job}/attempts/{jobAttemptId}/taskRoles/{taskRoleName}/taskIndex/{taskIndex}/attempts': {
-        before: [ createTestJob() ],
         tests: [
             {
-                description: 'Get task status',
-                operation: {
-                    parameters: [
-                        {
-                            type: 'raw',
-                            value: clustersJson[0].username
-                        },
-                        {
-                            type: 'raw',
-                            value: 'sdk_test_job' + randomString.get()
-                        },
-                        {
-                            type: 'raw',
-                            value: 0
-                        },
-                        {
-                            type: 'raw',
-                            value: 'worker'
-                        },
-                        {
-                            type: 'raw',
-                            value: 0
-                        }
-                    ]
-                }
-            },
-            {
-                description: 'Get task of a nonexist job',
-                operation: {
-                    parameters: [
-                        {
-                            type: 'raw',
-                            value: clustersJson[0].username
-                        },
-                        {
-                            type: 'raw',
-                            value: 'sdk_test_nonexist_job'
-                        },
-                        {
-                            type: 'raw',
-                            value: 0
-                        },
-                        {
-                            type: 'raw',
-                            value: 'worker'
-                        },
-                        {
-                            type: 'raw',
-                            value: 0
-                        }
-                    ],
-                    response: {
-                        statusCode: 404
-                    }
-                }
-            },
-            {
-                description: 'Get nonexist task attempt',
-                operation: {
-                    parameters: [
-                        {
-                            type: 'raw',
-                            value: clustersJson[0].username
-                        },
-                        {
-                            type: 'raw',
-                            value: 'sdk_test_job'
-                        },
-                        {
-                            type: 'raw',
-                            value: 0
-                        },
-                        {
-                            type: 'raw',
-                            value: 'worker'
-                        },
-                        {
-                            type: 'raw',
-                            value: 5
-                        }
-                    ],
-                    response: {
-                        statusCode: 404
-                    }
-                }
+                // Skip the test temporarily to avoid highly increasing CI cost.
+                description: 'Skip',
+                customizedTest: 'skipTest'
             }
-        ],
-        after: [ updateTestJobExecutionType('STOP') ]
+        ]
     },
     'get /api/v2/jobs/{user}~{job}/config': {
         before: [ createTestJob() ],

@@ -21,9 +21,12 @@ export const testJobStatus: IJobStatus = {
         },
         createdTime: 1565329763372,
         completedTime: null,
+        attemptId: 0,
+        attemptState: 'RUNNING',
         appId: 'application_1565337391589_0002',
         appProgress: 0,
         appTrackingUrl: 'http://0.0.0.34/yarn/0.0.0.34:8088/proxy/application_1565337391589_0002/',
+        appCreatedTime: 1565337476313,
         appLaunchedTime: 1565337476313,
         appCompletedTime: null,
         appExitCode: null,
@@ -48,7 +51,14 @@ export const testJobStatus: IJobStatus = {
             taskStatuses: [
                 {
                     taskIndex: 0,
+                    taskUid: '65b2e476-1101-11eb-b396-96ba8c8049b4',
                     taskState: 'RUNNING',
+                    retries: 0,
+                    accountableRetries: 0,
+                    createdTime: 1602998326000,
+                    completedTime: null,
+                    attemptId: 0,
+                    attemptState: 'RUNNING',
                     containerId: 'container_e34_1565337391589_0002_01_000002',
                     containerIp: '0.0.0.38',
                     containerPorts: {

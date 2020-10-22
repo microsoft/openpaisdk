@@ -22,6 +22,7 @@ export const testTaskDetail: ITaskDetail = {
        {
            attemptId: 1,
            attemptState: 'STOPPED',
+           currentAttemptCreatedTime: 1602665952000,
            currentAttemptLaunchedTime: 1602665952000,
            currentAttemptCompletedTime: 1602665969000,
            containerId: 'b62b9972-ee99-405d-a1bc-9f4467b7289a',
@@ -58,6 +59,7 @@ export const testTaskDetail: ITaskDetail = {
        {
            attemptId: 0,
            attemptState: 'STOPPED',
+           currentAttemptCreatedTime: 1602665934000,
            currentAttemptLaunchedTime: 1602665934000,
            currentAttemptCompletedTime: 1602665952000,
            containerId: '142b5212-1f2b-4ad6-83da-17d7d1e99e4f',
