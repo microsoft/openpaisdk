@@ -28,7 +28,7 @@ jobs:
         run: |
           . myenv/bin/activate
           node --version
-          npm install typescript tslint tslint-microsoft-contrib
+          npm install typescript tslint tslint-microsoft-contrib --force
           npm run build
           npm link
           pai -h
