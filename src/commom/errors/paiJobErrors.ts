@@ -18,3 +18,8 @@ export class NoJobConfigError extends PAIBaseError {}
  * No job config error.
  */
 export class UnknownError extends PAIBaseError {}
+
+/**
+ * No pod logs error.
+ */
+export class NoPodLogsError extends PAIBaseError {}
