@@ -955,31 +955,13 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
         ]
     },
     'get /api/v2/jobs/{user}~{job}/pods/{podUid}/logs': {
-        before: [ createTestRunningJob() ],
         tests: [
             {
-                description: 'Get pod logs',
-                operation: {
-                    parameters: [
-                        {
-                            type: 'raw',
-                            value: clustersJson[0].username
-                        },
-                        {
-                            type: 'raw',
-                            value: 'sdk_test_job' + randomString.get()
-                        },
-                        {
-                            type: 'fromResult',
-                            resultType: 'beforeResults',
-                            resultPath: ['taskRoles', 'worker', 'taskStatuses', 0, 'containerId'],
-                            resultIndex: 0
-                        }
-                    ]
-                }
+                // Skip the test temporarily to avoid highly increasing CI cost.
+                description: 'Skip',
+                customizedTest: 'skipTest'
             }
-        ],
-        after: [ updateTestJobExecutionType('STOP') ]
+        ]
     },
     'get /api/v2/jobs/{user}~{job}/config': {
         before: [ createTestJob() ],
