@@ -7,7 +7,7 @@ import {
 import { Util } from '@pai/commom/util';
 import * as yaml from 'js-yaml';
 
-import { IEventListQuery, IJobListQeury, IPodLogInfo } from '../models/job';
+import { IEventListQuery, IJobListQeury, ITaskLogInfo } from '../models/job';
 
 import { OpenPAIBaseClient } from './baseClient';
 
@@ -189,14 +189,22 @@ export class JobClient extends OpenPAIBaseClient {
     }
 
     /**
-     * Get pod logs.
+     * Get task logs.
      * @param userName The user name.
      * @param jobName The job name.
      * @param podUid The pod uid.
      */
-    public async getPodLogs(userName: string, jobName: string, podUid: string, tailMode?: boolean): Promise<IPodLogInfo> {
+    public async getTaskLogs(
+        userName: string,
+        jobName: string,
+        jobAttemptId: number,
+        taskRoleName: string,
+        taskIndex: number,
+        taskAttemptId: number,
+        tailMode?: boolean
+    ): Promise<ITaskLogInfo> {
         const url: string = Util.fixUrl(
-            `${this.cluster.rest_server_uri}/api/v2/jobs/${userName}~${jobName}/pods/${podUid}/logs`,
+            `${this.cluster.rest_server_uri}/api/v2/jobs/${userName}~${jobName}/attempts/${jobAttemptId}/taskRoles/${taskRoleName}/${taskIndex}/attempts/${taskAttemptId}/logs`,
             this.cluster.https
         );
         return await this.httpClient.get(url, undefined, undefined, tailMode ? { tailMode } : undefined);

@@ -22,4 +22,4 @@ export class UnknownError extends PAIBaseError {}
 /**
  * No pod logs error.
  */
-export class NoPodLogsError extends PAIBaseError {}
+export class NoTaskLogError extends PAIBaseError {}
