@@ -954,7 +954,7 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
             }
         ]
     },
-    'get /api/v2/jobs/{user}~{job}/pods/{podUid}/logs': {
+    'get /api/v2/jobs/{user}~{job}/attempts/{jobAttemptId}/taskRoles/{taskRoleName}/taskIndex/{taskIndex}/attempts/{taskAttemptId}/logs': {
         tests: [
             {
                 // Skip the test temporarily to avoid highly increasing CI cost.

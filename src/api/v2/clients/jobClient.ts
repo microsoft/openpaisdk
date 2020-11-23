@@ -204,7 +204,7 @@ export class JobClient extends OpenPAIBaseClient {
         tailMode?: boolean
     ): Promise<ITaskLogInfo> {
         const url: string = Util.fixUrl(
-            `${this.cluster.rest_server_uri}/api/v2/jobs/${userName}~${jobName}/attempts/${jobAttemptId}/taskRoles/${taskRoleName}/${taskIndex}/attempts/${taskAttemptId}/logs`,
+            `${this.cluster.rest_server_uri}/api/v2/jobs/${userName}~${jobName}/attempts/${jobAttemptId}/taskRoles/${taskRoleName}/taskIndex/${taskIndex}/attempts/${taskAttemptId}/logs`,
             this.cluster.https
         );
         return await this.httpClient.get(url, undefined, undefined, tailMode ? { tailMode } : undefined);
