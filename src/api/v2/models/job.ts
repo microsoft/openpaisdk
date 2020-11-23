@@ -53,7 +53,7 @@ export interface IJobListQeury {
     withTotalCount?: boolean;
 }
 
-export interface IPodLogInfo {
+export interface ITaskLogInfo {
     locations: {
         name: string;
         uri: string;

@@ -11,7 +11,8 @@ info:
     Version 2.1.0: add add/delete tag api; add tags field in get job detail and get job list; add tags filter in get job list
     Version 2.1.1: add get event api
     Version 2.2.0: add get task status api; add jobAttempId filter to job status api and extend job detail schema
-    version 2.2.1: add get pod logs api
+    Version 2.2.1: a user can add/delete tags to/from his/her own jobs
+    version 2.2.2: add get task logs api
   license:
     name: MIT License
     url: "https://github.com/microsoft/pai/blob/master/LICENSE"
@@ -442,7 +443,6 @@ paths:
       summary: Update user's own profile.
       description: >-
         Update user's own profile in the system.
-        Only allowed in basic mode
       operationId: updateUserSelf
       security:
         - bearerAuth: []
@@ -479,6 +479,13 @@ paths:
                         Old password.
                         When newPassword exists, it's required.
                         When newPassword doesn't exists, it's useless.
+                    extension:
+                      type: object
+                      description: >-
+                        Extension fields.
+                        Be allowed in both oidc and basic mode.
+                        When patch is false, it's required.
+                        When patch is true, it's optional.
                 patch:
                   type: boolean
                   default: false
@@ -1387,7 +1394,7 @@ paths:
     put:
       tags:
         - job
-      summary: Add a tag to a job. Only admin users are authorized.
+      summary: Add a tag to a job. Admin users can add tags to any job. A non-admin user can add tags to his/her own jobs.
       description: Add a tag to a job.
       operationId: addTag
       security:
@@ -1425,7 +1432,7 @@ paths:
     delete:
       tags:
         - job
-      summary: Delete a tag from a job. Only admin users are authorized.
+      summary: Delete a tag from a job. Admin users can delete tags from any job. A non-admin user can delete tags from his/her own jobs.
       description: Delete a tag from a job.
       operationId: deleteTag
       security:
@@ -1734,7 +1741,7 @@ paths:
                       ssh: 37508
                       http: 24661
                     containerGpus: null
-                    containerLog: /api/v2/jobs/admin~admin_444da84f/pods/07cdd036-1a7c-11eb-830b-000d3ab25bb6/logs
+                    containerLog: /api/v2/jobs/admin~admin_444da84f/attempts/0/taskRoles/taskrole/taskIndex/0/attempts/2/logs
                     containerExitCode: -220
                     containerExitSpec:
                       code: -220
@@ -1761,7 +1768,7 @@ paths:
                       ssh: 37508
                       http: 24661
                     containerGpus: null
-                    containerLog: /api/v2/jobs/admin~admin_444da84f/pods/07cdd036-1a7c-11eb-830b-000d3ab25bb6/logs
+                    containerLog: /api/v2/jobs/admin~admin_444da84f/attempts/0/taskRoles/taskrole/taskIndex/0/attempts/2/logs
                     containerExitCode: -220
                     containerExitSpec:
                       code: -220
@@ -1780,19 +1787,22 @@ paths:
           $ref: "#/components/responses/NoTaskError"
         "500":
           $ref: "#/components/responses/UnknownError"
-  "/api/v2/jobs/{user}~{job}/pods/{podUid}/logs":
+  "/api/v2/jobs/{user}~{job}/attempts/{jobAttemptId}/taskRoles/{taskRoleName}/taskIndex/{taskIndex}/attempts/{taskAttemptId}/logs":
     get:
       tags:
         - job
-      summary: Get job pod log list.
-      description: Get job pod log list.
-      operationId: getPodLogs
+      summary: Get task log list.
+      description: Get task log list.
+      operationId: getTaskLogs
       security:
         - bearerAuth: []
       parameters:
       - $ref: "#/components/parameters/user"
       - $ref: "#/components/parameters/job"
-      - $ref: "#/components/parameters/podUid"
+      - $ref: "#/components/parameters/jobAttemptId"
+      - $ref: "#/components/parameters/taskRoleName"
+      - $ref: "#/components/parameters/taskIndex"
+      - $ref: "#/components/parameters/taskAttemptId"
       - name: tailMode
         in: query
         description: getting log content via tail mode. Could be "true" or "false"
@@ -1814,7 +1824,7 @@ paths:
                 - name: stdout
                   uri: "https://mater_ip/log-manager/node_ip/api/v1/logs/user.pai.stdout?username=user&framework-name=34775529adebae576fbc0bf48d835386&pod-uid=07cdd036-1a7c-11eb-830b-000d3ab25bb6&taskrole=taskrole&token=token"
         "404":
-          $ref: "#/components/responses/NoPodLogsError"
+          $ref: "#/components/responses/NoTaskLogError"
         "500":
           $ref: "#/components/responses/UnknownError"
   /api/v2/kubernetes/nodes:
@@ -1950,10 +1960,10 @@ components:
       required: true
       schema:
         type: string
-    podUid:
-      name: podUid
+    taskAttemptId:
+      name: taskAttemptId
       in: path
-      description: job pod uid
+      description: task attempt id
       required: true
       schema:
         type: string
@@ -3280,8 +3290,8 @@ components:
               value:
                 code: NoJobSshInfoError
                 message: "SSH info of job {job} is not found."
-    NoPodLogsError:
-      description: NoPodLogsError
+    NoTaskLogError:
+      description: NoTaskLogError
       content:
         application/json:
           schema:
@@ -3289,8 +3299,8 @@ components:
           examples:
             NoJobSshInfoError:
               value:
-                code: NoPodLogsError
-                message: "Logs for pod {podUid} is not found."
+                code: NoTaskLogError
+                message: "Log of task is not found."
     ConflictUserError:
       description: ConflictUserError
       content:
