@@ -48,6 +48,18 @@ export class ApiTestRunner {
     ): Promise<any> {
         if (this.mock) {
             this.mockExample(operation);
+            if (operation.operationId === 'createRunningJob') {
+                return {
+                    code: 200,
+                    data: {
+                        taskRoles: {
+                            worker: {
+                                taskStatuses: [ { containerId: 'id' } ]
+                            }
+                        }
+                    }
+                };
+            }
         }
 
         const client: any = operation.cluster ?
@@ -136,7 +148,7 @@ export class ApiTestRunner {
                     data: operation.response.expectResult ||
                         op.examples[operation.response!.statusCode!] || {}
                 };
-            } else {
+            } else if (op) {
                 for (const code of Object.keys(op.examples)) {
                     if (code.startsWith('20')) {
                         example = {
@@ -145,6 +157,8 @@ export class ApiTestRunner {
                         };
                     }
                 }
+            } else {
+                return;
             }
         }
         let pathString: string = op.path.replace(new RegExp('{(.*)}', 'gi'), '(.*)');

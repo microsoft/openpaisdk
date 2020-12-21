@@ -21,7 +21,7 @@ import { StorageNodeV2 as StorageNode } from './clients/storageClient';
 import { IAuthnInfo, ILoginInfo } from './models/authn';
 import { IPAICluster, IPAIClusterInfo } from './models/cluster';
 import { IGroup } from './models/group';
-import { IJobAttempt, IJobFrameworkInfo, IJobInfo, IJobListQeury, IJobSshInfo, IJobStatus, ITaskDetail } from './models/job';
+import { IJobAttempt, IJobFrameworkInfo, IJobInfo, IJobListQeury, IJobSshInfo, IJobStatus, ITaskDetail, ITaskLogInfo } from './models/job';
 import { IPAIResponse } from './models/paiResponse';
 import { IMountInfo, IStorageConfig, IStorageDetail, IStorageServer, IStorageSummary } from './models/storage';
 import { IToken, ITokenList } from './models/token';
@@ -69,5 +69,6 @@ export {
     ApiClient,
     JobHistoryClient,
     IPAIResponse,
-    KubernetesClient
+    KubernetesClient,
+    ITaskLogInfo
 };

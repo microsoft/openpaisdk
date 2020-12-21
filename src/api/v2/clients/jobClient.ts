@@ -7,7 +7,7 @@ import {
 import { Util } from '@pai/commom/util';
 import * as yaml from 'js-yaml';
 
-import { IEventListQuery, IJobListQeury } from '../models/job';
+import { IEventListQuery, IJobListQeury, ITaskLogInfo } from '../models/job';
 
 import { OpenPAIBaseClient } from './baseClient';
 
@@ -41,7 +41,7 @@ export class JobClient extends OpenPAIBaseClient {
      * Submit a job in the system.
      * @param jobConfig The job config.
      */
-    public async createRunningJob(jobConfig: IJobConfig): Promise<IPAIResponse>  {
+    public async createRunningJob(jobConfig: IJobConfig): Promise<IJobInfo>  {
         const url: string = Util.fixUrl(
             `${this.cluster.rest_server_uri}/api/v2/jobs`,
             this.cluster.https
@@ -54,18 +54,26 @@ export class JobClient extends OpenPAIBaseClient {
             }
         });
 
+        function delay(ms: number): Promise<any> {
+            // tslint:disable-next-line: no-string-based-set-timeout
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
         let jobStatus : string;
-        while (true) {
-            const result: any = await this.getJob(this.cluster.username ? this.cluster.username : '', jobConfig.name);
+        let count: number = 0;
+        let result: any;
+        while (count++ < 60) {
+            result = await this.getJob(this.cluster.username ? this.cluster.username : '', jobConfig.name);
             jobStatus = result.jobStatus.state;
             if (jobStatus === 'WAITING') {
-                setTimeout(() => { console.log('waiting for the job to run...'); }, 5000);
+                console.log('waiting for the job to run...');
+                await delay(5000);
                 continue;
             } else {
                 break;
             }
         }
-        return { code: '202', message: `The job ${jobConfig.name} is ${jobStatus}`};
+        return result;
     }
 
     /**
@@ -179,17 +187,40 @@ export class JobClient extends OpenPAIBaseClient {
         );
         return await this.httpClient.get(url);
     }
+
+    /**
+     * Get task logs.
+     * @param userName The user name.
+     * @param jobName The job name.
+     * @param podUid The pod uid.
+     */
+    public async getTaskLogs(
+        userName: string,
+        jobName: string,
+        jobAttemptId: number,
+        taskRoleName: string,
+        taskIndex: number,
+        taskAttemptId: number,
+        tailMode?: boolean
+    ): Promise<ITaskLogInfo> {
+        const url: string = Util.fixUrl(
+            `${this.cluster.rest_server_uri}/api/v2/jobs/${userName}~${jobName}/attempts/${jobAttemptId}/taskRoles/${taskRoleName}/taskIndex/${taskIndex}/attempts/${taskAttemptId}/logs`,
+            this.cluster.https
+        );
+        return await this.httpClient.get(url, undefined, undefined, tailMode ? { tailMode } : undefined);
+    }
+
    /**
     * Get the events of a job.
     * @param userName The user name.
     * @param jobName The job name.
     * @param query filter jobs by event type
     */
-  public async listEvents(userName: string, jobName: string, query?: IEventListQuery): Promise<any> {
-    const url: string = Util.fixUrl(
-      `${this.cluster.rest_server_uri}/api/v2/jobs/${userName}~${jobName}/events`,
-      this.cluster.https
-    );
-    return await this.httpClient.get(url, undefined, undefined, query);
-  }
+    public async listEvents(userName: string, jobName: string, query?: IEventListQuery): Promise<any> {
+        const url: string = Util.fixUrl(
+            `${this.cluster.rest_server_uri}/api/v2/jobs/${userName}~${jobName}/events`,
+            this.cluster.https
+        );
+        return await this.httpClient.get(url, undefined, undefined, query);
+    }
 }
