@@ -22,7 +22,7 @@ jobs:
 
     # Runs a single command using the runners shell
     - name: Setup Node.js environment
-      uses: actions/setup-node@v1.4.2
+      uses: actions/setup-node@v2.1.4
       with:
         # Version Spec of the version to use.  Examples: 10.x, 10.15.1, >=10.15.0
         node-version: 12
