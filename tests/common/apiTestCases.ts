@@ -1078,6 +1078,15 @@ export const ApiDefaultTestCases: {[key: string]: IApiTestCase} = {
             }
         }],
         after: [ updateTestJobExecutionType('STOP') ]
+    },
+    'get /api/v2/alerts': {
+        tests: [
+            {
+                // Skip the test temporarily because the alerts came from prometheus.
+                description: 'Skip',
+                customizedTest: 'skipTest'
+            }
+        ]
     }
 };
 
@@ -1096,7 +1105,7 @@ class CustomizedTestsClass {
     ): Promise<void> {
         const client: TokenClient = new TokenClient({
             token: unauthorizedToken,
-            https: true,
+            https: clustersJson[0].https,
             rest_server_uri: clustersJson[0].rest_server_uri
         });
 
@@ -1112,7 +1121,7 @@ class CustomizedTestsClass {
     ): Promise<void> {
         const client: AuthnClient = new AuthnClient({
             token: operationResults!.beforeResults![0].token,
-            https: true,
+            https: clustersJson[0].https,
             rest_server_uri: clustersJson[0].rest_server_uri
         });
 
@@ -1125,7 +1134,7 @@ class CustomizedTestsClass {
     ): Promise<void> {
         const client: AuthnClient = new AuthnClient({
             token: unauthorizedToken,
-            https: true,
+            https: clustersJson[0].https,
             rest_server_uri: clustersJson[0].rest_server_uri
         });
 
@@ -1250,7 +1259,7 @@ class CustomizedTestsClass {
     ): Promise<void> {
         const client: UserClient = new UserClient({
             token: applicationToken,
-            https: true,
+            https: clustersJson[0].https,
             rest_server_uri: clustersJson[0].rest_server_uri
         });
 
@@ -1269,7 +1278,7 @@ class CustomizedTestsClass {
 
         const client: UserClient = new UserClient({
             token: info.token,
-            https: true,
+            https: clustersJson[0].https,
             rest_server_uri: clustersJson[0].rest_server_uri
         });
 
@@ -1286,7 +1295,7 @@ class CustomizedTestsClass {
     private async createNonadminUserAndToken(): Promise<ILoginInfo> {
         const openPAIClient: OpenPAIClient = new OpenPAIClient({
             token: clustersJson[0].token,
-            https: true,
+            https: clustersJson[0].https,
             rest_server_uri: clustersJson[0].rest_server_uri
         });
 
@@ -1310,7 +1319,7 @@ class CustomizedTestsClass {
     private async deleteNonadminUserAndToken(info: ILoginInfo): Promise<void> {
         const openPAIClient: OpenPAIClient = new OpenPAIClient({
             token: clustersJson[0].token,
-            https: true,
+            https: clustersJson[0].https,
             rest_server_uri: clustersJson[0].rest_server_uri
         });
 

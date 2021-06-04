@@ -105,6 +105,7 @@ export class ApiTestRunner {
                 const valid: boolean = this.ajvInstance.validate(operation.response.schema, res) as boolean;
                 if (!valid) {
                     console.log(this.ajvInstance.errors);
+                    console.log(JSON.stringify(res));
                 }
                 expect(valid, 'response should be valid.').to.be.true();
             }
